@@ -9,6 +9,8 @@ export type TCLIServiceTypes = {
     TExecuteStatementReq: any,
     TFetchResultsReq: any,
     TFetchOrientation: any,
+    TGetResultSetMetadataReq: any,
+    TTypeId: any,
     TStatusCode: any,
 };
 
@@ -42,6 +44,11 @@ export type ExecuteStatementRequest = {
 };
 
 export type ThriftClient = any;
+
+export type ResultSetMetadataResponse = {
+    status: any,
+    schema?: any
+};
 
 export default class ThriftService {
     private TCLIService: object;
@@ -112,6 +119,20 @@ export default class ThriftService {
         );
 
         return result.execute();
+    }
+
+    getResultSetMetadata(response: ThriftResponse): Promise<ResultSetMetadataResponse> {
+        if (!response.operationHandle) {
+			return Promise.reject(new Error('operation handle does not exist'));
+		}
+	
+		return new Promise((resolve, reject) => {
+            const request = new this.TCLIService_types.TGetResultSetMetadataReq(response);
+
+            this.client.GetResultSetMetadata(request, (error: Error, result: ResultSetMetadataResponse) => {
+                error ? reject(error) : resolve(result);
+            });
+        });
     }
 
     private getTheLatestProtocol(): number {

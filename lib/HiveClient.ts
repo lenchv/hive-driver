@@ -2,6 +2,7 @@ import IConnectionProvider from './connection/IConnectionProvider';
 import IConnectionOptions from './connection/IConnectionOptions';
 import ThriftService, { TCLIServiceTypes, ThriftSession, ExecuteStatementRequest, ThriftClient, ThriftResponse } from './hive/ThriftService';
 import IConnection from './connection/IConnection';
+import ExecuteStatementResponse, { ExecuteStatementResult } from './ExecuteStatementResponse';
 
 type ClientParameters = {
     /** TCLIService object generated from TCLIService.thrift (https://github.com/apache/hive/blob/master/service-rpc/if/TCLIService.thrift) */
@@ -67,14 +68,19 @@ export default class HiveClient {
         });
     }
 
-    execute(statement: string, options?: ExecuteStatementRequest): Promise<Array<any>> {
+    execute(statement: string, options?: ExecuteStatementRequest): Promise<ExecuteStatementResult> {
         return this.thriftService.executeStatement(
             this.getSession(),
             statement,
             options || {}
         ).then((response: ThriftResponse) => {
-            return this.thriftService.fetchResult(response);
-        });
+            const result = new ExecuteStatementResponse(
+                response,
+                this.thriftService
+            );
+
+            return result.create();
+        })
     }
 
     getSession(): ThriftSession {

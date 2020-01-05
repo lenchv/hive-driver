@@ -63,6 +63,18 @@ var ThriftService = /** @class */ (function () {
         var result = new FetchResult_1["default"](this.TCLIService_types, this.client, response, limit);
         return result.execute();
     };
+    ThriftService.prototype.getResultSetMetadata = function (response) {
+        var _this = this;
+        if (!response.operationHandle) {
+            return Promise.reject(new Error('operation handle does not exist'));
+        }
+        return new Promise(function (resolve, reject) {
+            var request = new _this.TCLIService_types.TGetResultSetMetadataReq(response);
+            _this.client.GetResultSetMetadata(request, function (error, result) {
+                error ? reject(error) : resolve(result);
+            });
+        });
+    };
     ThriftService.prototype.getTheLatestProtocol = function () {
         return Number(Object.values(this.TCLIService_types.TProtocolVersion).pop());
     };

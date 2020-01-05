@@ -2,6 +2,7 @@ const TCLIService = require('../thrift/gen-nodejs/TCLIService');
 const TCLIService_types = require('../thrift/gen-nodejs/TCLIService_types');
 const HiveClient = require('../index').HiveClient;
 const mech = require('../index').mechanisms;
+const ResponseCombiner = require('../index').ResponseCombiner;
 
 const client = new HiveClient({
     connectionOptions: {
@@ -20,6 +21,7 @@ client.connect(new mech.NoSaslTcpConnection())
     .then(session => {
         return client.execute('show databases');
     })
-    .then(databases => {
-        console.log(databases);
+    .then(response => {
+        const result = new ResponseCombiner(TCLIService_types);
+        console.log(result.combine(response));
     });

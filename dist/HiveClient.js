@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 exports.__esModule = true;
 var ThriftService_1 = __importDefault(require("./hive/ThriftService"));
+var ExecuteStatementResponse_1 = __importDefault(require("./ExecuteStatementResponse"));
 var HiveClient = /** @class */ (function () {
     function HiveClient(parameters) {
         var TCLIService = parameters.TCLIService, TCLIService_types = parameters.TCLIService_types, protocol = parameters.protocol, connectionOptions = parameters.connectionOptions;
@@ -37,7 +38,8 @@ var HiveClient = /** @class */ (function () {
     HiveClient.prototype.execute = function (statement, options) {
         var _this = this;
         return this.thriftService.executeStatement(this.getSession(), statement, options || {}).then(function (response) {
-            return _this.thriftService.fetchResult(response);
+            var result = new ExecuteStatementResponse_1["default"](response, _this.thriftService);
+            return result.create();
         });
     };
     HiveClient.prototype.getSession = function () {
