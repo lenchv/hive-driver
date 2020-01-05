@@ -1,0 +1,36 @@
+{
+  "name": "hive-js",
+  "version": "0.0.1",
+  "description": "Driver for connection to apache hive via Thrift API.",
+  "main": "index.js",
+  "directories": {
+    "example": "examples",
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "mocha tests/**/*.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lenchv/hive-js/"
+  },
+  "keywords": [
+    "hiveserver2",
+    "apache",
+    "hive",
+    "hive",
+    "hs2",
+    "kerberos",
+    "sasl",
+    "ldap",
+    "hadoop",
+    "client",
+    "thrift"
+  ],
+  "author": "Liench Volodymyr",
+  "license": "MIT",
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^7.0.0"
+  }
+}
