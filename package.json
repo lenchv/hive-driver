@@ -8,7 +8,7 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "mocha tests/**/*.js",
+    "test": "mocha tests/**/*.test.js",
     "build": "tsc",
     "watch": "tsc -w"
   },
@@ -34,10 +34,10 @@
   "devDependencies": {
     "@types/node": "^13.1.4",
     "chai": "^4.2.0",
-    "mocha": "^7.0.0",
+    "mocha": "^5.2.0",
     "typescript": "^3.7.4"
   },
   "dependencies": {
-    "thrift": "^0.13.0"
+    "thrift": "0.12.0"
   }
 }
