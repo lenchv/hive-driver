@@ -10,6 +10,7 @@ import GetTypeInfoCommand, { GetTypeInfoRequest, GetTypeInfoResponse } from "./C
 import GetCatalogsCommand, { GetCatalogsRequest, GetCatalogsResponse } from "./Commands/GetCatalogsCommand";
 import GetSchemasCommand, { GetSchemasRequest, GetSchemasResponse } from "./Commands/GetSchemasCommand";
 import GetTablesCommand, { GetTablesRequest, GetTablesResponse } from "./Commands/GetTablesCommand";
+import GetTableTypesCommand, { GetTableTypesRequest, GetTableTypesResponse } from "./Commands/GetTableTypesCommand";
 
 const thrift = require('thrift');
 
@@ -113,6 +114,15 @@ export default class HiveDriver {
 
     getTables(request: GetTablesRequest): Promise<GetTablesResponse> {
         const command = new GetTablesCommand(
+            this.getClient(),
+            this.TCLIService_types
+        );
+
+        return command.execute(request);
+    }
+
+    getTableTypes(request: GetTableTypesRequest): Promise<GetTableTypesResponse> {
+        const command = new GetTableTypesCommand(
             this.getClient(),
             this.TCLIService_types
         );

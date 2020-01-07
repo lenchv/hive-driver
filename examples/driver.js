@@ -32,6 +32,7 @@ connectionProvider.connect({
         getCatalogs(driver, sessionResponse),
         getSchemas(driver, sessionResponse),
         getTables(driver, sessionResponse),
+        getTableTypes(driver, sessionResponse),
     ]).then(() => {
         return sessionResponse;
     });
@@ -178,7 +179,26 @@ function getTables(driver, sessionResponse) {
         }
 
         if (response.operationHandle.operationType !== TCLIService_types.TOperationType.GET_TABLES) {
-            return Promise.reject(new Error('Get tables: operation type is different'));
+            return Promise.reject(new Error('Get table types: operation type is different'));
+        }
+
+        return getOperationHandle(driver, response);
+    })
+    .then(result => {
+        return result;
+    });
+}
+
+function getTableTypes(driver, sessionResponse) {
+    return driver.getTableTypes({
+        sessionHandle: sessionResponse.sessionHandle
+    }).then(response => {
+        if (TCLIService_types.TStatusCode.SUCCESS_STATUS !== response.status.statusCode) {
+            return Promise.reject(new Error(response.status.errorMessage));
+        }
+
+        if (response.operationHandle.operationType !== TCLIService_types.TOperationType.GET_TABLE_TYPES) {
+            return Promise.reject(new Error('Get table types: operation type is different'));
         }
 
         return getOperationHandle(driver, response);
