@@ -13,6 +13,7 @@ export type ThriftClient = {
     GetColumns: Function,
     GetFunctions: Function,
     GetPrimaryKeys: Function,
+    GetCrossReference: Function,
 };
 
 export type TCLIServiceTypes = {
@@ -32,6 +33,7 @@ export type TCLIServiceTypes = {
     TGetColumnsReq: any,
     TGetFunctionsReq: any,
     TGetPrimaryKeysReq: any,
+    TGetCrossReferenceReq: any,
     TTypeId: any,
     TStatusCode: any,
 };

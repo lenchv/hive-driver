@@ -17,6 +17,7 @@ var GetTableTypesCommand_1 = __importDefault(require("./Commands/GetTableTypesCo
 var GetColumnsCommand_1 = __importDefault(require("./Commands/GetColumnsCommand"));
 var GetFunctionsCommand_1 = __importDefault(require("./Commands/GetFunctionsCommand"));
 var GetPrimaryKeysCommand_1 = __importDefault(require("./Commands/GetPrimaryKeysCommand"));
+var GetCrossReferenceCommand_1 = __importDefault(require("./Commands/GetCrossReferenceCommand"));
 var thrift = require('thrift');
 var HiveDriver = /** @class */ (function () {
     function HiveDriver(TCLIService, TCLIService_types) {
@@ -82,6 +83,10 @@ var HiveDriver = /** @class */ (function () {
     };
     HiveDriver.prototype.getPrimaryKeys = function (request) {
         var command = new GetPrimaryKeysCommand_1["default"](this.getClient(), this.TCLIService_types);
+        return command.execute(request);
+    };
+    HiveDriver.prototype.getCrossReference = function (request) {
+        var command = new GetCrossReferenceCommand_1["default"](this.getClient(), this.TCLIService_types);
         return command.execute(request);
     };
     HiveDriver.prototype.getClient = function () {

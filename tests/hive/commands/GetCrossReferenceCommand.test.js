@@ -1,40 +1,46 @@
 const { expect } = require('chai');
-const GetPrimaryKeysCommand = require('../../../dist/hive/commands/GetPrimaryKeysCommand').default;
+const GetCrossReferenceCommand = require('../../../dist/hive/commands/GetCrossReferenceCommand').default;
 
 const requestMock = {
     sessionHandle: {
         sessionId: { guid: '', secret: '' }
     },
+    parentCatalogName: 'parentCatalogName',
+    parentSchemaName: 'parentSchemaName',
+    parentTableName: 'parentTableName',
+    foreignCatalogName: 'foreignCatalogName',
+    foreignSchemaName: 'foreignSchemaName',
+    foreignTableName: 'foreignTableName',
 };
 
 const TCLIService_types = {
-    TGetPrimaryKeysReq: function (options) {
+    TGetCrossReferenceReq: function (options) {
         this.options = options;
 
         expect(options).to.be.deep.eq(requestMock);
     }
 };
 
-const GET_PRIMARY_KEYS = 7;
+const GET_CROSS_REFERENCE = 7;
 
 const responseMock = {
     status: { statusCode: 0 },
     operationHandle: {
         hasResultSet: true,
         operationId: { guid: '', secret: '' },
-        operationType: GET_PRIMARY_KEYS,
+        operationType: GET_CROSS_REFERENCE,
         modifiedRowCount: 0
     }
 };
 const thriftClientMock = {
-    GetPrimaryKeys(request, callback) {
+    GetCrossReference(request, callback) {
         return callback(null, responseMock);
     }
 };
 
-describe('GetPrimaryKeysCommand', () => {
+describe('GetCrossReferenceCommand', () => {
     it('should return response', (cb) => {
-        const command = new GetPrimaryKeysCommand(
+        const command = new GetCrossReferenceCommand(
             thriftClientMock,
             TCLIService_types
         );

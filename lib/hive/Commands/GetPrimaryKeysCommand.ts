@@ -4,7 +4,7 @@ import { Status, SessionHandle, OperationHandle } from "../Types";
 export type GetPrimaryKeysRequest = {
     sessionHandle: SessionHandle,
     catalogName?: string,
-    schemaName?: string,
+    schemaName: string,
     tableName: string,
 };
 

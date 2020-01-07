@@ -14,6 +14,7 @@ import GetTableTypesCommand, { GetTableTypesRequest, GetTableTypesResponse } fro
 import GetColumnsCommand, { GetColumnsRequest, GetColumnsResponse } from "./Commands/GetColumnsCommand";
 import GetFunctionsCommand, { GetFunctionsRequest, GetFunctionsResponse } from "./Commands/GetFunctionsCommand";
 import GetPrimaryKeysCommand, { GetPrimaryKeysRequest, GetPrimaryKeysResponse } from "./Commands/GetPrimaryKeysCommand";
+import GetCrossReferenceCommand, { GetCrossReferenceRequest, GetCrossReferenceResponse } from "./Commands/GetCrossReferenceCommand";
 
 const thrift = require('thrift');
 
@@ -153,6 +154,15 @@ export default class HiveDriver {
 
     getPrimaryKeys(request: GetPrimaryKeysRequest): Promise<GetPrimaryKeysResponse> {
         const command = new GetPrimaryKeysCommand(
+            this.getClient(),
+            this.TCLIService_types
+        );
+
+        return command.execute(request);
+    }
+
+    getCrossReference(request: GetCrossReferenceRequest): Promise<GetCrossReferenceResponse> {
+        const command = new GetCrossReferenceCommand(
             this.getClient(),
             this.TCLIService_types
         );

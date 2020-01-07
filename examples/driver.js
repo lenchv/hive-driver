@@ -17,7 +17,7 @@ connectionProvider.connect({
     driver.createClient(connection);
 
     return driver.openSession({
-        client_protocol: TCLIService_types.TProtocolVersion.HIVE_CLI_SERVICE_PROTOCOL_V9
+        client_protocol: TCLIService_types.TProtocolVersion.HIVE_CLI_SERVICE_PROTOCOL_V10
     });
 })
 .then((sessionResponse) => {
@@ -26,8 +26,10 @@ connectionProvider.connect({
     }
 
     return Promise.all([
+        getInfo(driver, sessionResponse, TCLIService_types.TGetInfoType.CLI_DBMS_VER),
+        executeStatement(driver, sessionResponse, 'create table table1 ( id string, value integer, primary key(id) disable novalidate )'),
+        executeStatement(driver, sessionResponse, 'create table table2 ( id string, table1_fk integer, primary key(id) disable novalidate, foreign key (table1_fk) references table1(id) disable novalidate)'),
         executeStatement(driver, sessionResponse, 'show tables'),
-        getInfo(driver, sessionResponse, TCLIService_types.TGetInfoType.CLI_DBMS_NAME),
         getTypeInfo(driver, sessionResponse),
         getCatalogs(driver, sessionResponse),
         getSchemas(driver, sessionResponse),
@@ -35,7 +37,11 @@ connectionProvider.connect({
         getTableTypes(driver, sessionResponse),
         getColumns(driver, sessionResponse),
         getFunctions(driver, sessionResponse, 'SUM'),
-        getPrimaryKeys(driver, sessionResponse, 'default', 'pokes'),
+        getPrimaryKeys(driver, sessionResponse, 'default', 'table1'),
+        getCrossReference(driver, sessionResponse),
+
+        executeStatement(driver, sessionResponse, 'drop table table1'),
+        executeStatement(driver, sessionResponse, 'drop table table2'),
     ]).then(() => {
         return sessionResponse;
     });
@@ -68,11 +74,6 @@ function executeStatement(driver, sessionResponse, statement) {
         if (response.operationHandle.operationType !== TCLIService_types.TOperationType.EXECUTE_STATEMENT) {
             return Promise.reject(new Error('Execute statment: operation type is different'));
         }
-
-        if (!response.operationHandle.hasResultSet) {
-            return Promise.reject(new Error('Execute statment: no result returned'));
-        }
-
         return response;
     }).then((response) => {
         return getOperationHandle(driver, response);
@@ -80,6 +81,10 @@ function executeStatement(driver, sessionResponse, statement) {
 }
 
 function getOperationHandle(driver, response) {
+    if (!response.operationHandle.hasResultSet) {
+        return Promise.resolve({});
+    }
+
     return Promise.all([
         driver.getResultSetMetadata({ operationHandle: response.operationHandle }),
         driver.fetchResults({
@@ -262,6 +267,31 @@ function getPrimaryKeys(driver, sessionResponse, schemaName, tableName) {
 
         if (response.operationHandle.operationType !== TCLIService_types.TOperationType.GET_FUNCTIONS) {
             return Promise.reject(new Error('Get primary keys: operation type is different'));
+        }
+
+        return getOperationHandle(driver, response);
+    })
+    .then(result => {
+        return result;
+    });
+}
+
+function getCrossReference(driver, sessionResponse) {
+    return driver.getCrossReference({
+        sessionHandle: sessionResponse.sessionHandle,
+        parentCatalogName: '',
+        parentSchemaName: 'default',
+        parentTableName: 'table1',
+        foreignCatalogName: '',
+        foreignSchemaName: 'default',
+        foreignTableName: 'table2'
+    }).then(response => {
+        if (TCLIService_types.TStatusCode.SUCCESS_STATUS !== response.status.statusCode) {
+            return Promise.reject(new Error(response.status.errorMessage));
+        }
+
+        if (response.operationHandle.operationType !== TCLIService_types.TOperationType.GET_FUNCTIONS) {
+            return Promise.reject(new Error('Get cross reference: operation type is different'));
         }
 
         return getOperationHandle(driver, response);
