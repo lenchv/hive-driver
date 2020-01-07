@@ -34,6 +34,7 @@ connectionProvider.connect({
         getTables(driver, sessionResponse),
         getTableTypes(driver, sessionResponse),
         getColumns(driver, sessionResponse),
+        getFunctions(driver, sessionResponse, 'SUM'),
     ]).then(() => {
         return sessionResponse;
     });
@@ -219,6 +220,26 @@ function getColumns(driver, sessionResponse) {
 
         if (response.operationHandle.operationType !== TCLIService_types.TOperationType.GET_COLUMNS) {
             return Promise.reject(new Error('Get columns: operation type is different'));
+        }
+
+        return getOperationHandle(driver, response);
+    })
+    .then(result => {
+        return result;
+    });
+}
+
+function getFunctions(driver, sessionResponse, functionName) {
+    return driver.getFunctions({
+        sessionHandle: sessionResponse.sessionHandle,
+        functionName
+    }).then(response => {
+        if (TCLIService_types.TStatusCode.SUCCESS_STATUS !== response.status.statusCode) {
+            return Promise.reject(new Error(response.status.errorMessage));
+        }
+
+        if (response.operationHandle.operationType !== TCLIService_types.TOperationType.GET_FUNCTIONS) {
+            return Promise.reject(new Error('Get functions: operation type is different'));
         }
 
         return getOperationHandle(driver, response);
