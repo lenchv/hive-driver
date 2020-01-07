@@ -35,6 +35,7 @@ connectionProvider.connect({
         getTableTypes(driver, sessionResponse),
         getColumns(driver, sessionResponse),
         getFunctions(driver, sessionResponse, 'SUM'),
+        getPrimaryKeys(driver, sessionResponse, 'default', 'pokes'),
     ]).then(() => {
         return sessionResponse;
     });
@@ -240,6 +241,27 @@ function getFunctions(driver, sessionResponse, functionName) {
 
         if (response.operationHandle.operationType !== TCLIService_types.TOperationType.GET_FUNCTIONS) {
             return Promise.reject(new Error('Get functions: operation type is different'));
+        }
+
+        return getOperationHandle(driver, response);
+    })
+    .then(result => {
+        return result;
+    });
+}
+
+function getPrimaryKeys(driver, sessionResponse, schemaName, tableName) {
+    return driver.getPrimaryKeys({
+        sessionHandle: sessionResponse.sessionHandle,
+        schemaName,
+        tableName,
+    }).then(response => {
+        if (TCLIService_types.TStatusCode.SUCCESS_STATUS !== response.status.statusCode) {
+            return Promise.reject(new Error(response.status.errorMessage));
+        }
+
+        if (response.operationHandle.operationType !== TCLIService_types.TOperationType.GET_FUNCTIONS) {
+            return Promise.reject(new Error('Get primary keys: operation type is different'));
         }
 
         return getOperationHandle(driver, response);
