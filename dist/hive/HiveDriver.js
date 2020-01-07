@@ -10,6 +10,7 @@ var GetResultSetMetadataCommand_1 = __importDefault(require("./Commands/GetResul
 var FetchResultsCommand_1 = __importDefault(require("./Commands/FetchResultsCommand"));
 var GetInfoCommand_1 = __importDefault(require("./Commands/GetInfoCommand"));
 var GetTypeInfoCommand_1 = __importDefault(require("./Commands/GetTypeInfoCommand"));
+var GetCatalogsCommand_1 = __importDefault(require("./Commands/GetCatalogsCommand"));
 var thrift = require('thrift');
 var HiveDriver = /** @class */ (function () {
     function HiveDriver(TCLIService, TCLIService_types) {
@@ -47,6 +48,10 @@ var HiveDriver = /** @class */ (function () {
     };
     HiveDriver.prototype.getTypeInfo = function (request) {
         var command = new GetTypeInfoCommand_1["default"](this.getClient(), this.TCLIService_types);
+        return command.execute(request);
+    };
+    HiveDriver.prototype.getCatalogs = function (request) {
+        var command = new GetCatalogsCommand_1["default"](this.getClient(), this.TCLIService_types);
         return command.execute(request);
     };
     HiveDriver.prototype.getClient = function () {

@@ -6,6 +6,7 @@ export type ThriftClient = {
     FetchResults: Function,
     GetInfo: Function,
     GetTypeInfo: Function,
+    GetCatalogs: Function,
 };
 
 export type TCLIServiceTypes = {
@@ -18,6 +19,7 @@ export type TCLIServiceTypes = {
     TFetchOrientation: any,
     TGetResultSetMetadataReq: any,
     TGetTypeInfoReq: any,
+    TGetCatalogsReq: any,
     TTypeId: any,
     TStatusCode: any,
 };

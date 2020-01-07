@@ -28,7 +28,8 @@ connectionProvider.connect({
     return Promise.all([
         executeStatement(driver, sessionResponse, 'show tables'),
         getInfo(driver, sessionResponse, TCLIService_types.TGetInfoType.CLI_DBMS_NAME),
-        getTypeInfo(driver, sessionResponse)
+        getTypeInfo(driver, sessionResponse),
+        getCatalogs(driver, sessionResponse),
     ]).then(() => {
         return sessionResponse;
     });
@@ -111,6 +112,21 @@ function getInfo(driver, sessionResponse, infoType) {
 
 function getTypeInfo(driver, sessionResponse) {
     return driver.getTypeInfo({
+        sessionHandle: sessionResponse.sessionHandle
+    }).then(response => {
+        if (TCLIService_types.TStatusCode.SUCCESS_STATUS !== response.status.statusCode) {
+            return Promise.reject(new Error(response.status.errorMessage));
+        }
+
+        return getOperationHandle(driver, response);
+    })
+    .then(result => {
+        return result;
+    });
+}
+
+function getCatalogs(driver, sessionResponse) {
+    return driver.getCatalogs({
         sessionHandle: sessionResponse.sessionHandle
     }).then(response => {
         if (TCLIService_types.TStatusCode.SUCCESS_STATUS !== response.status.statusCode) {
