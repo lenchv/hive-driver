@@ -85,14 +85,18 @@ function getOperationHandle(driver, response) {
         return Promise.resolve({});
     }
 
-    return Promise.all([
-        driver.getResultSetMetadata({ operationHandle: response.operationHandle }),
-        driver.fetchResults({
-            operationHandle: response.operationHandle,
-            orientation: TCLIService_types.TFetchOrientation.FETCH_FIRST,
-            maxRows: 1000,
-        })
-    ]).then(([ resulSetMetaDataResponse, resultResponse ]) => {
+    return getOperationStatus(driver, response, true)
+    .then(() => {
+        return Promise.all([
+            driver.getResultSetMetadata({ operationHandle: response.operationHandle }),
+            driver.fetchResults({
+                operationHandle: response.operationHandle,
+                orientation: TCLIService_types.TFetchOrientation.FETCH_FIRST,
+                maxRows: 1000,
+            })
+        ]);
+    })
+    .then(([ resulSetMetaDataResponse, resultResponse ]) => {
         if (TCLIService_types.TStatusCode.SUCCESS_STATUS !== resulSetMetaDataResponse.status.statusCode) {
             return Promise.reject(new Error(resulSetMetaDataResponse.status.errorMessage));
         }
@@ -298,5 +302,18 @@ function getCrossReference(driver, sessionResponse) {
     })
     .then(result => {
         return result;
+    });
+}
+
+function getOperationStatus(driver, operationResponse, progress) {
+    return driver.getOperationStatus({
+        operationHandle: operationResponse.operationHandle,
+        getProgressUpdate: progress
+    }).then(response => {
+        if (TCLIService_types.TStatusCode.SUCCESS_STATUS !== response.status.statusCode) {
+            return Promise.reject(new Error(response.status.errorMessage));
+        }
+
+        return response;
     });
 }

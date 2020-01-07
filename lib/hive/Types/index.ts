@@ -14,6 +14,7 @@ export type ThriftClient = {
     GetFunctions: Function,
     GetPrimaryKeys: Function,
     GetCrossReference: Function,
+    GetOperationStatus: Function,
 };
 
 export type TCLIServiceTypes = {
@@ -34,6 +35,7 @@ export type TCLIServiceTypes = {
     TGetFunctionsReq: any,
     TGetPrimaryKeysReq: any,
     TGetCrossReferenceReq: any,
+    TGetOperationStatusReq: any,
     TTypeId: any,
     TStatusCode: any,
 };
@@ -198,4 +200,13 @@ export type GetInfoValue = {
     integerFlag: number,
     binaryValue: number,
     lenValue: Buffer | string
+};
+
+export type ProgressUpdateResponse = {
+    headerNames: Array<string>,
+    rows: Array<Array<string>>
+    progressedPercentage: number,
+    status: number,
+    footerSummary: string,
+    startTime: Buffer | string
 };
