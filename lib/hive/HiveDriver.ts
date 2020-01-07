@@ -8,6 +8,7 @@ import FetchResultsCommand, { FetchResultsRequest, FetchResultsResponse } from "
 import GetInfoCommand, { GetInfoRequest, GetInfoResponse } from "./Commands/GetInfoCommand";
 import GetTypeInfoCommand, { GetTypeInfoRequest, GetTypeInfoResponse } from "./Commands/GetTypeInfoCommand";
 import GetCatalogsCommand, { GetCatalogsRequest, GetCatalogsResponse } from "./Commands/GetCatalogsCommand";
+import GetSchemasCommand, { GetSchemasRequest, GetSchemasResponse } from "./Commands/GetSchemasCommand";
 
 const thrift = require('thrift');
 
@@ -99,6 +100,16 @@ export default class HiveDriver {
 
         return command.execute(request);
     }
+
+    getSchemas(request: GetSchemasRequest): Promise<GetSchemasResponse> {
+        const command = new GetSchemasCommand(
+            this.getClient(),
+            this.TCLIService_types
+        );
+
+        return command.execute(request);
+    }
+
 
     getClient(): ThriftClient {
         if (!this._client) {

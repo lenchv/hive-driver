@@ -30,6 +30,7 @@ connectionProvider.connect({
         getInfo(driver, sessionResponse, TCLIService_types.TGetInfoType.CLI_DBMS_NAME),
         getTypeInfo(driver, sessionResponse),
         getCatalogs(driver, sessionResponse),
+        getSchemas(driver, sessionResponse),
     ]).then(() => {
         return sessionResponse;
     });
@@ -127,6 +128,21 @@ function getTypeInfo(driver, sessionResponse) {
 
 function getCatalogs(driver, sessionResponse) {
     return driver.getCatalogs({
+        sessionHandle: sessionResponse.sessionHandle
+    }).then(response => {
+        if (TCLIService_types.TStatusCode.SUCCESS_STATUS !== response.status.statusCode) {
+            return Promise.reject(new Error(response.status.errorMessage));
+        }
+
+        return getOperationHandle(driver, response);
+    })
+    .then(result => {
+        return result;
+    });
+}
+
+function getSchemas(driver, sessionResponse) {
+    return driver.getSchemas({
         sessionHandle: sessionResponse.sessionHandle
     }).then(response => {
         if (TCLIService_types.TStatusCode.SUCCESS_STATUS !== response.status.statusCode) {
