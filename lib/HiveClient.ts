@@ -1,6 +1,7 @@
 import IConnectionProvider from './connection/IConnectionProvider';
 import IConnectionOptions from './connection/IConnectionOptions';
-import ThriftService, { TCLIServiceTypes, ThriftSession, ExecuteStatementRequest, ThriftClient, ThriftResponse } from './hive/ThriftService';
+import { ThriftClient } from './hive/Types/';
+import ThriftService, { TCLIServiceTypes, ThriftSession, ExecuteStatementRequest, ThriftResponse } from './hive/ThriftService';
 import IConnection from './connection/IConnection';
 import ExecuteStatementResponse, { ExecuteStatementResult } from './ExecuteStatementResponse';
 
@@ -50,9 +51,9 @@ export default class HiveClient {
             .then((connection: IConnection) => {
                 this.connection = connection;
 
-                const client = this.thriftService.createClient(connection);
+                this.thriftService.createClient(connection.getThriftConnection());
 
-                return client;
+                return this.thriftService.getClient();
             });
     }
 

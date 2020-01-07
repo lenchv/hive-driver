@@ -1,10 +1,14 @@
-import IConnection from "./IConnection";
+import IConnection, { ThriftConnection } from "./IConnection";
 
 export default class Connection implements IConnection {
-    public connection: any;
+    public connection: ThriftConnection;
 
-    constructor(connection: any) {
+    constructor(connection: ThriftConnection) {
         this.connection = connection;
+    }
+
+    getThriftConnection(): ThriftConnection {
+        return this.connection;
     }
 
     connect(): any {

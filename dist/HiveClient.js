@@ -19,8 +19,8 @@ var HiveClient = /** @class */ (function () {
             .connect(this.connectionOptions)
             .then(function (connection) {
             _this.connection = connection;
-            var client = _this.thriftService.createClient(connection);
-            return client;
+            _this.thriftService.createClient(connection.getThriftConnection());
+            return _this.thriftService.getClient();
         });
     };
     HiveClient.prototype.openSession = function (configuration) {

@@ -4,6 +4,9 @@ var Connection = /** @class */ (function () {
     function Connection(connection) {
         this.connection = connection;
     }
+    Connection.prototype.getThriftConnection = function () {
+        return this.connection;
+    };
     Connection.prototype.connect = function () {
         return this.connection.connect();
     };

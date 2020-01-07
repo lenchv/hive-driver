@@ -14,7 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 exports.__esModule = true;
-var FetchResult_1 = __importDefault(require("./commands/FetchResult"));
+var FetchResult_1 = __importDefault(require("./Commands/FetchResult"));
 var thrift = require('thrift');
 var ThriftService = /** @class */ (function () {
     function ThriftService(TCLIService, TCLIService_types, protocol) {
@@ -31,7 +31,7 @@ var ThriftService = /** @class */ (function () {
         var _this = this;
         return new Promise(function (resolve, reject) {
             var request = new _this.TCLIService_types.TOpenSessionReq(_this.setIfDefined(__assign({ client_protocol: _this.protocol }, parameters)));
-            _this.client.OpenSession(request, function (err, session) {
+            _this.getClient().OpenSession(request, function (err, session) {
                 if (err) {
                     reject(err);
                 }
@@ -46,7 +46,7 @@ var ThriftService = /** @class */ (function () {
         return new Promise(function (resolve, reject) {
             var requestOptions = __assign({ sessionHandle: session.sessionHandle, statement: statement, confOverlay: undefined, runAsync: false, queryTimeout: 100000 }, options);
             var request = new _this.TCLIService_types.TExecuteStatementReq(requestOptions);
-            _this.client.ExecuteStatement(request, function (err, res) {
+            _this.getClient().ExecuteStatement(request, function (err, res) {
                 if (err) {
                     reject(err);
                 }
@@ -60,7 +60,7 @@ var ThriftService = /** @class */ (function () {
         });
     };
     ThriftService.prototype.fetchResult = function (response, limit) {
-        var result = new FetchResult_1["default"](this.TCLIService_types, this.client, response, limit);
+        var result = new FetchResult_1["default"](this.TCLIService_types, this.getClient(), response, limit);
         return result.execute();
     };
     ThriftService.prototype.getResultSetMetadata = function (response) {
@@ -70,10 +70,16 @@ var ThriftService = /** @class */ (function () {
         }
         return new Promise(function (resolve, reject) {
             var request = new _this.TCLIService_types.TGetResultSetMetadataReq(response);
-            _this.client.GetResultSetMetadata(request, function (error, result) {
+            _this.getClient().GetResultSetMetadata(request, function (error, result) {
                 error ? reject(error) : resolve(result);
             });
         });
+    };
+    ThriftService.prototype.getClient = function () {
+        if (!this.client) {
+            throw new Error('ThriftService: client is not initialized');
+        }
+        return this.client;
     };
     ThriftService.prototype.getTheLatestProtocol = function () {
         return Number(Object.values(this.TCLIService_types.TProtocolVersion).pop());

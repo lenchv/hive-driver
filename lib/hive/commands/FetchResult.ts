@@ -1,4 +1,5 @@
-import { TCLIServiceTypes, ThriftResponse, ThriftClient } from "../ThriftService";
+import { TCLIServiceTypes, ThriftResponse } from "../ThriftService";
+import { ThriftClient } from '../../hive/Types/';
 
 export default class FetchResult {
     private TCLIService_types: TCLIServiceTypes;

@@ -1,5 +1,6 @@
 import IConnection from "../connection/IConnection";
-import FetchResult from "./commands/FetchResult";
+import FetchResult from "./Commands/FetchResult";
+import { ThriftClient } from "./Types/";
 
 const thrift = require('thrift');
 
@@ -43,8 +44,6 @@ export type ExecuteStatementRequest = {
     queryTimeout?: number
 };
 
-export type ThriftClient = any;
-
 export type ResultSetMetadataResponse = {
     status: any,
     schema?: any
@@ -63,7 +62,7 @@ export default class ThriftService {
         this.client = null;
     }
 
-    createClient(connection: IConnection): ThriftClient {
+    createClient(connection: IConnection): ThriftClient | null {
         this.client = thrift.createClient(this.TCLIService, connection);
 
         return this.client;
@@ -76,7 +75,7 @@ export default class ThriftService {
                 ...parameters,
             }));
 
-            this.client.OpenSession(request, (err: Error, session: ThriftSession) => {
+            this.getClient().OpenSession(request, (err: Error, session: ThriftSession) => {
 				if (err) {
                     reject(err);
 				} else {
@@ -98,7 +97,7 @@ export default class ThriftService {
             };
             const request = new this.TCLIService_types.TExecuteStatementReq(requestOptions);
 
-            this.client.ExecuteStatement(request, (err: Error, res: ThriftResponse) => {
+            this.getClient().ExecuteStatement(request, (err: Error, res: ThriftResponse) => {
                 if (err) {
                     reject(err);
                 } else if (res.status.statusCode === this.TCLIService_types.TStatusCode.ERROR_STATUS) {
@@ -113,7 +112,7 @@ export default class ThriftService {
     fetchResult(response: ThriftResponse, limit?: number): Promise<Array<any>> {
         const result = new FetchResult(
             this.TCLIService_types,
-            this.client,
+            this.getClient(),
             response,
             limit
         );
@@ -129,10 +128,18 @@ export default class ThriftService {
 		return new Promise((resolve, reject) => {
             const request = new this.TCLIService_types.TGetResultSetMetadataReq(response);
 
-            this.client.GetResultSetMetadata(request, (error: Error, result: ResultSetMetadataResponse) => {
+            this.getClient().GetResultSetMetadata(request, (error: Error, result: ResultSetMetadataResponse) => {
                 error ? reject(error) : resolve(result);
             });
         });
+    }
+
+    getClient(): ThriftClient {
+        if (!this.client) {
+            throw new Error('ThriftService: client is not initialized');
+        }
+
+        return this.client;
     }
 
     private getTheLatestProtocol(): number {
