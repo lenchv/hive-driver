@@ -47,7 +47,15 @@ connectionProvider.connect({
 
         return response;
     }).then((response) => {
-        
+        return Promise.all([
+            driver.getResultSetMetadata({ operationHandle: response.operationHandle })
+        ]);
+    }).then(([ resulSetMetaDataResponse ]) => {
+        if (TCLIService_types.TStatusCode.SUCCESS_STATUS !== resulSetMetaDataResponse.status.statusCode) {
+            return Promise.reject(new Error(resulSetMetaDataResponse.status.errorMessage));
+        }
+
+        console.log(resulSetMetaDataResponse);
     }).then(() => {
         return sessionResponse;
     });

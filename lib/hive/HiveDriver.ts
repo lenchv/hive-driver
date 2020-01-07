@@ -3,6 +3,7 @@ import { ThriftClient, TCLIServiceTypes } from './Types/'
 import OpenSessionCommand, { OpenSessionRequest, OpenSessionResponse } from "./Commands/OpenSessionCommand";
 import CloseSessionCommand, { CloseSessionRequest, CloseSessionResponse } from "./Commands/CloseSessionCommand";
 import ExecuteStatementCommand, { ExecuteStatementResponse, ExecuteStatementRequest } from "./Commands/ExecuteStatementCommand";
+import GetResultSetMetadataCommand, { GetResultSetMetadataRequest, GetResultSetMetadataResponse } from "./Commands/GetResultSetMetadataCommand";
 
 const thrift = require('thrift');
 
@@ -43,6 +44,15 @@ export default class HiveDriver {
 
     executeStatement(request: ExecuteStatementRequest): Promise<ExecuteStatementResponse> {
         const command = new ExecuteStatementCommand(
+            this.getClient(),
+            this.TCLIService_types
+        );
+
+        return command.execute(request);
+    }
+
+    getResultSetMetadata(request: GetResultSetMetadataRequest): Promise<GetResultSetMetadataResponse> {
+        const command = new GetResultSetMetadataCommand(
             this.getClient(),
             this.TCLIService_types
         );

@@ -1,44 +1,44 @@
 const { expect } = require('chai');
-const ExecuteStatementCommand = require('../../../dist/hive/commands/ExecuteStatementCommand').default;
+const GetResultSetMetadataCommand = require('../../../dist/hive/commands/GetResultSetMetadataCommand').default;
 
 const requestMock = {
-    sessionHandle: {
+    operationHandle: {
         sessionId: { guid: '', secret: '' }
-    },
-    statement: 'show tables',
-    confOverlay: {},
-    runAsync: false,
-    queryTimeout: 0
+    }
 };
 
 const TCLIService_types = {
-    TExecuteStatementReq: function (options) {
+    TGetResultSetMetadataReq: function (options) {
         this.options = options;
 
         expect(options).to.be.deep.eq(requestMock);
     }
 };
 
-const EXECUTE_STATEMENT = 0;
-
 const responseMock = {
     status: { statusCode: 0 },
-    operationHandle: {
-        hasResultSet: true,
-        operationId: { guid: '', secret: '' },
-        operationType: EXECUTE_STATEMENT,
-        modifiedRowCount: 0
+    schema: {
+        columns: [{
+            columnName: 'column1',
+            typeDesc: {
+                types: [{
+                    type: 0
+                }]
+            },
+            position: 0,
+            comment: ''
+        }]
     }
 };
 const thriftClientMock = {
-    ExecuteStatement(request, callback) {
+    GetResultSetMetadata(request, callback) {
         return callback(null, responseMock);
     }
 };
 
-describe('ExecuteStatementCommand', () => {
+describe('GetResultSetMetadataCommand', () => {
     it('should return response', (cb) => {
-        const command = new ExecuteStatementCommand(
+        const command = new GetResultSetMetadataCommand(
             thriftClientMock,
             TCLIService_types
         );
