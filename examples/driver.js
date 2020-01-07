@@ -27,7 +27,8 @@ connectionProvider.connect({
 
     return Promise.all([
         executeStatement(driver, sessionResponse, 'show tables'),
-        getInfo(driver, sessionResponse, TCLIService_types.TGetInfoType.CLI_DBMS_NAME)
+        getInfo(driver, sessionResponse, TCLIService_types.TGetInfoType.CLI_DBMS_NAME),
+        getTypeInfo(driver, sessionResponse)
     ]).then(() => {
         return sessionResponse;
     });
@@ -67,15 +68,19 @@ function executeStatement(driver, sessionResponse, statement) {
 
         return response;
     }).then((response) => {
-        return Promise.all([
-            driver.getResultSetMetadata({ operationHandle: response.operationHandle }),
-            driver.fetchResults({
-                operationHandle: response.operationHandle,
-                orientation: TCLIService_types.TFetchOrientation.FETCH_FIRST,
-                maxRows: 1000,
-            })
-        ]);
-    }).then(([ resulSetMetaDataResponse, resultResponse ]) => {
+        return getOperationHandle(driver, response);
+    });
+}
+
+function getOperationHandle(driver, response) {
+    return Promise.all([
+        driver.getResultSetMetadata({ operationHandle: response.operationHandle }),
+        driver.fetchResults({
+            operationHandle: response.operationHandle,
+            orientation: TCLIService_types.TFetchOrientation.FETCH_FIRST,
+            maxRows: 1000,
+        })
+    ]).then(([ resulSetMetaDataResponse, resultResponse ]) => {
         if (TCLIService_types.TStatusCode.SUCCESS_STATUS !== resulSetMetaDataResponse.status.statusCode) {
             return Promise.reject(new Error(resulSetMetaDataResponse.status.errorMessage));
         }
@@ -101,5 +106,20 @@ function getInfo(driver, sessionResponse, infoType) {
         }
 
         return response;
+    });
+}
+
+function getTypeInfo(driver, sessionResponse) {
+    return driver.getTypeInfo({
+        sessionHandle: sessionResponse.sessionHandle
+    }).then(response => {
+        if (TCLIService_types.TStatusCode.SUCCESS_STATUS !== response.status.statusCode) {
+            return Promise.reject(new Error(response.status.errorMessage));
+        }
+
+        return getOperationHandle(driver, response);
+    })
+    .then(result => {
+        return result;
     });
 }

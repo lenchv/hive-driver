@@ -6,6 +6,7 @@ import ExecuteStatementCommand, { ExecuteStatementResponse, ExecuteStatementRequ
 import GetResultSetMetadataCommand, { GetResultSetMetadataRequest, GetResultSetMetadataResponse } from "./Commands/GetResultSetMetadataCommand";
 import FetchResultsCommand, { FetchResultsRequest, FetchResultsResponse } from "./Commands/FetchResultsCommand";
 import GetInfoCommand, { GetInfoRequest, GetInfoResponse } from "./Commands/GetInfoCommand";
+import GetTypeInfoCommand, { GetTypeInfoRequest, GetTypeInfoResponse } from "./Commands/GetTypeInfoCommand";
 
 const thrift = require('thrift');
 
@@ -73,6 +74,15 @@ export default class HiveDriver {
 
     getInfo(request: GetInfoRequest): Promise<GetInfoResponse> {
         const command = new GetInfoCommand(
+            this.getClient(),
+            this.TCLIService_types
+        );
+
+        return command.execute(request);
+    }
+
+    getTypeInfo(request: GetTypeInfoRequest): Promise<GetTypeInfoResponse> {
+        const command = new GetTypeInfoCommand(
             this.getClient(),
             this.TCLIService_types
         );
