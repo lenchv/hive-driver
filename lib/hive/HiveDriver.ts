@@ -2,6 +2,7 @@ import IConnection from "../connection/IConnection";
 import { ThriftClient, TCLIServiceTypes } from './Types/'
 import OpenSessionCommand, { OpenSessionRequest, OpenSessionResponse } from "./Commands/OpenSessionCommand";
 import CloseSessionCommand, { CloseSessionRequest, CloseSessionResponse } from "./Commands/CloseSessionCommand";
+import ExecuteStatementCommand, { ExecuteStatementResponse, ExecuteStatementRequest } from "./Commands/ExecuteStatementCommand";
 
 const thrift = require('thrift');
 
@@ -33,6 +34,15 @@ export default class HiveDriver {
 
     closeSession(request: CloseSessionRequest): Promise<CloseSessionResponse> {
         const command = new CloseSessionCommand(
+            this.getClient(),
+            this.TCLIService_types
+        );
+
+        return command.execute(request);
+    }
+
+    executeStatement(request: ExecuteStatementRequest): Promise<ExecuteStatementResponse> {
+        const command = new ExecuteStatementCommand(
             this.getClient(),
             this.TCLIService_types
         );

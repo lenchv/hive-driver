@@ -20,19 +20,42 @@ connectionProvider.connect({
         client_protocol: TCLIService_types.TProtocolVersion.HIVE_CLI_SERVICE_PROTOCOL_V9
     });
 })
-.then((response) => {
-    if (TCLIService_types.TStatusCode.SUCCESS_STATUS !== response.status.statusCode) {
-        return Promise.reject(new Error(response.status.errorMessage));
+.then((sessionResponse) => {
+    if (TCLIService_types.TStatusCode.SUCCESS_STATUS !== sessionResponse.status.statusCode) {
+        return Promise.reject(new Error(sessionResponse.status.errorMessage));
     }
 
-    return driver.closeSession({
-        sessionHandle: response.sessionHandle
+    return driver.executeStatement({
+        sessionHandle: sessionResponse.sessionHandle,
+        statement: 'show tables',
+        confOverlay: {},
+        runAsync: false,
+        queryTimeout: 2000
+    })
+    .then((response) => {
+        if (TCLIService_types.TStatusCode.SUCCESS_STATUS !== response.status.statusCode) {
+            return Promise.reject(new Error(response.status.errorMessage));
+        }
+
+        if (response.operationHandle.operationType !== TCLIService_types.TOperationType.EXECUTE_STATEMENT) {
+            return Promise.reject(new Error('Execute statment: operation type is different'));
+        }
+
+        if (!response.operationHandle.hasResultSet) {
+            return Promise.reject(new Error('Execute statment: no result returned'));
+        }
+
+        return response;
+    }).then((response) => {
+        
+    }).then(() => {
+        return sessionResponse;
     });
 }).then(response => {
     if (TCLIService_types.TStatusCode.SUCCESS_STATUS !== response.status.statusCode) {
         return Promise.reject(new Error(response.status.errorMessage));
     }
-
+}).then(() => {
     console.log('ok');
 }).catch(error => {
     console.error(error);

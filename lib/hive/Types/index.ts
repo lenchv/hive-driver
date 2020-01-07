@@ -30,4 +30,18 @@ export type Status = {
     errorMessage?: string,
 };
 
-export type SessionHandle = any;
+type HandleIdentifier = {
+    guid: Buffer | string,
+    secret: Buffer | string
+};
+
+export type SessionHandle = {
+    sessionId: HandleIdentifier
+};
+
+export type OperationHandle = {
+    operationId: HandleIdentifier,
+    operationType: number,
+    hasResultSet: boolean,
+    modifiedRowCount: number
+};

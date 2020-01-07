@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 exports.__esModule = true;
 var OpenSessionCommand_1 = __importDefault(require("./Commands/OpenSessionCommand"));
 var CloseSessionCommand_1 = __importDefault(require("./Commands/CloseSessionCommand"));
+var ExecuteStatementCommand_1 = __importDefault(require("./Commands/ExecuteStatementCommand"));
 var thrift = require('thrift');
 var HiveDriver = /** @class */ (function () {
     function HiveDriver(TCLIService, TCLIService_types) {
@@ -22,6 +23,10 @@ var HiveDriver = /** @class */ (function () {
     };
     HiveDriver.prototype.closeSession = function (request) {
         var command = new CloseSessionCommand_1["default"](this.getClient(), this.TCLIService_types);
+        return command.execute(request);
+    };
+    HiveDriver.prototype.executeStatement = function (request) {
+        var command = new ExecuteStatementCommand_1["default"](this.getClient(), this.TCLIService_types);
         return command.execute(request);
     };
     HiveDriver.prototype.getClient = function () {
