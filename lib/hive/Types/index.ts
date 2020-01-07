@@ -4,6 +4,7 @@ export type ThriftClient = {
     GetResultSetMetadata: Function,
     ExecuteStatement: Function,
     FetchResults: Function,
+    GetInfo: Function,
 };
 
 export type TCLIServiceTypes = {
@@ -12,6 +13,7 @@ export type TCLIServiceTypes = {
     TProtocolVersion: any,
     TExecuteStatementReq: any,
     TFetchResultsReq: any,
+    TGetInfoReq: any,
     TFetchOrientation: any,
     TGetResultSetMetadataReq: any,
     TTypeId: any,
@@ -169,4 +171,13 @@ export type RowSet = {
     columns?: Array<Column>,
     binaryColumns?: Buffer | string,
     columnCount?: number
+};
+
+export type GetInfoValue = {
+    stringValue: string,
+    smallIntValue: number,
+    integerBitmask: number,
+    integerFlag: number,
+    binaryValue: number,
+    lenValue: Buffer | string
 };

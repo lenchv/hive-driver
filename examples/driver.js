@@ -25,9 +25,29 @@ connectionProvider.connect({
         return Promise.reject(new Error(sessionResponse.status.errorMessage));
     }
 
+    return Promise.all([
+        executeStatement(driver, sessionResponse, 'show tables'),
+        getInfo(driver, sessionResponse, TCLIService_types.TGetInfoType.CLI_DBMS_NAME)
+    ]).then(() => {
+        return sessionResponse;
+    });
+}).then(response => {
+    return driver.closeSession(response);
+}).then(response => {
+    if (TCLIService_types.TStatusCode.SUCCESS_STATUS !== response.status.statusCode) {
+        return Promise.reject(new Error(response.status.errorMessage));
+    }
+}).then(() => {
+    console.log('ok');
+}).catch(error => {
+    console.error(error);
+    console.log('failed');
+});
+
+function executeStatement(driver, sessionResponse, statement) {
     return driver.executeStatement({
         sessionHandle: sessionResponse.sessionHandle,
-        statement: 'select * from pokes',
+        statement: statement,
         confOverlay: {},
         runAsync: false,
         queryTimeout: 2000
@@ -64,18 +84,22 @@ connectionProvider.connect({
             return Promise.reject(new Error(resultResponse.status.errorMessage));
         }
 
-        console.log(resulSetMetaDataResponse);
-        console.log(resultResponse);
-    }).then(() => {
-        return sessionResponse;
+        return {
+            result: resultResponse,
+            metadata: resulSetMetaDataResponse
+        };
     });
-}).then(response => {
-    if (TCLIService_types.TStatusCode.SUCCESS_STATUS !== response.status.statusCode) {
-        return Promise.reject(new Error(response.status.errorMessage));
-    }
-}).then(() => {
-    console.log('ok');
-}).catch(error => {
-    console.error(error);
-    console.log('failed');
-});
+}
+
+function getInfo(driver, sessionResponse, infoType) {
+    return driver.getInfo({
+        sessionHandle: sessionResponse.sessionHandle,
+        infoType
+    }).then(response => {
+        if (TCLIService_types.TStatusCode.SUCCESS_STATUS !== response.status.statusCode) {
+            return Promise.reject(new Error(response.status.errorMessage));
+        }
+
+        return response;
+    });
+}

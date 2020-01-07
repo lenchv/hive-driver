@@ -8,6 +8,7 @@ var CloseSessionCommand_1 = __importDefault(require("./Commands/CloseSessionComm
 var ExecuteStatementCommand_1 = __importDefault(require("./Commands/ExecuteStatementCommand"));
 var GetResultSetMetadataCommand_1 = __importDefault(require("./Commands/GetResultSetMetadataCommand"));
 var FetchResultsCommand_1 = __importDefault(require("./Commands/FetchResultsCommand"));
+var GetInfoCommand_1 = __importDefault(require("./Commands/GetInfoCommand"));
 var thrift = require('thrift');
 var HiveDriver = /** @class */ (function () {
     function HiveDriver(TCLIService, TCLIService_types) {
@@ -37,6 +38,10 @@ var HiveDriver = /** @class */ (function () {
     };
     HiveDriver.prototype.fetchResults = function (request) {
         var command = new FetchResultsCommand_1["default"](this.getClient(), this.TCLIService_types);
+        return command.execute(request);
+    };
+    HiveDriver.prototype.getInfo = function (request) {
+        var command = new GetInfoCommand_1["default"](this.getClient(), this.TCLIService_types);
         return command.execute(request);
     };
     HiveDriver.prototype.getClient = function () {

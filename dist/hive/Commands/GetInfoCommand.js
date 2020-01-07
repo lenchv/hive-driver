@@ -17,15 +17,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 exports.__esModule = true;
 var BaseCommand_1 = __importDefault(require("./BaseCommand"));
-var FetchResultsCommand = /** @class */ (function (_super) {
-    __extends(FetchResultsCommand, _super);
-    function FetchResultsCommand() {
+var GetInfoCommand = /** @class */ (function (_super) {
+    __extends(GetInfoCommand, _super);
+    function GetInfoCommand() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    FetchResultsCommand.prototype.execute = function (data) {
-        var request = new this.TCLIService_types.TFetchResultsReq(data);
-        return this.executeCommand(request, this.client.FetchResults);
+    GetInfoCommand.prototype.execute = function (data) {
+        var request = new this.TCLIService_types.TGetInfoReq(data);
+        return this.executeCommand(request, this.client.GetInfo);
     };
-    return FetchResultsCommand;
+    return GetInfoCommand;
 }(BaseCommand_1["default"]));
-exports["default"] = FetchResultsCommand;
+exports["default"] = GetInfoCommand;

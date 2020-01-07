@@ -17,9 +17,9 @@ export type FetchResultsResponse = {
 };
 
 export default class FetchResultsCommand extends BaseCommand {
-    execute(executeStatementRequest: FetchResultsRequest): Promise<FetchResultsResponse> {
-        const request = new this.TCLIService_types.TFetchResultsReq(executeStatementRequest);
+    execute(data: FetchResultsRequest): Promise<FetchResultsResponse> {
+        const request = new this.TCLIService_types.TFetchResultsReq(data);
 
-        return this.executeCommand(request, this.client.FetchResults);
+        return this.executeCommand<FetchResultsResponse>(request, this.client.FetchResults);
     }   
 }
