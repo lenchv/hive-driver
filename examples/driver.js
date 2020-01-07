@@ -33,6 +33,7 @@ connectionProvider.connect({
         getSchemas(driver, sessionResponse),
         getTables(driver, sessionResponse),
         getTableTypes(driver, sessionResponse),
+        getColumns(driver, sessionResponse),
     ]).then(() => {
         return sessionResponse;
     });
@@ -199,6 +200,25 @@ function getTableTypes(driver, sessionResponse) {
 
         if (response.operationHandle.operationType !== TCLIService_types.TOperationType.GET_TABLE_TYPES) {
             return Promise.reject(new Error('Get table types: operation type is different'));
+        }
+
+        return getOperationHandle(driver, response);
+    })
+    .then(result => {
+        return result;
+    });
+}
+
+function getColumns(driver, sessionResponse) {
+    return driver.getColumns({
+        sessionHandle: sessionResponse.sessionHandle
+    }).then(response => {
+        if (TCLIService_types.TStatusCode.SUCCESS_STATUS !== response.status.statusCode) {
+            return Promise.reject(new Error(response.status.errorMessage));
+        }
+
+        if (response.operationHandle.operationType !== TCLIService_types.TOperationType.GET_COLUMNS) {
+            return Promise.reject(new Error('Get columns: operation type is different'));
         }
 
         return getOperationHandle(driver, response);

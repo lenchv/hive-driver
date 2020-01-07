@@ -14,6 +14,7 @@ var GetCatalogsCommand_1 = __importDefault(require("./Commands/GetCatalogsComman
 var GetSchemasCommand_1 = __importDefault(require("./Commands/GetSchemasCommand"));
 var GetTablesCommand_1 = __importDefault(require("./Commands/GetTablesCommand"));
 var GetTableTypesCommand_1 = __importDefault(require("./Commands/GetTableTypesCommand"));
+var GetColumnsCommand_1 = __importDefault(require("./Commands/GetColumnsCommand"));
 var thrift = require('thrift');
 var HiveDriver = /** @class */ (function () {
     function HiveDriver(TCLIService, TCLIService_types) {
@@ -67,6 +68,10 @@ var HiveDriver = /** @class */ (function () {
     };
     HiveDriver.prototype.getTableTypes = function (request) {
         var command = new GetTableTypesCommand_1["default"](this.getClient(), this.TCLIService_types);
+        return command.execute(request);
+    };
+    HiveDriver.prototype.getColumns = function (request) {
+        var command = new GetColumnsCommand_1["default"](this.getClient(), this.TCLIService_types);
         return command.execute(request);
     };
     HiveDriver.prototype.getClient = function () {

@@ -11,6 +11,7 @@ import GetCatalogsCommand, { GetCatalogsRequest, GetCatalogsResponse } from "./C
 import GetSchemasCommand, { GetSchemasRequest, GetSchemasResponse } from "./Commands/GetSchemasCommand";
 import GetTablesCommand, { GetTablesRequest, GetTablesResponse } from "./Commands/GetTablesCommand";
 import GetTableTypesCommand, { GetTableTypesRequest, GetTableTypesResponse } from "./Commands/GetTableTypesCommand";
+import GetColumnsCommand, { GetColumnsRequest, GetColumnsResponse } from "./Commands/GetColumnsCommand";
 
 const thrift = require('thrift');
 
@@ -123,6 +124,15 @@ export default class HiveDriver {
 
     getTableTypes(request: GetTableTypesRequest): Promise<GetTableTypesResponse> {
         const command = new GetTableTypesCommand(
+            this.getClient(),
+            this.TCLIService_types
+        );
+
+        return command.execute(request);
+    }
+
+    getColumns(request: GetColumnsRequest): Promise<GetColumnsResponse> {
+        const command = new GetColumnsCommand(
             this.getClient(),
             this.TCLIService_types
         );
