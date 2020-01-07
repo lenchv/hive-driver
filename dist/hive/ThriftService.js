@@ -24,7 +24,7 @@ var ThriftService = /** @class */ (function () {
         this.client = null;
     }
     ThriftService.prototype.createClient = function (connection) {
-        this.client = thrift.createClient(this.TCLIService, connection.getConnection());
+        this.client = thrift.createClient(this.TCLIService, connection);
         return this.client;
     };
     ThriftService.prototype.openSession = function (parameters) {

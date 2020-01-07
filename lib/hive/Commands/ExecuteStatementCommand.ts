@@ -1,4 +1,5 @@
-import { ThriftClient, TCLIServiceTypes, SessionHandle, Status, OperationHandle } from "../Types";
+import { SessionHandle, Status, OperationHandle } from "../Types";
+import BaseCommand from "./BaseCommand";
 
 export type ExecuteStatementRequest = {
     sessionHandle: SessionHandle,
@@ -13,26 +14,10 @@ export type ExecuteStatementResponse = {
     operationHandle: OperationHandle
 };
 
-export default class ExecuteStatementCommand {
-    private client: ThriftClient;
-    private TCLIService_types: TCLIServiceTypes;
-    
-    constructor(client: ThriftClient, TCLIService_types: TCLIServiceTypes) {
-        this.client = client;
-        this.TCLIService_types = TCLIService_types;
-    }
-
+export default class ExecuteStatementCommand extends BaseCommand {
     execute(executeStatementRequest: ExecuteStatementRequest): Promise<ExecuteStatementResponse> {
-        return new Promise((resolve, reject) => {
-            const request = new this.TCLIService_types.TExecuteStatementReq(executeStatementRequest);
-    
-            this.client.ExecuteStatement(request, (err: Error, session: ExecuteStatementResponse) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve(session);
-                }
-            });
-        });
+        const request = new this.TCLIService_types.TExecuteStatementReq(executeStatementRequest);
+        
+        return this.executeCommand<ExecuteStatementResponse>(request, this.client.ExecuteStatement);
     }
 }

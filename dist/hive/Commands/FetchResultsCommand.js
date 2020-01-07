@@ -17,15 +17,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 exports.__esModule = true;
 var BaseCommand_1 = __importDefault(require("./BaseCommand"));
-var CloseSessionCommand = /** @class */ (function (_super) {
-    __extends(CloseSessionCommand, _super);
-    function CloseSessionCommand() {
+var FetchResultsCommand = /** @class */ (function (_super) {
+    __extends(FetchResultsCommand, _super);
+    function FetchResultsCommand() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    CloseSessionCommand.prototype.execute = function (openSessionRequest) {
-        var request = new this.TCLIService_types.TCloseSessionReq(openSessionRequest);
-        return this.executeCommand(request, this.client.CloseSession);
+    FetchResultsCommand.prototype.execute = function (executeStatementRequest) {
+        var request = new this.TCLIService_types.TFetchResultsReq(executeStatementRequest);
+        return this.executeCommand(request, this.client.FetchResults);
     };
-    return CloseSessionCommand;
+    return FetchResultsCommand;
 }(BaseCommand_1["default"]));
-exports["default"] = CloseSessionCommand;
+exports["default"] = FetchResultsCommand;

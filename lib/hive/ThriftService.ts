@@ -63,7 +63,7 @@ export default class ThriftService {
     }
 
     createClient(connection: IConnection): ThriftClient | null {
-        this.client = thrift.createClient(this.TCLIService, connection.getConnection());
+        this.client = thrift.createClient(this.TCLIService, connection);
 
         return this.client;
     }

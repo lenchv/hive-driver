@@ -1,4 +1,5 @@
-import { ThriftClient, TCLIServiceTypes, ThriftSession, Status, SessionHandle } from "../Types";
+import { Status, SessionHandle } from "../Types";
+import BaseCommand from "./BaseCommand";
 
 /**
  * For auth mechanism GSSAPI the host and service should be provided when session is opened.
@@ -30,26 +31,10 @@ export type OpenSessionResponse = {
     configuration?: SessionConfiguration,
 };
 
-export default class OpenSessionCommand {
-    private client: ThriftClient;
-    private TCLIService_types: TCLIServiceTypes;
-    
-    constructor(client: ThriftClient, TCLIService_types: TCLIServiceTypes) {
-        this.client = client;
-        this.TCLIService_types = TCLIService_types;
-    }
-    
+export default class OpenSessionCommand extends BaseCommand {
     execute(openSessionRequest: OpenSessionRequest): Promise<OpenSessionResponse> {
-        return new Promise((resolve, reject) => {
-            const request = new this.TCLIService_types.TOpenSessionReq(openSessionRequest);
-    
-            this.client.OpenSession(request, (err: Error, session: OpenSessionResponse) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve(session);
-                }
-            });
-        });
+        const request = new this.TCLIService_types.TOpenSessionReq(openSessionRequest);
+
+        return this.executeCommand<OpenSessionResponse>(request, this.client.OpenSession);
     }
 }

@@ -104,3 +104,69 @@ type ColumnDesc = {
 export type TableSchema = {
     columns: Array<ColumnDesc>
 };
+
+type ColumnValue = BoolValue | ByteValue | TI16Value | TI32Value | TI64Value | TDoubleValue | TStringValue;
+
+type BoolValue = { value: boolean };
+type ByteValue = { value: Buffer | string };
+type TI16Value = { value: number };
+type TI32Value = { value: number };
+type TI64Value = { value: Buffer | string };
+type TDoubleValue = { value: number };
+type TStringValue = { value: string };
+
+type Row = {
+    colVals: Array<ColumnValue>
+};
+
+type TBoolColumn = {
+    values: Array<boolean>
+    nulls: Buffer | string
+};
+type TByteColumn = {
+    values: Array<Buffer | string>,
+    nulls: Buffer | string
+};
+type TI16Column = {
+    values: Array<number>,
+    nulls: Buffer | string
+};
+type TI32Column = {
+    values: Array<number>,
+    nulls: Buffer | string
+};
+type TI64Column = {
+    values: Array<Buffer | string>,
+    nulls: Buffer | string
+};
+type TDoubleColumn = {
+    values: Array<number>,
+    nulls: Buffer | string
+};
+type TStringColumn = {
+    values: Array<string>,
+    nulls: Buffer | string
+};
+type TBinaryColumn = {
+    values: Array<Buffer | string>,
+    nulls: Buffer | string
+};
+
+type Column = {
+    boolVal: TBoolColumn,
+    byteVal: TByteColumn,
+    i16Val: TI16Column,
+    i32Val: TI32Column,
+    i64Val: TI64Column,
+    doubleVal: TDoubleColumn,
+    stringVal: TStringColumn,
+    binaryVal: TBinaryColumn
+};
+
+export type RowSet = {
+    startRowOffset: Buffer | string,
+    rows: Array<Row>,
+    columns?: Array<Column>,
+    binaryColumns?: Buffer | string,
+    columnCount?: number
+};

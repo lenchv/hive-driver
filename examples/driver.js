@@ -27,7 +27,7 @@ connectionProvider.connect({
 
     return driver.executeStatement({
         sessionHandle: sessionResponse.sessionHandle,
-        statement: 'show tables',
+        statement: 'select * from pokes',
         confOverlay: {},
         runAsync: false,
         queryTimeout: 2000
@@ -48,14 +48,24 @@ connectionProvider.connect({
         return response;
     }).then((response) => {
         return Promise.all([
-            driver.getResultSetMetadata({ operationHandle: response.operationHandle })
+            driver.getResultSetMetadata({ operationHandle: response.operationHandle }),
+            driver.fetchResults({
+                operationHandle: response.operationHandle,
+                orientation: TCLIService_types.TFetchOrientation.FETCH_FIRST,
+                maxRows: 1000,
+            })
         ]);
-    }).then(([ resulSetMetaDataResponse ]) => {
+    }).then(([ resulSetMetaDataResponse, resultResponse ]) => {
         if (TCLIService_types.TStatusCode.SUCCESS_STATUS !== resulSetMetaDataResponse.status.statusCode) {
             return Promise.reject(new Error(resulSetMetaDataResponse.status.errorMessage));
         }
 
+        if (TCLIService_types.TStatusCode.SUCCESS_STATUS !== resultResponse.status.statusCode) {
+            return Promise.reject(new Error(resultResponse.status.errorMessage));
+        }
+
         console.log(resulSetMetaDataResponse);
+        console.log(resultResponse);
     }).then(() => {
         return sessionResponse;
     });
