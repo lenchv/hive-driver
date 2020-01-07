@@ -8,6 +8,7 @@ export type ThriftClient = {
     GetTypeInfo: Function,
     GetCatalogs: Function,
     GetSchemas: Function,
+    GetTables: Function,
 };
 
 export type TCLIServiceTypes = {
@@ -22,6 +23,7 @@ export type TCLIServiceTypes = {
     TGetTypeInfoReq: any,
     TGetCatalogsReq: any,
     TGetSchemasReq: any,
+    TGetTablesReq: any,
     TTypeId: any,
     TStatusCode: any,
 };

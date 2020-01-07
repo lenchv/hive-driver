@@ -1,42 +1,44 @@
 const { expect } = require('chai');
-const GetSchemasCommand = require('../../../dist/hive/commands/GetSchemasCommand').default;
+const GetTablesCommand = require('../../../dist/hive/commands/GetTablesCommand').default;
 
 const requestMock = {
     sessionHandle: {
         sessionId: { guid: '', secret: '' }
     },
     catalogName: 'catalog',
-    schemaName: 'schema'
+    schemaName: 'schema',
+    tableName: 'table',
+    tableTypes: ['TABLE', 'VIEW', 'SYSTEM TABLE', 'GLOBAL TEMPORARY', 'LOCAL TEMPORARY', 'ALIAS', 'SYNONYM']
 };
 
 const TCLIService_types = {
-    TGetSchemasReq: function (options) {
+    TGetTablesReq: function (options) {
         this.options = options;
 
         expect(options).to.be.deep.eq(requestMock);
     }
 };
 
-const GET_SCHEMAS = 3;
+const GET_TABLES = 4;
 
 const responseMock = {
     status: { statusCode: 0 },
     operationHandle: {
         hasResultSet: true,
         operationId: { guid: '', secret: '' },
-        operationType: GET_SCHEMAS,
+        operationType: GET_TABLES,
         modifiedRowCount: 0
     }
 };
 const thriftClientMock = {
-    GetSchemas(request, callback) {
+    GetTables(request, callback) {
         return callback(null, responseMock);
     }
 };
 
-describe('GetSchemasCommand', () => {
+describe('GetTablesCommand', () => {
     it('should return response', (cb) => {
-        const command = new GetSchemasCommand(
+        const command = new GetTablesCommand(
             thriftClientMock,
             TCLIService_types
         );

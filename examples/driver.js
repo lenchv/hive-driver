@@ -31,6 +31,7 @@ connectionProvider.connect({
         getTypeInfo(driver, sessionResponse),
         getCatalogs(driver, sessionResponse),
         getSchemas(driver, sessionResponse),
+        getTables(driver, sessionResponse),
     ]).then(() => {
         return sessionResponse;
     });
@@ -119,6 +120,10 @@ function getTypeInfo(driver, sessionResponse) {
             return Promise.reject(new Error(response.status.errorMessage));
         }
 
+        if (response.operationHandle.operationType !== TCLIService_types.TOperationType.GET_TYPE_INFO) {
+            return Promise.reject(new Error('Get tables: operation type is different'));
+        }
+
         return getOperationHandle(driver, response);
     })
     .then(result => {
@@ -132,6 +137,10 @@ function getCatalogs(driver, sessionResponse) {
     }).then(response => {
         if (TCLIService_types.TStatusCode.SUCCESS_STATUS !== response.status.statusCode) {
             return Promise.reject(new Error(response.status.errorMessage));
+        }
+        
+        if (response.operationHandle.operationType !== TCLIService_types.TOperationType.GET_CATALOGS) {
+            return Promise.reject(new Error('Get catalogs: operation type is different'));
         }
 
         return getOperationHandle(driver, response);
@@ -147,6 +156,29 @@ function getSchemas(driver, sessionResponse) {
     }).then(response => {
         if (TCLIService_types.TStatusCode.SUCCESS_STATUS !== response.status.statusCode) {
             return Promise.reject(new Error(response.status.errorMessage));
+        }
+
+        if (response.operationHandle.operationType !== TCLIService_types.TOperationType.GET_SCHEMAS) {
+            return Promise.reject(new Error('Get schemas: operation type is different'));
+        }
+
+        return getOperationHandle(driver, response);
+    })
+    .then(result => {
+        return result;
+    });
+}
+
+function getTables(driver, sessionResponse) {
+    return driver.getTables({
+        sessionHandle: sessionResponse.sessionHandle
+    }).then(response => {
+        if (TCLIService_types.TStatusCode.SUCCESS_STATUS !== response.status.statusCode) {
+            return Promise.reject(new Error(response.status.errorMessage));
+        }
+
+        if (response.operationHandle.operationType !== TCLIService_types.TOperationType.GET_TABLES) {
+            return Promise.reject(new Error('Get tables: operation type is different'));
         }
 
         return getOperationHandle(driver, response);
