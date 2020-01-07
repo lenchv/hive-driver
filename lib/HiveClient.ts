@@ -51,7 +51,7 @@ export default class HiveClient {
             .then((connection: IConnection) => {
                 this.connection = connection;
 
-                this.thriftService.createClient(connection.getThriftConnection());
+                this.thriftService.createClient(connection.getConnection());
 
                 return this.thriftService.getClient();
             });

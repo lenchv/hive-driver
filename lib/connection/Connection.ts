@@ -7,7 +7,7 @@ export default class Connection implements IConnection {
         this.connection = connection;
     }
 
-    getThriftConnection(): ThriftConnection {
+    getConnection(): ThriftConnection {
         return this.connection;
     }
 

@@ -19,7 +19,7 @@ var HiveClient = /** @class */ (function () {
             .connect(this.connectionOptions)
             .then(function (connection) {
             _this.connection = connection;
-            _this.thriftService.createClient(connection.getThriftConnection());
+            _this.thriftService.createClient(connection.getConnection());
             return _this.thriftService.getClient();
         });
     };

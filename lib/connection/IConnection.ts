@@ -1,7 +1,7 @@
 export type ThriftConnection = any;
 
 export default interface IConnection {
-    getThriftConnection(): ThriftConnection;
+    getConnection(): ThriftConnection;
 
     connect(): any;
 

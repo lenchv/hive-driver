@@ -17,7 +17,7 @@ export default class HiveDriver {
     }
 
     createClient(connection: IConnection): HiveDriver {
-        this._client = thrift.createClient(this.TCLIService, connection);
+        this._client = thrift.createClient(this.TCLIService, connection.getConnection());
 
         return this;
     }

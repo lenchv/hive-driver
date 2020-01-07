@@ -13,7 +13,7 @@ var HiveDriver = /** @class */ (function () {
         this._client = null;
     }
     HiveDriver.prototype.createClient = function (connection) {
-        this._client = thrift.createClient(this.TCLIService, connection);
+        this._client = thrift.createClient(this.TCLIService, connection.getConnection());
         return this;
     };
     HiveDriver.prototype.openSession = function (request) {
