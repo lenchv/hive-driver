@@ -17,6 +17,7 @@ import GetPrimaryKeysCommand, { GetPrimaryKeysRequest, GetPrimaryKeysResponse } 
 import GetCrossReferenceCommand, { GetCrossReferenceRequest, GetCrossReferenceResponse } from "./Commands/GetCrossReferenceCommand";
 import GetOperationStatusCommand, { GetOperationStatusRequest, GetOperationStatusResponse } from "./Commands/GetOperationStatusCommand";
 import CancelOperationCommand, { CancelOperationRequest, CancelOperationResponse } from "./Commands/CancelOperationCommand";
+import CloseOperationCommand, { CloseOperationRequest, CloseOperationResponse } from "./Commands/CloseOperationCommand";
 
 const thrift = require('thrift');
 
@@ -189,6 +190,16 @@ export default class HiveDriver {
 
         return command.execute(request);
     }
+
+    closeOperation(request: CloseOperationRequest): Promise<CloseOperationResponse> {
+        const command = new CloseOperationCommand(
+            this.getClient(),
+            this.TCLIService_types
+        );
+
+        return command.execute(request);
+    }
+
 
     getClient(): ThriftClient {
         if (!this._client) {

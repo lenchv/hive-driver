@@ -112,10 +112,12 @@ function getOperationHandle(driver, response) {
             return Promise.reject(new Error(resultResponse.status.errorMessage));
         }
 
-        return {
-            result: resultResponse,
-            metadata: resulSetMetaDataResponse
-        };
+        return closeOperation(driver, response).then(() => {
+            return {
+                result: resultResponse,
+                metadata: resulSetMetaDataResponse
+            };
+        });
     });
 }
 
@@ -327,6 +329,18 @@ function getOperationStatus(driver, operationResponse, progress) {
 
 function cancelOperation(driver, operationResponse) {
     return driver.cancelOperation({
+        operationHandle: operationResponse.operationHandle,
+    }).then(response => {
+        if (TCLIService_types.TStatusCode.SUCCESS_STATUS !== response.status.statusCode) {
+            return Promise.reject(new Error(response.status.errorMessage));
+        }
+
+        return response;
+    });
+}
+
+function closeOperation(driver, operationResponse) {
+    return driver.closeOperation({
         operationHandle: operationResponse.operationHandle,
     }).then(response => {
         if (TCLIService_types.TStatusCode.SUCCESS_STATUS !== response.status.statusCode) {
