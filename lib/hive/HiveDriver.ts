@@ -19,6 +19,7 @@ import GetOperationStatusCommand, { GetOperationStatusRequest, GetOperationStatu
 import CancelOperationCommand, { CancelOperationRequest, CancelOperationResponse } from "./Commands/CancelOperationCommand";
 import CloseOperationCommand, { CloseOperationRequest, CloseOperationResponse } from "./Commands/CloseOperationCommand";
 import GetDelegationTokenCommand, { GetDelegationTokenRequest, GetDelegationTokenResponse } from "./Commands/GetDelegationTokenCommand";
+import CancelDelegationTokenCommand, { CancelDelegationTokenRequest, CancelDelegationTokenResponse } from "./Commands/CancelDelegationTokenCommand";
 
 const thrift = require('thrift');
 
@@ -203,6 +204,15 @@ export default class HiveDriver {
 
     getDelegationToken(request: GetDelegationTokenRequest): Promise<GetDelegationTokenResponse> {
         const command = new GetDelegationTokenCommand(
+            this.getClient(),
+            this.TCLIService_types
+        );
+
+        return command.execute(request);
+    }
+
+    cancelDelegationToken(request: CancelDelegationTokenRequest): Promise<CancelDelegationTokenResponse> {
+        const command = new CancelDelegationTokenCommand(
             this.getClient(),
             this.TCLIService_types
         );
