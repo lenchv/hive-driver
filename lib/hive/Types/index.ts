@@ -20,6 +20,7 @@ export type ThriftClient = {
     GetDelegationToken: Function,
     CancelDelegationToken: Function,
     RenewDelegationToken: Function,
+    GetQueryId: Function,
 };
 
 export type TCLIServiceTypes = {
@@ -46,6 +47,7 @@ export type TCLIServiceTypes = {
     TGetDelegationTokenReq: any,
     TCancelDelegationTokenReq: any,
     TRenewDelegationTokenReq: any,
+    TGetQueryIdReq: any,
     TTypeId: any,
     TStatusCode: any,
 };

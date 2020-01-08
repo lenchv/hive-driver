@@ -40,6 +40,7 @@ connectionProvider.connect({
         getPrimaryKeys(driver, sessionResponse, 'default', 'table1'),
         getCrossReference(driver, sessionResponse),
         _executeStatement(driver, sessionResponse, 'select * from table1').then(cancelOperation.bind(null, driver)),
+        // _executeStatement(driver, sessionResponse, 'select * from table1').then(getQueryId.bind(null, driver)),
         // getDelegationToken(driver, sessionResponse, 'hive', 'hive'),
         // cancelDelegationToken(driver, sessionResponse, 'asd'),
         // renewDelegationToken(driver, sessionResponse, 'asd'),
@@ -385,6 +386,18 @@ function renewDelegationToken(driver, sessionResponse, delegationToken) {
     return driver.renewDelegationToken({
         sessionHandle: sessionResponse.sessionHandle,
         delegationToken
+    }).then(response => {
+        if (TCLIService_types.TStatusCode.SUCCESS_STATUS !== response.status.statusCode) {
+            return Promise.reject(new Error(response.status.errorMessage));
+        }
+
+        return response;
+    });
+}
+
+function getQueryId(driver, operationResponse) {
+    return driver.getQueryId({
+        operationHandle: operationResponse.operationHandle,
     }).then(response => {
         if (TCLIService_types.TStatusCode.SUCCESS_STATUS !== response.status.statusCode) {
             return Promise.reject(new Error(response.status.errorMessage));
