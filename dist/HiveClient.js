@@ -3,50 +3,45 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 exports.__esModule = true;
-var ThriftService_1 = __importDefault(require("./hive/ThriftService"));
-var ExecuteStatementResponse_1 = __importDefault(require("./ExecuteStatementResponse"));
+var thrift = require('thrift');
+var HiveDriver_1 = __importDefault(require("./hive/HiveDriver"));
+var HiveSession_1 = __importDefault(require("./HiveSession"));
 var HiveClient = /** @class */ (function () {
-    function HiveClient(parameters) {
-        var TCLIService = parameters.TCLIService, TCLIService_types = parameters.TCLIService_types, protocol = parameters.protocol, connectionOptions = parameters.connectionOptions;
-        this.thriftService = new ThriftService_1["default"](TCLIService, TCLIService_types, protocol);
-        this.connectionOptions = connectionOptions;
-        this.session = null;
-        this.connection = null;
+    /**
+     *
+     * @param TCLIService generated from TCLIService.thrift (https://github.com/apache/hive/blob/master/service-rpc/if/TCLIService.thrift)
+     * @param TCLIService_types object generated from TCLIService.thrift
+     */
+    function HiveClient(TCLIService, TCLIService_types) {
+        this.TCLIService = TCLIService;
+        this.TCLIService_types = TCLIService_types;
+        this.client = null;
     }
-    HiveClient.prototype.connect = function (connectionProvider) {
+    HiveClient.prototype.connect = function (connectionProvider, options) {
         var _this = this;
         return connectionProvider
-            .connect(this.connectionOptions)
+            .connect(options)
             .then(function (connection) {
-            _this.connection = connection;
-            _this.thriftService.createClient(connection.getConnection());
-            return _this.thriftService.getClient();
+            _this.client = thrift.createClient(_this.TCLIService, connection.getConnection());
+            return _this;
         });
     };
-    HiveClient.prototype.openSession = function (configuration) {
+    HiveClient.prototype.openSession = function (request) {
         var _this = this;
-        var _a, _b;
-        return this.thriftService.openSession({
-            username: (_a = this.connectionOptions.options) === null || _a === void 0 ? void 0 : _a.username,
-            password: (_b = this.connectionOptions.options) === null || _b === void 0 ? void 0 : _b.password,
-            configuration: configuration
-        }).then(function (session) {
-            _this.session = session;
+        var driver = new HiveDriver_1["default"](this.TCLIService_types, this.getClient());
+        return driver.openSession(request).then(function (response) {
+            if (response.status.statusCode === _this.TCLIService_types.TStatusCode.ERROR_STATUS) {
+                throw new Error(response.status.errorMessage);
+            }
+            var session = new HiveSession_1["default"](driver, response.sessionHandle);
             return session;
         });
     };
-    HiveClient.prototype.execute = function (statement, options) {
-        var _this = this;
-        return this.thriftService.executeStatement(this.getSession(), statement, options || {}).then(function (response) {
-            var result = new ExecuteStatementResponse_1["default"](response, _this.thriftService);
-            return result.create();
-        });
-    };
-    HiveClient.prototype.getSession = function () {
-        if (this.session === null) {
-            throw new Error('session is not initialized. Execute "openSession" to initialize session.');
+    HiveClient.prototype.getClient = function () {
+        if (!this.client) {
+            throw new Error('HiveClient: client is not initialized');
         }
-        return this.session;
+        return this.client;
     };
     return HiveClient;
 }());

@@ -1,4 +1,3 @@
-import IConnection from "../connection/IConnection";
 import { ThriftClient, TCLIServiceTypes } from './Types/'
 import OpenSessionCommand, { OpenSessionRequest, OpenSessionResponse } from "./Commands/OpenSessionCommand";
 import CloseSessionCommand, { CloseSessionRequest, CloseSessionResponse } from "./Commands/CloseSessionCommand";
@@ -24,28 +23,18 @@ import RenewDelegationTokenCommand, { RenewDelegationTokenRequest, RenewDelegati
 import GetQueryIdCommand, { GetQueryIdRequest, GetQueryIdResponse } from "./Commands/GetQueryIdCommand";
 import SetClientInfoCommand, { SetClientInfoRequest, SetClientInfoResponse } from "./Commands/SetClientInfoCommand";
 
-const thrift = require('thrift');
-
 export default class HiveDriver {
-    private TCLIService: object;
     private TCLIService_types: TCLIServiceTypes;
-    private _client: ThriftClient | null;
+    private client: ThriftClient;
 
-    constructor(TCLIService: object, TCLIService_types: TCLIServiceTypes) {
-        this.TCLIService = TCLIService;
+    constructor(TCLIService_types: TCLIServiceTypes, client: ThriftClient) {
         this.TCLIService_types = TCLIService_types;
-        this._client = null;
-    }
-
-    createClient(connection: IConnection): HiveDriver {
-        this._client = thrift.createClient(this.TCLIService, connection.getConnection());
-
-        return this;
+        this.client = client;
     }
 
     openSession(request: OpenSessionRequest): Promise<OpenSessionResponse> {
         const action = new OpenSessionCommand(
-            this.getClient(),
+            this.client,
             this.TCLIService_types
         );
 
@@ -54,7 +43,7 @@ export default class HiveDriver {
 
     closeSession(request: CloseSessionRequest): Promise<CloseSessionResponse> {
         const command = new CloseSessionCommand(
-            this.getClient(),
+            this.client,
             this.TCLIService_types
         );
 
@@ -63,7 +52,7 @@ export default class HiveDriver {
 
     executeStatement(request: ExecuteStatementRequest): Promise<ExecuteStatementResponse> {
         const command = new ExecuteStatementCommand(
-            this.getClient(),
+            this.client,
             this.TCLIService_types
         );
 
@@ -72,7 +61,7 @@ export default class HiveDriver {
 
     getResultSetMetadata(request: GetResultSetMetadataRequest): Promise<GetResultSetMetadataResponse> {
         const command = new GetResultSetMetadataCommand(
-            this.getClient(),
+            this.client,
             this.TCLIService_types
         );
 
@@ -81,7 +70,7 @@ export default class HiveDriver {
 
     fetchResults(request: FetchResultsRequest): Promise<FetchResultsResponse> {
         const command = new FetchResultsCommand(
-            this.getClient(),
+            this.client,
             this.TCLIService_types
         );
 
@@ -90,7 +79,7 @@ export default class HiveDriver {
 
     getInfo(request: GetInfoRequest): Promise<GetInfoResponse> {
         const command = new GetInfoCommand(
-            this.getClient(),
+            this.client,
             this.TCLIService_types
         );
 
@@ -99,7 +88,7 @@ export default class HiveDriver {
 
     getTypeInfo(request: GetTypeInfoRequest): Promise<GetTypeInfoResponse> {
         const command = new GetTypeInfoCommand(
-            this.getClient(),
+            this.client,
             this.TCLIService_types
         );
 
@@ -108,7 +97,7 @@ export default class HiveDriver {
 
     getCatalogs(request: GetCatalogsRequest): Promise<GetCatalogsResponse> {
         const command = new GetCatalogsCommand(
-            this.getClient(),
+            this.client,
             this.TCLIService_types
         );
 
@@ -117,7 +106,7 @@ export default class HiveDriver {
 
     getSchemas(request: GetSchemasRequest): Promise<GetSchemasResponse> {
         const command = new GetSchemasCommand(
-            this.getClient(),
+            this.client,
             this.TCLIService_types
         );
 
@@ -126,7 +115,7 @@ export default class HiveDriver {
 
     getTables(request: GetTablesRequest): Promise<GetTablesResponse> {
         const command = new GetTablesCommand(
-            this.getClient(),
+            this.client,
             this.TCLIService_types
         );
 
@@ -135,7 +124,7 @@ export default class HiveDriver {
 
     getTableTypes(request: GetTableTypesRequest): Promise<GetTableTypesResponse> {
         const command = new GetTableTypesCommand(
-            this.getClient(),
+            this.client,
             this.TCLIService_types
         );
 
@@ -144,7 +133,7 @@ export default class HiveDriver {
 
     getColumns(request: GetColumnsRequest): Promise<GetColumnsResponse> {
         const command = new GetColumnsCommand(
-            this.getClient(),
+            this.client,
             this.TCLIService_types
         );
 
@@ -153,7 +142,7 @@ export default class HiveDriver {
 
     getFunctions(request: GetFunctionsRequest): Promise<GetFunctionsResponse> {
         const command = new GetFunctionsCommand(
-            this.getClient(),
+            this.client,
             this.TCLIService_types
         );
 
@@ -162,7 +151,7 @@ export default class HiveDriver {
 
     getPrimaryKeys(request: GetPrimaryKeysRequest): Promise<GetPrimaryKeysResponse> {
         const command = new GetPrimaryKeysCommand(
-            this.getClient(),
+            this.client,
             this.TCLIService_types
         );
 
@@ -171,7 +160,7 @@ export default class HiveDriver {
 
     getCrossReference(request: GetCrossReferenceRequest): Promise<GetCrossReferenceResponse> {
         const command = new GetCrossReferenceCommand(
-            this.getClient(),
+            this.client,
             this.TCLIService_types
         );
 
@@ -180,7 +169,7 @@ export default class HiveDriver {
 
     getOperationStatus(request: GetOperationStatusRequest): Promise<GetOperationStatusResponse> {
         const command = new GetOperationStatusCommand(
-            this.getClient(),
+            this.client,
             this.TCLIService_types
         );
 
@@ -189,7 +178,7 @@ export default class HiveDriver {
 
     cancelOperation(request: CancelOperationRequest): Promise<CancelOperationResponse> {
         const command = new CancelOperationCommand(
-            this.getClient(),
+            this.client,
             this.TCLIService_types
         );
 
@@ -198,7 +187,7 @@ export default class HiveDriver {
 
     closeOperation(request: CloseOperationRequest): Promise<CloseOperationResponse> {
         const command = new CloseOperationCommand(
-            this.getClient(),
+            this.client,
             this.TCLIService_types
         );
 
@@ -207,7 +196,7 @@ export default class HiveDriver {
 
     getDelegationToken(request: GetDelegationTokenRequest): Promise<GetDelegationTokenResponse> {
         const command = new GetDelegationTokenCommand(
-            this.getClient(),
+            this.client,
             this.TCLIService_types
         );
 
@@ -216,7 +205,7 @@ export default class HiveDriver {
 
     cancelDelegationToken(request: CancelDelegationTokenRequest): Promise<CancelDelegationTokenResponse> {
         const command = new CancelDelegationTokenCommand(
-            this.getClient(),
+            this.client,
             this.TCLIService_types
         );
 
@@ -225,7 +214,7 @@ export default class HiveDriver {
 
     renewDelegationToken(request: RenewDelegationTokenRequest): Promise<RenewDelegationTokenResponse> {
         const command = new RenewDelegationTokenCommand(
-            this.getClient(),
+            this.client,
             this.TCLIService_types
         );
 
@@ -234,7 +223,7 @@ export default class HiveDriver {
 
     getQueryId(request: GetQueryIdRequest): Promise<GetQueryIdResponse> {
         const command = new GetQueryIdCommand(
-            this.getClient(),
+            this.client,
             this.TCLIService_types
         );
 
@@ -243,18 +232,10 @@ export default class HiveDriver {
 
     setClientInfo(request: SetClientInfoRequest): Promise<SetClientInfoResponse> {
         const command = new SetClientInfoCommand(
-            this.getClient(),
+            this.client,
             this.TCLIService_types
         );
 
         return command.execute(request);
-    }
-
-    getClient(): ThriftClient {
-        if (!this._client) {
-            throw new Error('HiveDriver: client is not initialized');
-        }
-
-        return this._client;
     }
 }

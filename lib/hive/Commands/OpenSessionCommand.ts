@@ -27,7 +27,7 @@ export type OpenSessionRequest = {
 export type OpenSessionResponse = {
     status: Status,
     serverProtocolVersion: number,
-    sessionHandle?: SessionHandle, 
+    sessionHandle: SessionHandle, 
     configuration?: SessionConfiguration,
 };
 

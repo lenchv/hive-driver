@@ -2,11 +2,9 @@ const TCLIService = require('../thrift/gen-nodejs/TCLIService');
 const TCLIService_types = require('../thrift/gen-nodejs/TCLIService_types');
 const HiveDriver = require('../index').HiveDriver;
 const mech = require('../index').mechanisms;
+const thrift = require('thrift');
 
-const driver = new HiveDriver(
-    TCLIService,
-    TCLIService_types
-);
+let driver = null;
 
 const connectionProvider = new mech.NoSaslTcpConnection();
 
@@ -14,7 +12,10 @@ connectionProvider.connect({
     host: '192.168.99.100',
     port: 10000
 }).then((connection) => {
-    driver.createClient(connection);
+    driver = new HiveDriver(
+        TCLIService_types,
+        thrift.createClient(TCLIService, connection.getConnection())
+    );
 
     return driver.openSession({
         client_protocol: TCLIService_types.TProtocolVersion.HIVE_CLI_SERVICE_PROTOCOL_V10

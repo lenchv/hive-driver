@@ -1,94 +1,67 @@
+const thrift = require('thrift');
+
 import IConnectionProvider from './connection/IConnectionProvider';
 import IConnectionOptions from './connection/IConnectionOptions';
-import { ThriftClient } from './hive/Types/';
-import ThriftService, { TCLIServiceTypes, ThriftSession, ExecuteStatementRequest, ThriftResponse } from './hive/ThriftService';
+import { ThriftClient, TCLIServiceTypes } from './hive/Types/';
 import IConnection from './connection/IConnection';
 import ExecuteStatementResponse, { ExecuteStatementResult } from './ExecuteStatementResponse';
+import IHiveClient from './contracts/IHiveClient';
+import HiveDriver from './hive/HiveDriver';
+import { OpenSessionRequest, OpenSessionResponse } from './hive/Commands/OpenSessionCommand';
+import HiveSession from './HiveSession';
+import IHiveSession from './contracts/IHiveSession';
 
-type ClientParameters = {
-    /** TCLIService object generated from TCLIService.thrift (https://github.com/apache/hive/blob/master/service-rpc/if/TCLIService.thrift) */
-    TCLIService: object,
-    
-    /** TCLIService_types object generated from TCLIService.thrift */
-    TCLIService_types: TCLIServiceTypes,
-    
-    /**
-     * One of the values TCLIService_types.TProtocolVersion. May be different depends on version of Hive you use.
-     * For instance, for Hive lower that 3.x it is better to use HIVE_CLI_SERVICE_PROTOCOL_V8.
-     */
-    protocol: number,
+export default class HiveClient implements IHiveClient {
+    private TCLIService: object;
+    private TCLIService_types: TCLIServiceTypes;
+    private client: ThriftClient | null;
 
     /**
-     * Options for connection provider
+     * 
+     * @param TCLIService generated from TCLIService.thrift (https://github.com/apache/hive/blob/master/service-rpc/if/TCLIService.thrift)
+     * @param TCLIService_types object generated from TCLIService.thrift 
      */
-    connectionOptions: IConnectionOptions
-}
-
-export default class HiveClient {
-    private connectionOptions: IConnectionOptions;
-    private session: ThriftSession | null;
-    
-    public thriftService: ThriftService;
-    public connection: IConnection | null;
-
-    constructor(parameters: ClientParameters) {
-        const {
-            TCLIService,
-            TCLIService_types,
-            protocol,
-            connectionOptions,
-        } = parameters;
-
-        this.thriftService = new ThriftService(TCLIService, TCLIService_types, protocol);
-        this.connectionOptions = connectionOptions;
-        this.session = null;
-        this.connection = null;
+    constructor(TCLIService: object, TCLIService_types: TCLIServiceTypes) {
+        this.TCLIService = TCLIService;
+        this.TCLIService_types = TCLIService_types;
+        this.client = null;
     }
 
-    connect(connectionProvider: IConnectionProvider): Promise<ThriftClient> {
+    connect(connectionProvider: IConnectionProvider, options: IConnectionOptions): Promise<HiveClient> {
         return connectionProvider
-            .connect(this.connectionOptions)
+            .connect(options)
             .then((connection: IConnection) => {
-                this.connection = connection;
+                this.client = thrift.createClient(
+                    this.TCLIService,
+                    connection.getConnection()
+                );
 
-                this.thriftService.createClient(connection.getConnection());
-
-                return this.thriftService.getClient();
+                return this;
             });
     }
 
-    openSession(configuration?: object): Promise<ThriftSession> {
-        return this.thriftService.openSession({
-            username: this.connectionOptions.options?.username,
-            password: this.connectionOptions.options?.password,
-            configuration,
-        }).then(session => {
-            this.session = session;
+    openSession(request: OpenSessionRequest): Promise<IHiveSession> {
+        const driver = new HiveDriver(
+            this.TCLIService_types,
+            this.getClient()
+        );
+
+        return driver.openSession(request).then((response: OpenSessionResponse) => {
+            if (response.status.statusCode === this.TCLIService_types.TStatusCode.ERROR_STATUS) {
+                throw new Error(response.status.errorMessage);
+            }
+
+            const session = new HiveSession(driver, response.sessionHandle);
 
             return session;
         });
     }
 
-    execute(statement: string, options?: ExecuteStatementRequest): Promise<ExecuteStatementResult> {
-        return this.thriftService.executeStatement(
-            this.getSession(),
-            statement,
-            options || {}
-        ).then((response: ThriftResponse) => {
-            const result = new ExecuteStatementResponse(
-                response,
-                this.thriftService
-            );
-
-            return result.create();
-        })
-    }
-
-    getSession(): ThriftSession {
-        if (this.session === null) {
-            throw new Error('session is not initialized. Execute "openSession" to initialize session.');
+    getClient(): ThriftClient {
+        if (!this.client) {
+            throw new Error('HiveClient: client is not initialized');
         }
 
-        return this.session;
+        return this.client;
     }
 }

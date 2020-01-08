@@ -4,9 +4,9 @@ import BaseCommand from "./BaseCommand";
 export type ExecuteStatementRequest = {
     sessionHandle: SessionHandle,
     statement: string,
-    confOverlay: Map<string, string>,
-    runAsync: boolean,
-    queryTimeout: number
+    confOverlay?: Map<string, string>,
+    runAsync?: boolean,
+    queryTimeout?: Buffer
 };
 
 export type ExecuteStatementResponse = {
