@@ -17,6 +17,7 @@ export type ThriftClient = {
     GetOperationStatus: Function,
     CancelOperation: Function,
     CloseOperation: Function,
+    GetDelegationToken: Function,
 };
 
 export type TCLIServiceTypes = {
@@ -40,6 +41,7 @@ export type TCLIServiceTypes = {
     TGetOperationStatusReq: any,
     TCancelOperationReq: any,
     TCloseOperationReq: any,
+    TGetDelegationTokenReq: any,
     TTypeId: any,
     TStatusCode: any,
 };

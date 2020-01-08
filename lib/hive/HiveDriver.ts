@@ -18,6 +18,7 @@ import GetCrossReferenceCommand, { GetCrossReferenceRequest, GetCrossReferenceRe
 import GetOperationStatusCommand, { GetOperationStatusRequest, GetOperationStatusResponse } from "./Commands/GetOperationStatusCommand";
 import CancelOperationCommand, { CancelOperationRequest, CancelOperationResponse } from "./Commands/CancelOperationCommand";
 import CloseOperationCommand, { CloseOperationRequest, CloseOperationResponse } from "./Commands/CloseOperationCommand";
+import GetDelegationTokenCommand, { GetDelegationTokenRequest, GetDelegationTokenResponse } from "./Commands/GetDelegationTokenCommand";
 
 const thrift = require('thrift');
 
@@ -200,6 +201,14 @@ export default class HiveDriver {
         return command.execute(request);
     }
 
+    getDelegationToken(request: GetDelegationTokenRequest): Promise<GetDelegationTokenResponse> {
+        const command = new GetDelegationTokenCommand(
+            this.getClient(),
+            this.TCLIService_types
+        );
+
+        return command.execute(request);
+    }
 
     getClient(): ThriftClient {
         if (!this._client) {

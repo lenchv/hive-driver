@@ -40,6 +40,7 @@ connectionProvider.connect({
         getPrimaryKeys(driver, sessionResponse, 'default', 'table1'),
         getCrossReference(driver, sessionResponse),
         _executeStatement(driver, sessionResponse, 'select * from table1').then(cancelOperation.bind(null, driver)),
+        // getDelegationToken(driver, sessionResponse, 'hive', 'hive'),
 
         executeStatement(driver, sessionResponse, 'drop table table1'),
         executeStatement(driver, sessionResponse, 'drop table table2'),
@@ -342,6 +343,20 @@ function cancelOperation(driver, operationResponse) {
 function closeOperation(driver, operationResponse) {
     return driver.closeOperation({
         operationHandle: operationResponse.operationHandle,
+    }).then(response => {
+        if (TCLIService_types.TStatusCode.SUCCESS_STATUS !== response.status.statusCode) {
+            return Promise.reject(new Error(response.status.errorMessage));
+        }
+
+        return response;
+    });
+}
+
+function getDelegationToken(driver, sessionResponse, owner, renewer) {
+    return driver.getDelegationToken({
+        sessionHandle: sessionResponse.sessionHandle,
+        owner,
+        renewer,
     }).then(response => {
         if (TCLIService_types.TStatusCode.SUCCESS_STATUS !== response.status.statusCode) {
             return Promise.reject(new Error(response.status.errorMessage));

@@ -21,6 +21,7 @@ var GetCrossReferenceCommand_1 = __importDefault(require("./Commands/GetCrossRef
 var GetOperationStatusCommand_1 = __importDefault(require("./Commands/GetOperationStatusCommand"));
 var CancelOperationCommand_1 = __importDefault(require("./Commands/CancelOperationCommand"));
 var CloseOperationCommand_1 = __importDefault(require("./Commands/CloseOperationCommand"));
+var GetDelegationTokenCommand_1 = __importDefault(require("./Commands/GetDelegationTokenCommand"));
 var thrift = require('thrift');
 var HiveDriver = /** @class */ (function () {
     function HiveDriver(TCLIService, TCLIService_types) {
@@ -102,6 +103,10 @@ var HiveDriver = /** @class */ (function () {
     };
     HiveDriver.prototype.closeOperation = function (request) {
         var command = new CloseOperationCommand_1["default"](this.getClient(), this.TCLIService_types);
+        return command.execute(request);
+    };
+    HiveDriver.prototype.getDelegationToken = function (request) {
+        var command = new GetDelegationTokenCommand_1["default"](this.getClient(), this.TCLIService_types);
         return command.execute(request);
     };
     HiveDriver.prototype.getClient = function () {
