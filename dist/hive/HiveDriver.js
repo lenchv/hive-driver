@@ -25,6 +25,7 @@ var GetDelegationTokenCommand_1 = __importDefault(require("./Commands/GetDelegat
 var CancelDelegationTokenCommand_1 = __importDefault(require("./Commands/CancelDelegationTokenCommand"));
 var RenewDelegationTokenCommand_1 = __importDefault(require("./Commands/RenewDelegationTokenCommand"));
 var GetQueryIdCommand_1 = __importDefault(require("./Commands/GetQueryIdCommand"));
+var SetClientInfoCommand_1 = __importDefault(require("./Commands/SetClientInfoCommand"));
 var thrift = require('thrift');
 var HiveDriver = /** @class */ (function () {
     function HiveDriver(TCLIService, TCLIService_types) {
@@ -122,6 +123,10 @@ var HiveDriver = /** @class */ (function () {
     };
     HiveDriver.prototype.getQueryId = function (request) {
         var command = new GetQueryIdCommand_1["default"](this.getClient(), this.TCLIService_types);
+        return command.execute(request);
+    };
+    HiveDriver.prototype.setClientInfo = function (request) {
+        var command = new SetClientInfoCommand_1["default"](this.getClient(), this.TCLIService_types);
         return command.execute(request);
     };
     HiveDriver.prototype.getClient = function () {

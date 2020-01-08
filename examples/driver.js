@@ -44,6 +44,7 @@ connectionProvider.connect({
         // getDelegationToken(driver, sessionResponse, 'hive', 'hive'),
         // cancelDelegationToken(driver, sessionResponse, 'asd'),
         // renewDelegationToken(driver, sessionResponse, 'asd'),
+        // setClientInfo(driver, sessionResponse, { param: 'value' }),
 
         executeStatement(driver, sessionResponse, 'drop table table1'),
         executeStatement(driver, sessionResponse, 'drop table table2'),
@@ -406,3 +407,17 @@ function getQueryId(driver, operationResponse) {
         return response;
     });
 }
+
+function setClientInfo(driver, sessionResponse, configuration) {
+    return driver.setClientInfo({
+        sessionHandle: sessionResponse.sessionHandle,
+        configuration
+    }).then(response => {
+        if (TCLIService_types.TStatusCode.SUCCESS_STATUS !== response.status.statusCode) {
+            return Promise.reject(new Error(response.status.errorMessage));
+        }
+
+        return response;
+    });
+}
+
