@@ -39,6 +39,7 @@ connectionProvider.connect({
         getFunctions(driver, sessionResponse, 'SUM'),
         getPrimaryKeys(driver, sessionResponse, 'default', 'table1'),
         getCrossReference(driver, sessionResponse),
+        _executeStatement(driver, sessionResponse, 'select * from table1').then(cancelOperation.bind(null, driver)),
 
         executeStatement(driver, sessionResponse, 'drop table table1'),
         executeStatement(driver, sessionResponse, 'drop table table2'),
@@ -58,7 +59,7 @@ connectionProvider.connect({
     console.log('failed');
 });
 
-function executeStatement(driver, sessionResponse, statement) {
+function _executeStatement(driver, sessionResponse, statement) {
     return driver.executeStatement({
         sessionHandle: sessionResponse.sessionHandle,
         statement: statement,
@@ -74,10 +75,16 @@ function executeStatement(driver, sessionResponse, statement) {
         if (response.operationHandle.operationType !== TCLIService_types.TOperationType.EXECUTE_STATEMENT) {
             return Promise.reject(new Error('Execute statment: operation type is different'));
         }
+
         return response;
-    }).then((response) => {
-        return getOperationHandle(driver, response);
     });
+}
+
+function executeStatement(driver, sessionResponse, statement) {
+    return _executeStatement(driver, sessionResponse, statement)
+        .then((response) => {
+            return getOperationHandle(driver, response);
+        });
 }
 
 function getOperationHandle(driver, response) {
@@ -309,6 +316,18 @@ function getOperationStatus(driver, operationResponse, progress) {
     return driver.getOperationStatus({
         operationHandle: operationResponse.operationHandle,
         getProgressUpdate: progress
+    }).then(response => {
+        if (TCLIService_types.TStatusCode.SUCCESS_STATUS !== response.status.statusCode) {
+            return Promise.reject(new Error(response.status.errorMessage));
+        }
+
+        return response;
+    });
+}
+
+function cancelOperation(driver, operationResponse) {
+    return driver.cancelOperation({
+        operationHandle: operationResponse.operationHandle,
     }).then(response => {
         if (TCLIService_types.TStatusCode.SUCCESS_STATUS !== response.status.statusCode) {
             return Promise.reject(new Error(response.status.errorMessage));

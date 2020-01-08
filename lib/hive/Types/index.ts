@@ -15,6 +15,7 @@ export type ThriftClient = {
     GetPrimaryKeys: Function,
     GetCrossReference: Function,
     GetOperationStatus: Function,
+    CancelOperation: Function,
 };
 
 export type TCLIServiceTypes = {
@@ -36,6 +37,7 @@ export type TCLIServiceTypes = {
     TGetPrimaryKeysReq: any,
     TGetCrossReferenceReq: any,
     TGetOperationStatusReq: any,
+    TCancelOperationReq: any,
     TTypeId: any,
     TStatusCode: any,
 };

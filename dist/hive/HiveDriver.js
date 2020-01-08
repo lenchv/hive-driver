@@ -19,6 +19,7 @@ var GetFunctionsCommand_1 = __importDefault(require("./Commands/GetFunctionsComm
 var GetPrimaryKeysCommand_1 = __importDefault(require("./Commands/GetPrimaryKeysCommand"));
 var GetCrossReferenceCommand_1 = __importDefault(require("./Commands/GetCrossReferenceCommand"));
 var GetOperationStatusCommand_1 = __importDefault(require("./Commands/GetOperationStatusCommand"));
+var CancelOperationCommand_1 = __importDefault(require("./Commands/CancelOperationCommand"));
 var thrift = require('thrift');
 var HiveDriver = /** @class */ (function () {
     function HiveDriver(TCLIService, TCLIService_types) {
@@ -92,6 +93,10 @@ var HiveDriver = /** @class */ (function () {
     };
     HiveDriver.prototype.getOperationStatus = function (request) {
         var command = new GetOperationStatusCommand_1["default"](this.getClient(), this.TCLIService_types);
+        return command.execute(request);
+    };
+    HiveDriver.prototype.cancelOperation = function (request) {
+        var command = new CancelOperationCommand_1["default"](this.getClient(), this.TCLIService_types);
         return command.execute(request);
     };
     HiveDriver.prototype.getClient = function () {

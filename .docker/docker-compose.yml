@@ -42,13 +42,9 @@ services:
     ports:
       - "9083:9083"
     volumes:
-      - ./conf/hive-site.conf:/opt/hive/conf/hive-site.conf
+      - ./conf/hive-site.xml:/opt/hive/conf/hive-site.xml
   hive-metastore-postgresql:
     image: bde2020/hive-metastore-postgresql:2.3.0
-  presto-coordinator:
-    image: shawnzhu/prestodb:0.181
-    ports:
-      - "8080:8080"
 
 volumes:
   namenode:
