@@ -13,7 +13,7 @@ var __assign = (this && this.__assign) || function () {
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", { value: true });
 var thrift = require('thrift');
 var Connection_1 = __importDefault(require("../Connection"));
 var NoSaslTcpConnection = /** @class */ (function () {
@@ -23,8 +23,9 @@ var NoSaslTcpConnection = /** @class */ (function () {
         var _a;
         var createConnection = ((_a = options.options) === null || _a === void 0 ? void 0 : _a.ssl) ? thrift.createSSLConnection : thrift.createConnection;
         var connection = createConnection(options.host, options.port, __assign({ transport: thrift.TBufferedTransport, protocol: thrift.TBinaryProtocol }, options.options));
-        return Promise.resolve(new Connection_1["default"](connection));
+        return Promise.resolve(new Connection_1.default(connection));
     };
     return NoSaslTcpConnection;
 }());
-exports["default"] = NoSaslTcpConnection;
+exports.default = NoSaslTcpConnection;
+//# sourceMappingURL=NoSaslTcpConnection.js.map

@@ -4,12 +4,12 @@ import IConnectionProvider from './connection/IConnectionProvider';
 import IConnectionOptions from './connection/IConnectionOptions';
 import { ThriftClient, TCLIServiceTypes } from './hive/Types/';
 import IConnection from './connection/IConnection';
-import ExecuteStatementResponse, { ExecuteStatementResult } from './ExecuteStatementResponse';
 import IHiveClient from './contracts/IHiveClient';
 import HiveDriver from './hive/HiveDriver';
 import { OpenSessionRequest, OpenSessionResponse } from './hive/Commands/OpenSessionCommand';
 import HiveSession from './HiveSession';
 import IHiveSession from './contracts/IHiveSession';
+import NoSaslTcpConnection from './connection/mechanisms/NoSaslTcpConnection';
 
 export default class HiveClient implements IHiveClient {
     private TCLIService: object;
@@ -27,7 +27,11 @@ export default class HiveClient implements IHiveClient {
         this.client = null;
     }
 
-    connect(connectionProvider: IConnectionProvider, options: IConnectionOptions): Promise<HiveClient> {
+    connect(options: IConnectionOptions, connectionProvider?: IConnectionProvider): Promise<HiveClient> {
+        if (!connectionProvider) {
+            connectionProvider = new NoSaslTcpConnection();
+        }
+        
         return connectionProvider
             .connect(options)
             .then((connection: IConnection) => {

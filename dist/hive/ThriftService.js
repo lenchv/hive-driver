@@ -13,7 +13,7 @@ var __assign = (this && this.__assign) || function () {
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", { value: true });
 var FetchResult_1 = __importDefault(require("./Commands/FetchResult"));
 var thrift = require('thrift');
 var ThriftService = /** @class */ (function () {
@@ -60,7 +60,7 @@ var ThriftService = /** @class */ (function () {
         });
     };
     ThriftService.prototype.fetchResult = function (response, limit) {
-        var result = new FetchResult_1["default"](this.TCLIService_types, this.getClient(), response, limit);
+        var result = new FetchResult_1.default(this.TCLIService_types, this.getClient(), response, limit);
         return result.execute();
     };
     ThriftService.prototype.getResultSetMetadata = function (response) {
@@ -97,4 +97,5 @@ var ThriftService = /** @class */ (function () {
     };
     return ThriftService;
 }());
-exports["default"] = ThriftService;
+exports.default = ThriftService;
+//# sourceMappingURL=ThriftService.js.map

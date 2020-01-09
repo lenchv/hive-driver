@@ -6,7 +6,7 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
             r[k] = a[j];
     return r;
 };
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", { value: true });
 var FetchResult = /** @class */ (function () {
     function FetchResult(TCLIService_types, client, response, limit) {
         if (limit === void 0) { limit = 100; }
@@ -38,14 +38,14 @@ var FetchResult = /** @class */ (function () {
         return this.fetchResults({
             orientation: this.TCLIService_types.TFetchOrientation.FETCH_FIRST,
             operationHandle: this.response.operationHandle,
-            maxRows: this.limit
+            maxRows: this.limit,
         });
     };
     FetchResult.prototype.next = function () {
         return this.fetchResults({
             orientation: this.TCLIService_types.TFetchOrientation.FETCH_NEXT,
             operationHandle: this.response.operationHandle,
-            maxRows: this.limit
+            maxRows: this.limit,
         });
     };
     FetchResult.prototype.fetchResults = function (options) {
@@ -64,4 +64,5 @@ var FetchResult = /** @class */ (function () {
     };
     return FetchResult;
 }());
-exports["default"] = FetchResult;
+exports.default = FetchResult;
+//# sourceMappingURL=FetchResult.js.map

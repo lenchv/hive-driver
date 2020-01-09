@@ -1,5 +1,5 @@
 "use strict";
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", { value: true });
 var ExecuteStatementResponse = /** @class */ (function () {
     function ExecuteStatementResponse(response, thriftService) {
         this.response = response;
@@ -19,7 +19,7 @@ var ExecuteStatementResponse = /** @class */ (function () {
             data: this.data,
             schema: this.schema || {
                 status: {}
-            }
+            },
         };
     };
     ExecuteStatementResponse.prototype.fetchData = function () {
@@ -40,4 +40,5 @@ var ExecuteStatementResponse = /** @class */ (function () {
     };
     return ExecuteStatementResponse;
 }());
-exports["default"] = ExecuteStatementResponse;
+exports.default = ExecuteStatementResponse;
+//# sourceMappingURL=ExecuteStatementResponse.js.map

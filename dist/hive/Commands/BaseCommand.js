@@ -1,5 +1,5 @@
 "use strict";
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", { value: true });
 var BaseCommand = /** @class */ (function () {
     function BaseCommand(client, TCLIService_types) {
         this.client = client;
@@ -20,4 +20,5 @@ var BaseCommand = /** @class */ (function () {
     };
     return BaseCommand;
 }());
-exports["default"] = BaseCommand;
+exports.default = BaseCommand;
+//# sourceMappingURL=BaseCommand.js.map

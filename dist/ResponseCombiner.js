@@ -6,7 +6,7 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
             r[k] = a[j];
     return r;
 };
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", { value: true });
 var Big = require('big.js');
 var ResponseCombiner = /** @class */ (function () {
     function ResponseCombiner(TCLIService_types) {
@@ -151,4 +151,5 @@ var ResponseCombiner = /** @class */ (function () {
     ;
     return ResponseCombiner;
 }());
-exports["default"] = ResponseCombiner;
+exports.default = ResponseCombiner;
+//# sourceMappingURL=ResponseCombiner.js.map

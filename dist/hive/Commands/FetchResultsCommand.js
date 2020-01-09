@@ -15,7 +15,7 @@ var __extends = (this && this.__extends) || (function () {
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", { value: true });
 var BaseCommand_1 = __importDefault(require("./BaseCommand"));
 var FetchResultsCommand = /** @class */ (function (_super) {
     __extends(FetchResultsCommand, _super);
@@ -27,5 +27,6 @@ var FetchResultsCommand = /** @class */ (function (_super) {
         return this.executeCommand(request, this.client.FetchResults);
     };
     return FetchResultsCommand;
-}(BaseCommand_1["default"]));
-exports["default"] = FetchResultsCommand;
+}(BaseCommand_1.default));
+exports.default = FetchResultsCommand;
+//# sourceMappingURL=FetchResultsCommand.js.map

@@ -2,10 +2,11 @@
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", { value: true });
 var thrift = require('thrift');
 var HiveDriver_1 = __importDefault(require("./hive/HiveDriver"));
 var HiveSession_1 = __importDefault(require("./HiveSession"));
+var NoSaslTcpConnection_1 = __importDefault(require("./connection/mechanisms/NoSaslTcpConnection"));
 var HiveClient = /** @class */ (function () {
     /**
      *
@@ -17,8 +18,11 @@ var HiveClient = /** @class */ (function () {
         this.TCLIService_types = TCLIService_types;
         this.client = null;
     }
-    HiveClient.prototype.connect = function (connectionProvider, options) {
+    HiveClient.prototype.connect = function (options, connectionProvider) {
         var _this = this;
+        if (!connectionProvider) {
+            connectionProvider = new NoSaslTcpConnection_1.default();
+        }
         return connectionProvider
             .connect(options)
             .then(function (connection) {
@@ -28,12 +32,12 @@ var HiveClient = /** @class */ (function () {
     };
     HiveClient.prototype.openSession = function (request) {
         var _this = this;
-        var driver = new HiveDriver_1["default"](this.TCLIService_types, this.getClient());
+        var driver = new HiveDriver_1.default(this.TCLIService_types, this.getClient());
         return driver.openSession(request).then(function (response) {
             if (response.status.statusCode === _this.TCLIService_types.TStatusCode.ERROR_STATUS) {
                 throw new Error(response.status.errorMessage);
             }
-            var session = new HiveSession_1["default"](driver, response.sessionHandle);
+            var session = new HiveSession_1.default(driver, response.sessionHandle);
             return session;
         });
     };
@@ -45,4 +49,5 @@ var HiveClient = /** @class */ (function () {
     };
     return HiveClient;
 }());
-exports["default"] = HiveClient;
+exports.default = HiveClient;
+//# sourceMappingURL=HiveClient.js.map

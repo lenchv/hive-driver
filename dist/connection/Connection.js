@@ -1,5 +1,5 @@
 "use strict";
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", { value: true });
 var Connection = /** @class */ (function () {
     function Connection(connection) {
         this.connection = connection;
@@ -25,4 +25,5 @@ var Connection = /** @class */ (function () {
     };
     return Connection;
 }());
-exports["default"] = Connection;
+exports.default = Connection;
+//# sourceMappingURL=Connection.js.map

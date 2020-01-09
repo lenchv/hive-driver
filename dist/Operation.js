@@ -1,5 +1,5 @@
 "use strict";
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", { value: true });
 var Operation = /** @class */ (function () {
     function Operation(driver, operationHandle) {
         this.driver = driver;
@@ -7,4 +7,5 @@ var Operation = /** @class */ (function () {
     }
     return Operation;
 }());
-exports["default"] = Operation;
+exports.default = Operation;
+//# sourceMappingURL=Operation.js.map

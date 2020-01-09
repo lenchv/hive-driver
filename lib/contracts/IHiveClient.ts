@@ -4,7 +4,7 @@ import IConnectionOptions from "../connection/IConnectionOptions";
 import { OpenSessionRequest } from "../hive/Commands/OpenSessionCommand";
 
 export default interface IHiveClient {
-    connect(connectionProvider: IConnectionProvider, options: IConnectionOptions): Promise<IHiveClient>;
+    connect(options: IConnectionOptions, connectionProvider?: IConnectionProvider): Promise<IHiveClient>;
 
     openSession(request: OpenSessionRequest): Promise<IHiveSession>;
 }
