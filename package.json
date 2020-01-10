@@ -38,6 +38,7 @@
     "typescript": "^3.7.4"
   },
   "dependencies": {
-    "thrift": "0.12.0"
+    "thrift": "0.12.0",
+    "node-int64": "^0.4.0"
   }
 }

@@ -63,10 +63,7 @@ export declare type Status = {
     errorCode?: number;
     errorMessage?: string;
 };
-export declare type ThriftBuffer = {
-    buffer: Buffer;
-    offset: number;
-};
+export declare type ThriftBuffer = Buffer;
 declare type HandleIdentifier = {
     guid: ThriftBuffer;
     secret: ThriftBuffer;

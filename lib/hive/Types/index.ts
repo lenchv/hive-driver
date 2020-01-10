@@ -66,10 +66,7 @@ export type Status = {
     errorMessage?: string,
 };
 
-export type ThriftBuffer = {
-    buffer: Buffer,
-    offset: number
-};
+export type ThriftBuffer = Buffer;
 
 type HandleIdentifier = {
     guid: ThriftBuffer,

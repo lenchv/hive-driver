@@ -4,6 +4,5 @@ export default class Int64 {
     constructor(value: ThriftBuffer);
     getValue(): number;
     getRawValue(): ThriftBuffer;
-    getBigValue(): any;
-    private toInt64;
+    getInt64(): any;
 }
