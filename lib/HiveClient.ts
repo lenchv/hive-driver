@@ -40,6 +40,14 @@ export default class HiveClient implements IHiveClient {
                     connection.getConnection()
                 );
 
+                connection.getConnection().on('close', (error: any) => {
+                    throw new Error('Hive: connection was accedentally closed');
+                });
+                
+                connection.getConnection().on('error', (error: any) => {
+                    throw error;
+                });
+
                 return this;
             });
     }
@@ -55,7 +63,11 @@ export default class HiveClient implements IHiveClient {
                 throw new Error(response.status.errorMessage);
             }
 
-            const session = new HiveSession(driver, response.sessionHandle);
+            const session = new HiveSession(
+                driver,
+                response.sessionHandle,
+                this.TCLIService_types
+            );
 
             return session;
         });

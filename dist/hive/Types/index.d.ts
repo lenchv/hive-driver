@@ -63,9 +63,13 @@ export declare type Status = {
     errorCode?: number;
     errorMessage?: string;
 };
+export declare type ThriftBuffer = {
+    buffer: Buffer;
+    offset: number;
+};
 declare type HandleIdentifier = {
-    guid: Buffer | string;
-    secret: Buffer | string;
+    guid: ThriftBuffer;
+    secret: ThriftBuffer;
 };
 export declare type SessionHandle = {
     sessionId: HandleIdentifier;
@@ -128,7 +132,7 @@ declare type BoolValue = {
     value: boolean;
 };
 declare type ByteValue = {
-    value: Buffer | string;
+    value: ThriftBuffer;
 };
 declare type TI16Value = {
     value: number;
@@ -137,7 +141,7 @@ declare type TI32Value = {
     value: number;
 };
 declare type TI64Value = {
-    value: Buffer | string;
+    value: ThriftBuffer;
 };
 declare type TDoubleValue = {
     value: number;
@@ -150,35 +154,35 @@ declare type Row = {
 };
 declare type TBoolColumn = {
     values: Array<boolean>;
-    nulls: Buffer | string;
+    nulls: ThriftBuffer;
 };
 declare type TByteColumn = {
-    values: Array<Buffer | string>;
-    nulls: Buffer | string;
+    values: Array<ThriftBuffer>;
+    nulls: ThriftBuffer;
 };
 declare type TI16Column = {
     values: Array<number>;
-    nulls: Buffer | string;
+    nulls: ThriftBuffer;
 };
 declare type TI32Column = {
     values: Array<number>;
-    nulls: Buffer | string;
+    nulls: ThriftBuffer;
 };
 declare type TI64Column = {
-    values: Array<Buffer | string>;
-    nulls: Buffer | string;
+    values: Array<ThriftBuffer>;
+    nulls: ThriftBuffer;
 };
 declare type TDoubleColumn = {
     values: Array<number>;
-    nulls: Buffer | string;
+    nulls: ThriftBuffer;
 };
 declare type TStringColumn = {
     values: Array<string>;
-    nulls: Buffer | string;
+    nulls: ThriftBuffer;
 };
 declare type TBinaryColumn = {
-    values: Array<Buffer | string>;
-    nulls: Buffer | string;
+    values: Array<ThriftBuffer>;
+    nulls: ThriftBuffer;
 };
 declare type Column = {
     boolVal: TBoolColumn;
@@ -191,10 +195,10 @@ declare type Column = {
     binaryVal: TBinaryColumn;
 };
 export declare type RowSet = {
-    startRowOffset: Buffer | string;
+    startRowOffset: ThriftBuffer;
     rows: Array<Row>;
     columns?: Array<Column>;
-    binaryColumns?: Buffer | string;
+    binaryColumns?: ThriftBuffer;
     columnCount?: number;
 };
 export declare type GetInfoValue = {
@@ -203,7 +207,7 @@ export declare type GetInfoValue = {
     integerBitmask: number;
     integerFlag: number;
     binaryValue: number;
-    lenValue: Buffer | string;
+    lenValue: ThriftBuffer;
 };
 export declare type ProgressUpdateResponse = {
     headerNames: Array<string>;
@@ -211,6 +215,6 @@ export declare type ProgressUpdateResponse = {
     progressedPercentage: number;
     status: number;
     footerSummary: string;
-    startTime: Buffer | string;
+    startTime: ThriftBuffer;
 };
 export {};

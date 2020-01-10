@@ -66,9 +66,14 @@ export type Status = {
     errorMessage?: string,
 };
 
+export type ThriftBuffer = {
+    buffer: Buffer,
+    offset: number
+};
+
 type HandleIdentifier = {
-    guid: Buffer | string,
-    secret: Buffer | string
+    guid: ThriftBuffer,
+    secret: ThriftBuffer
 };
 
 export type SessionHandle = {
@@ -144,10 +149,10 @@ export type TableSchema = {
 type ColumnValue = BoolValue | ByteValue | TI16Value | TI32Value | TI64Value | TDoubleValue | TStringValue;
 
 type BoolValue = { value: boolean };
-type ByteValue = { value: Buffer | string };
+type ByteValue = { value: ThriftBuffer };
 type TI16Value = { value: number };
 type TI32Value = { value: number };
-type TI64Value = { value: Buffer | string };
+type TI64Value = { value: ThriftBuffer };
 type TDoubleValue = { value: number };
 type TStringValue = { value: string };
 
@@ -157,35 +162,35 @@ type Row = {
 
 type TBoolColumn = {
     values: Array<boolean>
-    nulls: Buffer | string
+    nulls: ThriftBuffer
 };
 type TByteColumn = {
-    values: Array<Buffer | string>,
-    nulls: Buffer | string
+    values: Array<ThriftBuffer>,
+    nulls: ThriftBuffer
 };
 type TI16Column = {
     values: Array<number>,
-    nulls: Buffer | string
+    nulls: ThriftBuffer
 };
 type TI32Column = {
     values: Array<number>,
-    nulls: Buffer | string
+    nulls: ThriftBuffer
 };
 type TI64Column = {
-    values: Array<Buffer | string>,
-    nulls: Buffer | string
+    values: Array<ThriftBuffer>,
+    nulls: ThriftBuffer
 };
 type TDoubleColumn = {
     values: Array<number>,
-    nulls: Buffer | string
+    nulls: ThriftBuffer
 };
 type TStringColumn = {
     values: Array<string>,
-    nulls: Buffer | string
+    nulls: ThriftBuffer
 };
 type TBinaryColumn = {
-    values: Array<Buffer | string>,
-    nulls: Buffer | string
+    values: Array<ThriftBuffer>,
+    nulls: ThriftBuffer
 };
 
 type Column = {
@@ -200,10 +205,10 @@ type Column = {
 };
 
 export type RowSet = {
-    startRowOffset: Buffer | string,
+    startRowOffset: ThriftBuffer,
     rows: Array<Row>,
     columns?: Array<Column>,
-    binaryColumns?: Buffer | string,
+    binaryColumns?: ThriftBuffer,
     columnCount?: number
 };
 
@@ -213,7 +218,7 @@ export type GetInfoValue = {
     integerBitmask: number,
     integerFlag: number,
     binaryValue: number,
-    lenValue: Buffer | string
+    lenValue: ThriftBuffer
 };
 
 export type ProgressUpdateResponse = {
@@ -222,5 +227,5 @@ export type ProgressUpdateResponse = {
     progressedPercentage: number,
     status: number,
     footerSummary: string,
-    startTime: Buffer | string
+    startTime: ThriftBuffer
 };

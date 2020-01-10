@@ -1,24 +1,32 @@
 import HiveDriver from "./hive/HiveDriver";
-import { GetInfoResponse } from "./hive/Commands/GetInfoCommand";
 import IHiveSession from './contracts/IHiveSession';
-import { SessionHandle } from "./hive/Types";
+import { SessionHandle, TCLIServiceTypes } from "./hive/Types";
 import { ExecuteStatementResponse } from "./hive/Commands/ExecuteStatementCommand";
 import IOperation from "./contracts/IOperation";
 import Operation from "./Operation";
+import InfoResponse from "./responses/InfoResponse";
+import Status from "./dto/Status";
 
 export default class HiveSession implements IHiveSession {
     private driver: HiveDriver;
     private sessionHandle: SessionHandle;
+    private TCLIService_types: TCLIServiceTypes;
 
-    constructor(driver: HiveDriver, sessionHandle: SessionHandle) {
+    constructor(driver: HiveDriver, sessionHandle: SessionHandle, TCLIService_types: TCLIServiceTypes) {
         this.driver = driver;
         this.sessionHandle = sessionHandle;
+        this.TCLIService_types = TCLIService_types;
     }
 
-    getInfo(infoType: number): Promise<GetInfoResponse> {
+    /**
+     * @param infoType one of the values TCLIService_types.TGetInfoType
+     */
+    getInfo(infoType: number): Promise<InfoResponse> {
         return this.driver.getInfo({
             sessionHandle: this.sessionHandle,
             infoType
+        }).then(response => {
+            return new InfoResponse(response, this.TCLIService_types);
         });
     }
 
@@ -73,7 +81,14 @@ export default class HiveSession implements IHiveSession {
     // renewDelegationToken(token: string): Status {
 
     // }
-    // close(): Status {
-
-    // }
+    close(): Promise<Status> {
+        return this.driver.closeSession({
+            sessionHandle: this.sessionHandle
+        }).then((response) => {
+            return new Status(
+                response.status,
+                this.TCLIService_types
+            );
+        });
+    }
 }

@@ -8,14 +8,19 @@ var BaseCommand = /** @class */ (function () {
     BaseCommand.prototype.executeCommand = function (request, command) {
         var _this = this;
         return new Promise(function (resolve, reject) {
-            command.call(_this.client, request, function (err, response) {
-                if (err) {
-                    reject(err);
-                }
-                else {
-                    resolve(response);
-                }
-            });
+            try {
+                command.call(_this.client, request, function (err, response) {
+                    if (err) {
+                        reject(err);
+                    }
+                    else {
+                        resolve(response);
+                    }
+                });
+            }
+            catch (error) {
+                reject(error);
+            }
         });
     };
     return BaseCommand;

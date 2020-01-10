@@ -1,6 +1,5 @@
-import { GetInfoResponse } from "../hive/Commands/GetInfoCommand";
-import { Status } from "../hive/Types";
 import IOperation from "./IOperation";
+import InfoResponse from "../responses/InfoResponse";
 
 export type CrossReferenceRequest = {
     parentCatalogName: string,
@@ -12,7 +11,7 @@ export type CrossReferenceRequest = {
 };
 
 export default interface IHiveSession {
-    getInfo(infoType: number): Promise<GetInfoResponse>,
+    getInfo(infoType: number): Promise<InfoResponse>,
     executeStatement(statement: string): Promise<IOperation>,
     // getTypeInfo(): IOperation,
     // getCatalogs(): IOperation,
