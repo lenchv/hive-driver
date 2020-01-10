@@ -1,6 +1,6 @@
 const { expect } = require('chai');
 const InfoValue = require('../../dist/dto/InfoValue').default;
-const Int64 = require('../../dist/utils/Int64').default;
+const NodeInt64 = require('node-int64');
 
 describe('InfoValue', () => {
     const infoValue = (value) => Object.assign({
@@ -41,10 +41,10 @@ describe('InfoValue', () => {
 
     it('should return int64', () => {
         const value = new InfoValue(infoValue({
-            lenValue: Buffer.from([ 0x00, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10])
+            lenValue: new NodeInt64(Buffer.from([ 0x00, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10]))
         }));
 
-        expect(value.getValue()).to.be.instanceOf(Int64);
-        expect(value.getValue().getValue()).to.be.eq(4521260802379792);
+        expect(value.getValue()).to.be.instanceOf(NodeInt64);
+        expect(value.getValue().toNumber()).to.be.eq(4521260802379792);
     });
 });

@@ -1,13 +1,15 @@
-import { GetResultSetMetadataResponse } from "../hive/Commands/GetResultSetMetadataCommand";
-import { FetchResultsResponse } from "../hive/Commands/FetchResultsCommand";
 import { GetOperationStatusResponse } from "../hive/Commands/GetOperationStatusCommand";
-import { Status } from "../hive/Types";
+import Status from "../dto/Status";
+import OperationResult from "../dto/OperationResult";
 
 export default interface IOperation {
-    // getResultSetMetadata(): GetResultSetMetadataResponse;
-    // fetchResults(maxRows: number, fetchType: number): FetchResultsResponse;
-    // getStatus(progress: boolean): GetOperationStatusResponse;
+    fetch(): Promise<Status>;
+    status(progress: boolean): Promise<GetOperationStatusResponse>;
+    cancel(): Promise<Status>;
+    close(): Promise<Status>;
+    waitUntilReady(progress: boolean, callback: Function): void;
+    finished(): boolean;
+    hasMoreRows(): boolean;
+    result(): OperationResult | null;
     // getQueryId(): string;
-    // cancel(): Status;
-    // close(): Status;
 }

@@ -1,4 +1,3 @@
-import Int64 from "../utils/Int64";
 import { GetInfoValue } from "../hive/Types";
 
 export default class InfoValue {
@@ -8,7 +7,7 @@ export default class InfoValue {
         this.value = value;
     }
 
-    getValue(): string | number | Int64 | null {
+    getValue(): string | number | Buffer | null {
         const infoValue = this.value;
 
         if (infoValue.stringValue) {
@@ -20,7 +19,7 @@ export default class InfoValue {
         } else if (infoValue.integerFlag) {
             return infoValue.integerFlag;
         } else if (infoValue.lenValue) {
-            return new Int64(infoValue.lenValue);
+            return infoValue.lenValue;
         } else {
             return null;
         }

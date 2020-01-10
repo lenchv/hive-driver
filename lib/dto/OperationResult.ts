@@ -1,46 +1,46 @@
-const Big = require('big.js');
+import { TCLIServiceTypes, RowSet, TableSchema, ColumnDesc, Column, PrimitiveTypeEntry, ColumnCode, ColumnType, TBoolColumn, TByteColumn, ThriftBuffer } from "../hive/Types";
 
-import { ResultSetMetadataResponse, TCLIServiceTypes } from "./hive/ThriftService";
-import { ExecuteStatementResult } from "./ExecuteStatementResponse";
-
-export default class ResponseCombiner {
+export default class OperationResult {
     private TCLIService_types: TCLIServiceTypes;
-    
-    constructor(TCLIService_types: TCLIServiceTypes) {
+    private schema: TableSchema;
+    private data: Array<RowSet>;
+
+    constructor(schema: TableSchema, data: Array<RowSet>, TCLIService_types: TCLIServiceTypes) {
         this.TCLIService_types = TCLIService_types;
+        this.schema = schema;
+        this.data = data;
     }
 
-    combine(response: ExecuteStatementResult): Array<object> {
-        const { schema, data } = response;
-        const columns = this.getSchemaColumns(schema);
+    getValue(): Array<object> {
+        const descriptors = this.getSchemaColumns();
 
-        return data.reduce((result, response) => {
-            const values = response?.results?.columns || [];
+        return this.data.reduce((result: Array<any>, rowSet: RowSet) => {
+            const columns = rowSet.columns || [];
             const rows = this.getRows(
-                values,
-                columns
+                columns,
+                descriptors
             );
 
             return result.concat(rows);
         }, []);   
     }
 
-    private getSchemaColumns(schema: ResultSetMetadataResponse): Array<any> {
-        return [...(schema.schema?.columns || [])]
+    private getSchemaColumns(): Array<ColumnDesc> {
+        return [...(this.schema.columns)]
             .sort((c1, c2) => c1.position > c2.position ? 1 : c1.position < c2.position ? -1 : 0);
     }
 
-    private getRows(values: Array<any>, columns: Array<any>): Array<any> {
-        return columns.reduce((rows, column) => {
+    private getRows(columns: Array<Column>, descriptors: Array<ColumnDesc>): Array<any> {
+        return descriptors.reduce((rows, descriptor) => {
             return this.getSchemaValues(
-                column,
-                values[column.position - 1]
+                descriptor,
+                columns[descriptor.position - 1]
             ).reduce((result, value, i) => {
                 if (!result[i]) {
                     result[i] = {};
                 }
 
-                const name = this.getColumnName(column);
+                const name = this.getColumnName(descriptor);
 
                 result[i][name] = value;
 
@@ -49,44 +49,50 @@ export default class ResponseCombiner {
         }, []);
     }
 
-    private getSchemaValues(column: any, value: any): Array<any> {
-        const typeDescriptor = (column?.typeDesc?.types || [{}])[0].primitiveEntry || {};
-        const valueType = this.getValueType(typeDescriptor);
-        const values = value[valueType]?.values || [];
+    private getSchemaValues(descriptor: ColumnDesc, column: Column): Array<any> {
+        const typeDescriptor = descriptor.typeDesc.types[0]?.primitiveEntry || {};//(column?.typeDesc?.types || [{}])[0].primitiveEntry || {};
 
-        return values.map((value: any) => this.convertData(typeDescriptor, value));
+        return this.eachValue(typeDescriptor, column, (value: any) => {
+            return this.convertData(typeDescriptor, value);
+        });
     }
 
-    private getColumnName(column: any): string {
-	    const name = column?.columnName || '';
+    private getColumnName(column: ColumnDesc): string {
+	    const name = column.columnName || '';
 
-	    return name.split('.').pop();
+	    return name.split('.').pop() || '';
     }
 
-    private getValueType(typeDescriptor: { type: string }): string {
+    private map<T>(arr: Array<T>, callback: Function): Array<any> {
+        return arr.map((value: T, i: number) => {
+            return callback(value, i);
+        });
+    }
+
+    private eachValue(typeDescriptor: PrimitiveTypeEntry, column: Column, callback: Function): Array<any> {
         switch (typeDescriptor.type) {
             case this.TCLIService_types.TTypeId.BOOLEAN_TYPE:
-                return 'boolVal';
+                return this.map(column[ColumnCode.boolVal].values, callback);
             case this.TCLIService_types.TTypeId.TINYINT_TYPE:
-                return 'byteVal';
+                return this.map(column[ColumnCode.byteVal].values, callback);
             case this.TCLIService_types.TTypeId.SMALLINT_TYPE:
-                return 'i16Val';
+                return this.map(column[ColumnCode.i16Val].values, callback);
             case this.TCLIService_types.TTypeId.INT_TYPE:
-                return 'i32Val';
+                return this.map(column[ColumnCode.i32Val].values, callback);
             case this.TCLIService_types.TTypeId.BIGINT_TYPE:
             case this.TCLIService_types.TTypeId.TIMESTAMP_TYPE:
-                return 'i64Val';
+                return this.map(column[ColumnCode.i64Val].values, callback);
             case this.TCLIService_types.TTypeId.FLOAT_TYPE:
             case this.TCLIService_types.TTypeId.DOUBLE_TYPE:
-                return 'doubleVal';
+                return this.map(column[ColumnCode.doubleVal].values, callback);
             case this.TCLIService_types.TTypeId.BINARY_TYPE:
-                return 'binaryVal';
+                return this.map(column[ColumnCode.binaryVal].values, callback);
             default:
-                return 'stringVal';
+                return this.map(column[ColumnCode.stringVal].values, callback);
         }
     }
 
-    private convertData(typeDescriptor: { type: string }, value: any): any {
+    private convertData(typeDescriptor: PrimitiveTypeEntry, value: ColumnType): any {
         switch (typeDescriptor.type) {
             case this.TCLIService_types.TTypeId.TIMESTAMP_TYPE:
             case this.TCLIService_types.TTypeId.DATE_TYPE:
@@ -129,42 +135,6 @@ export default class ResponseCombiner {
     }
 
     private convertBigInt(value: any): any {
-        const result = this.toInt64(value.buffer, value.offset);
-        const max = new Big(Number.MAX_SAFE_INTEGER);
-
-        if (result.cmp(max) > 0) {
-            return Number.MAX_SAFE_INTEGER;
-        } else {
-            return parseInt(result.toString());
-        }
+        return value.toNumber();
     }
-
-    toInt64(buffer: any, offset: any): any {
-        const b = buffer;
-        const o = offset;
-    
-        const negate = b[o] & 0x80;
-        let value = new Big(0);
-        let m = new Big(1);
-        let carry = 1;
-    
-        for (let i = 7; i >= 0; i -= 1) {
-            let v = b[o + i];
-    
-            if (negate) {
-                v = (v ^ 0xff) + carry;
-                carry = v >> 8;
-                v &= 0xff;
-            }
-    
-            value = value.plus((new Big(v)).times(m));
-            m = m.times(256);
-        }
-    
-        if (negate) {
-            value = value.times(-1);
-        }
-    
-        return value;
-    };
 }

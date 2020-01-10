@@ -52,6 +52,7 @@ export type TCLIServiceTypes = {
     TSetClientInfoReq: any,
     TTypeId: any,
     TStatusCode: any,
+    TOperationState: any,
 };
 
 export type ThriftSession = {
@@ -91,48 +92,48 @@ type TypeQualifiers = {
     }>
 };
 
-type PrimitiveTypeEntry = {
+export type PrimitiveTypeEntry = {
     type: number,
     typeQualifiers?: TypeQualifiers
 };
 
 type TypeEntryPtr = number;
 
-type ArrayTypeEntry = {
+export type ArrayTypeEntry = {
     objectTypePtr: TypeEntryPtr
 };
 
-type MapTypeEntry = {
+export type MapTypeEntry = {
     keyTypePtr: TypeEntryPtr,
     valueTypePtr: TypeEntryPtr
 };
 
-type StructTypeEntry = {
+export type StructTypeEntry = {
     nameToTypePtr: Map<string, TypeEntryPtr>
 };
 
-type UnionTypeEntry = {
+export type UnionTypeEntry = {
     nameToTypePtr: Map<string, TypeEntryPtr>
 };
 
-type UserDefinedTypeEntry = {
+export type UserDefinedTypeEntry = {
     typeClassName: string
 };
 
-type TypeEntry = {
-    primitiveTypeEntry: PrimitiveTypeEntry,
-    arrayTypeEntry: ArrayTypeEntry,
-    mapTypeEntry: MapTypeEntry,
-    structTypeEntry: StructTypeEntry,
-    unionTypeEntry: UnionTypeEntry,
+export type TypeEntry = {
+    primitiveEntry: PrimitiveTypeEntry,
+    arrayEntry: ArrayTypeEntry,
+    mapEntry: MapTypeEntry,
+    structEntry: StructTypeEntry,
+    unionEntry: UnionTypeEntry,
     userDefinedTypeEntry: UserDefinedTypeEntry,
 };
 
-type TypeDesc = {
+export type TypeDesc = {
     types: Array<TypeEntry>
 };
 
-type ColumnDesc = {
+export type ColumnDesc = {
     columnName: string,
     typeDesc: TypeDesc,
     position: number,
@@ -157,48 +158,61 @@ type Row = {
     colVals: Array<ColumnValue>
 };
 
-type TBoolColumn = {
+export type TBoolColumn = {
     values: Array<boolean>
     nulls: ThriftBuffer
 };
-type TByteColumn = {
+export type TByteColumn = {
     values: Array<ThriftBuffer>,
     nulls: ThriftBuffer
 };
-type TI16Column = {
+export type TI16Column = {
     values: Array<number>,
     nulls: ThriftBuffer
 };
-type TI32Column = {
+export type TI32Column = {
     values: Array<number>,
     nulls: ThriftBuffer
 };
-type TI64Column = {
+export type TI64Column = {
     values: Array<ThriftBuffer>,
     nulls: ThriftBuffer
 };
-type TDoubleColumn = {
+export type TDoubleColumn = {
     values: Array<number>,
     nulls: ThriftBuffer
 };
-type TStringColumn = {
+export type TStringColumn = {
     values: Array<string>,
     nulls: ThriftBuffer
 };
-type TBinaryColumn = {
+export type TBinaryColumn = {
     values: Array<ThriftBuffer>,
     nulls: ThriftBuffer
 };
 
-type Column = {
-    boolVal: TBoolColumn,
-    byteVal: TByteColumn,
-    i16Val: TI16Column,
-    i32Val: TI32Column,
-    i64Val: TI64Column,
-    doubleVal: TDoubleColumn,
-    stringVal: TStringColumn,
-    binaryVal: TBinaryColumn
+export enum ColumnCode {
+    boolVal='boolVal',
+    byteVal='byteVal',
+    i16Val='i16Val',
+    i32Val='i32Val',
+    i64Val='i64Val',
+    doubleVal='doubleVal',
+    stringVal='stringVal',
+    binaryVal='binaryVal',
+};
+
+export type ColumnType =  TBoolColumn | TByteColumn | TI16Column | TI32Column | TI64Column | TDoubleColumn | TStringColumn | TBinaryColumn;
+
+export type Column = {
+    [ColumnCode.boolVal]: TBoolColumn,
+    [ColumnCode.byteVal]: TByteColumn,
+    [ColumnCode.i16Val]: TI16Column,
+    [ColumnCode.i32Val]: TI32Column,
+    [ColumnCode.i64Val]: TI64Column,
+    [ColumnCode.doubleVal]: TDoubleColumn,
+    [ColumnCode.stringVal]: TStringColumn,
+    [ColumnCode.binaryVal]: TBinaryColumn
 };
 
 export type RowSet = {

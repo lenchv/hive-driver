@@ -10,9 +10,15 @@ export type CrossReferenceRequest = {
     foreignTableName: string,
 };
 
+export type ExecuteStatementOptions = {
+    runAsync?: boolean,
+    confOverlay?: Map<string, string>,
+    queryTimeout?: Buffer
+};
+
 export default interface IHiveSession {
     getInfo(infoType: number): Promise<InfoResponse>,
-    executeStatement(statement: string): Promise<IOperation>,
+    executeStatement(statement: string, options?: ExecuteStatementOptions): Promise<IOperation>,
     // getTypeInfo(): IOperation,
     // getCatalogs(): IOperation,
     // getSchemas(): IOperation,

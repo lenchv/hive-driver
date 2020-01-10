@@ -1,21 +1,24 @@
 import HiveDriver from "./hive/HiveDriver";
-import IHiveSession from './contracts/IHiveSession';
+import IHiveSession, { ExecuteStatementOptions } from './contracts/IHiveSession';
 import { SessionHandle, TCLIServiceTypes } from "./hive/Types";
 import { ExecuteStatementResponse } from "./hive/Commands/ExecuteStatementCommand";
 import IOperation from "./contracts/IOperation";
 import Operation from "./Operation";
 import InfoResponse from "./responses/InfoResponse";
 import Status from "./dto/Status";
+import StatusFactory from "./factory/StatusFactory";
 
 export default class HiveSession implements IHiveSession {
     private driver: HiveDriver;
     private sessionHandle: SessionHandle;
     private TCLIService_types: TCLIServiceTypes;
+    private statusFactory: StatusFactory;
 
     constructor(driver: HiveDriver, sessionHandle: SessionHandle, TCLIService_types: TCLIServiceTypes) {
         this.driver = driver;
         this.sessionHandle = sessionHandle;
         this.TCLIService_types = TCLIService_types;
+        this.statusFactory = new StatusFactory(TCLIService_types);
     }
 
     /**
@@ -30,15 +33,27 @@ export default class HiveSession implements IHiveSession {
         });
     }
 
-    executeStatement(statement: string): Promise<IOperation> {
+    executeStatement(statement: string, options: ExecuteStatementOptions = {}): Promise<IOperation> {
+        options = {
+            runAsync: false,
+            ...options
+        };
+        
         return this.driver.executeStatement({
             sessionHandle: this.sessionHandle,
-            runAsync: false,
             statement,
+            ...options
         }).then((response: ExecuteStatementResponse) => {
+            const status = this.statusFactory.create(response.status);
+
+            if (status.error()) {
+                return Promise.reject(status.getError());
+            }
+
             const operation = new Operation(
                 this.driver,
-                response.operationHandle
+                response.operationHandle,
+                this.TCLIService_types,
             );
 
             return operation;

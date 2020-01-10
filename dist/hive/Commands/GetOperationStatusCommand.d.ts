@@ -12,11 +12,11 @@ export declare type GetOperationStatusResponse = {
     errorCode?: number;
     errorMessage?: string;
     taskStatus?: string;
-    operationStarted?: Buffer | string;
-    operationCompleted?: Buffer | string;
+    operationStarted?: Buffer;
+    operationCompleted?: Buffer;
     hasResultSet?: boolean;
     progressUpdateResponse?: ProgressUpdateResponse;
-    numModifiedRows?: Buffer | string;
+    numModifiedRows?: Buffer;
 };
 export default class GetOperationStatusCommand extends BaseCommand {
     execute(data: GetOperationStatusRequest): Promise<GetOperationStatusResponse>;

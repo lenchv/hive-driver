@@ -52,6 +52,7 @@ export declare type TCLIServiceTypes = {
     TSetClientInfoReq: any;
     TTypeId: any;
     TStatusCode: any;
+    TOperationState: any;
 };
 export declare type ThriftSession = {
     sessionHandle: any;
@@ -83,39 +84,39 @@ declare type TypeQualifiers = {
         stringValue?: string;
     }>;
 };
-declare type PrimitiveTypeEntry = {
+export declare type PrimitiveTypeEntry = {
     type: number;
     typeQualifiers?: TypeQualifiers;
 };
 declare type TypeEntryPtr = number;
-declare type ArrayTypeEntry = {
+export declare type ArrayTypeEntry = {
     objectTypePtr: TypeEntryPtr;
 };
-declare type MapTypeEntry = {
+export declare type MapTypeEntry = {
     keyTypePtr: TypeEntryPtr;
     valueTypePtr: TypeEntryPtr;
 };
-declare type StructTypeEntry = {
+export declare type StructTypeEntry = {
     nameToTypePtr: Map<string, TypeEntryPtr>;
 };
-declare type UnionTypeEntry = {
+export declare type UnionTypeEntry = {
     nameToTypePtr: Map<string, TypeEntryPtr>;
 };
-declare type UserDefinedTypeEntry = {
+export declare type UserDefinedTypeEntry = {
     typeClassName: string;
 };
-declare type TypeEntry = {
-    primitiveTypeEntry: PrimitiveTypeEntry;
-    arrayTypeEntry: ArrayTypeEntry;
-    mapTypeEntry: MapTypeEntry;
-    structTypeEntry: StructTypeEntry;
-    unionTypeEntry: UnionTypeEntry;
+export declare type TypeEntry = {
+    primitiveEntry: PrimitiveTypeEntry;
+    arrayEntry: ArrayTypeEntry;
+    mapEntry: MapTypeEntry;
+    structEntry: StructTypeEntry;
+    unionEntry: UnionTypeEntry;
     userDefinedTypeEntry: UserDefinedTypeEntry;
 };
-declare type TypeDesc = {
+export declare type TypeDesc = {
     types: Array<TypeEntry>;
 };
-declare type ColumnDesc = {
+export declare type ColumnDesc = {
     columnName: string;
     typeDesc: TypeDesc;
     position: number;
@@ -149,47 +150,58 @@ declare type TStringValue = {
 declare type Row = {
     colVals: Array<ColumnValue>;
 };
-declare type TBoolColumn = {
+export declare type TBoolColumn = {
     values: Array<boolean>;
     nulls: ThriftBuffer;
 };
-declare type TByteColumn = {
+export declare type TByteColumn = {
     values: Array<ThriftBuffer>;
     nulls: ThriftBuffer;
 };
-declare type TI16Column = {
+export declare type TI16Column = {
     values: Array<number>;
     nulls: ThriftBuffer;
 };
-declare type TI32Column = {
+export declare type TI32Column = {
     values: Array<number>;
     nulls: ThriftBuffer;
 };
-declare type TI64Column = {
+export declare type TI64Column = {
     values: Array<ThriftBuffer>;
     nulls: ThriftBuffer;
 };
-declare type TDoubleColumn = {
+export declare type TDoubleColumn = {
     values: Array<number>;
     nulls: ThriftBuffer;
 };
-declare type TStringColumn = {
+export declare type TStringColumn = {
     values: Array<string>;
     nulls: ThriftBuffer;
 };
-declare type TBinaryColumn = {
+export declare type TBinaryColumn = {
     values: Array<ThriftBuffer>;
     nulls: ThriftBuffer;
 };
-declare type Column = {
-    boolVal: TBoolColumn;
-    byteVal: TByteColumn;
-    i16Val: TI16Column;
-    i32Val: TI32Column;
-    i64Val: TI64Column;
-    doubleVal: TDoubleColumn;
-    stringVal: TStringColumn;
-    binaryVal: TBinaryColumn;
+export declare enum ColumnCode {
+    boolVal = "boolVal",
+    byteVal = "byteVal",
+    i16Val = "i16Val",
+    i32Val = "i32Val",
+    i64Val = "i64Val",
+    doubleVal = "doubleVal",
+    stringVal = "stringVal",
+    binaryVal = "binaryVal"
+}
+export declare type ColumnType = TBoolColumn | TByteColumn | TI16Column | TI32Column | TI64Column | TDoubleColumn | TStringColumn | TBinaryColumn;
+export declare type Column = {
+    [ColumnCode.boolVal]: TBoolColumn;
+    [ColumnCode.byteVal]: TByteColumn;
+    [ColumnCode.i16Val]: TI16Column;
+    [ColumnCode.i32Val]: TI32Column;
+    [ColumnCode.i64Val]: TI64Column;
+    [ColumnCode.doubleVal]: TDoubleColumn;
+    [ColumnCode.stringVal]: TStringColumn;
+    [ColumnCode.binaryVal]: TBinaryColumn;
 };
 export declare type RowSet = {
     startRowOffset: ThriftBuffer;

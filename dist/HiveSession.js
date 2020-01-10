@@ -1,4 +1,15 @@
 "use strict";
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -6,11 +17,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var Operation_1 = __importDefault(require("./Operation"));
 var InfoResponse_1 = __importDefault(require("./responses/InfoResponse"));
 var Status_1 = __importDefault(require("./dto/Status"));
+var StatusFactory_1 = __importDefault(require("./factory/StatusFactory"));
 var HiveSession = /** @class */ (function () {
     function HiveSession(driver, sessionHandle, TCLIService_types) {
         this.driver = driver;
         this.sessionHandle = sessionHandle;
         this.TCLIService_types = TCLIService_types;
+        this.statusFactory = new StatusFactory_1.default(TCLIService_types);
     }
     /**
      * @param infoType one of the values TCLIService_types.TGetInfoType
@@ -24,14 +37,16 @@ var HiveSession = /** @class */ (function () {
             return new InfoResponse_1.default(response, _this.TCLIService_types);
         });
     };
-    HiveSession.prototype.executeStatement = function (statement) {
+    HiveSession.prototype.executeStatement = function (statement, options) {
         var _this = this;
-        return this.driver.executeStatement({
-            sessionHandle: this.sessionHandle,
-            runAsync: false,
-            statement: statement,
-        }).then(function (response) {
-            var operation = new Operation_1.default(_this.driver, response.operationHandle);
+        if (options === void 0) { options = {}; }
+        options = __assign({ runAsync: false }, options);
+        return this.driver.executeStatement(__assign({ sessionHandle: this.sessionHandle, statement: statement }, options)).then(function (response) {
+            var status = _this.statusFactory.create(response.status);
+            if (status.error()) {
+                return Promise.reject(status.getError());
+            }
+            var operation = new Operation_1.default(_this.driver, response.operationHandle, _this.TCLIService_types);
             return operation;
         });
     };
