@@ -40,14 +40,6 @@ export default class HiveClient implements IHiveClient {
                     connection.getConnection()
                 );
 
-                connection.getConnection().on('close', (error: any) => {
-                    throw new Error('Hive: connection was accedentally closed');
-                });
-                
-                connection.getConnection().on('error', (error: any) => {
-                    throw error;
-                });
-
                 return this;
             });
     }

@@ -27,12 +27,6 @@ var HiveClient = /** @class */ (function () {
             .connect(options)
             .then(function (connection) {
             _this.client = thrift.createClient(_this.TCLIService, connection.getConnection());
-            connection.getConnection().on('close', function (error) {
-                throw new Error('Hive: connection was accedentally closed');
-            });
-            connection.getConnection().on('error', function (error) {
-                throw error;
-            });
             return _this;
         });
     };
