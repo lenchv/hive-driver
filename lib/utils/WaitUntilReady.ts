@@ -24,7 +24,7 @@ export default class WaitUntilReady {
             await this.executeCallback(callback.bind(null, response));    
         }
 
-        const isReady = await this.isReady(response.operationState);
+        const isReady = this.isReady(response.operationState);
         
         if (isReady) {
             return this.operation;
@@ -33,27 +33,27 @@ export default class WaitUntilReady {
         }
     }
 
-    private isReady(operationState?: number): Promise<boolean> {
+    private isReady(operationState?: number): boolean {
         switch(operationState) {
             case this.TCLIService_types.TOperationState.INITIALIZED_STATE:
-                return Promise.resolve(false);
+                return false;
             case this.TCLIService_types.TOperationState.RUNNING_STATE:
-                return Promise.resolve(false);
+                return false;
             case this.TCLIService_types.TOperationState.FINISHED_STATE:
-                return Promise.resolve(true);
+                return true;
             case this.TCLIService_types.TOperationState.CANCELED_STATE:
-                return Promise.reject(new Error('The operation was canceled by a client'));
+                throw new Error('The operation was canceled by a client');
             case this.TCLIService_types.TOperationState.CLOSED_STATE:
-                return Promise.reject(new Error('The operation was closed by a client'));
+                throw new Error('The operation was closed by a client');
             case this.TCLIService_types.TOperationState.ERROR_STATE:
-                return Promise.reject(new Error('The operation failed due to an error'));
+                throw new Error('The operation failed due to an error');
             case this.TCLIService_types.TOperationState.PENDING_STATE:
-                return Promise.reject(new Error('The operation is in a pending state'));
+                throw new Error('The operation is in a pending state');
             case this.TCLIService_types.TOperationState.TIMEDOUT_STATE:
-                return Promise.reject(new Error('The operation is in a timedout state'));
+                throw new Error('The operation is in a timedout state');
             case this.TCLIService_types.TOperationState.UKNOWN_STATE:
             default:
-                return Promise.reject(new Error('The operation is in an unrecognized state'));
+                throw new Error('The operation is in an unrecognized state');
         }  
     }
 
