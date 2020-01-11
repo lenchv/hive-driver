@@ -1,9 +1,8 @@
 import IOperation from "./contracts/IOperation";
 import HiveDriver from "./hive/HiveDriver";
-import { OperationHandle, TCLIServiceTypes } from "./hive/Types";
+import { OperationHandle, TCLIServiceTypes, TableSchema, RowSet } from "./hive/Types";
 import Status from "./dto/Status";
 import { GetOperationStatusResponse } from "./hive/Commands/GetOperationStatusCommand";
-import IOperationResult from "./result/IOperationResult";
 export default class HiveOperation implements IOperation {
     private driver;
     private operationHandle;
@@ -21,16 +20,16 @@ export default class HiveOperation implements IOperation {
     status(progress?: boolean): Promise<GetOperationStatusResponse>;
     cancel(): Promise<Status>;
     close(): Promise<Status>;
-    waitUntilReady(progress: boolean, callback: Function): Promise<HiveOperation>;
     finished(): boolean;
     hasMoreRows(): boolean;
     setMaxRows(maxRows: number): void;
     setFetchType(fetchType: number): void;
-    result(resultHandler?: IOperationResult): IOperationResult;
+    getSchema(): TableSchema | null;
+    getData(): Array<RowSet>;
     getQueryId(): Promise<string>;
     private initializeSchema;
     private firstFetch;
     private nextFetch;
     private processFetchResponse;
-    private executeCallback;
+    private checkIfOperationHasMoreRows;
 }

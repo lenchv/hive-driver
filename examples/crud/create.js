@@ -1,15 +1,18 @@
 const TCLIService = require('../../thrift/gen-nodejs/TCLIService');
 const TCLIService_types = require('../../thrift/gen-nodejs/TCLIService_types');
 const HiveClient = require('../../index').HiveClient;
+const HiveUtils = require('../../index').HiveUtils;
 const mech = require('../../index').mechanisms;
 
+const utils = new HiveUtils(
+    TCLIService_types
+);
 const connection = new mech.NoSaslTcpConnection();
 
 const client = new HiveClient(
     TCLIService,
     TCLIService_types
 );
-
 
 client.connect({
     host: '192.168.99.100',
@@ -62,7 +65,7 @@ const loadData = (session) => {
 };
 
 const select = (session) => {
-    return execute(session, 'select * from pokes order by foo').then(result => {
+    return execute(session, 'select * from pokes order by foo limit 100').then(result => {
         console.log(result, result.length);
     });
 };
@@ -71,12 +74,8 @@ const execute = (session, statement) => {
     return session.executeStatement(statement, { runAsync: true })
         .then((operation) => {
             return handleOperation(operation, {
-                progress: false,
-                callback: (error, stateResponse) => {
-                    if (error) {
-                        console.error(error.message);
-                    }
-
+                progress: true,
+                callback: (stateResponse) => {
                     console.log(stateResponse.taskStatus);
                 }
             });
@@ -87,7 +86,7 @@ const handleOperation = (operation, {
     progress = false,
     callback = () => {},
 }) => {
-    return operation.waitUntilReady(progress, callback)
+    return utils.waitUntilReady(operation, progress, callback)
     .then((operation) => {
         return fetchAll(operation);
     })
@@ -95,7 +94,7 @@ const handleOperation = (operation, {
         return operation.close();
     })
     .then(() => {
-        return operation.result().getValue();
+        return utils.getResult(operation).getValue();
     })
 };
 

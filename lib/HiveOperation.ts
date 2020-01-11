@@ -1,14 +1,11 @@
 import IOperation from "./contracts/IOperation";
 import HiveDriver from "./hive/HiveDriver";
-import { OperationHandle, TCLIServiceTypes, TableSchema, RowSet } from "./hive/Types";
+import { OperationHandle, TCLIServiceTypes, TableSchema, RowSet, ColumnCode, Column } from "./hive/Types";
 import Status from "./dto/Status";
 import { GetOperationStatusResponse } from "./hive/Commands/GetOperationStatusCommand";
 import { GetResultSetMetadataResponse } from "./hive/Commands/GetResultSetMetadataCommand";
 import { FetchResultsResponse } from "./hive/Commands/FetchResultsCommand";
 import StatusFactory from "./factory/StatusFactory";
-import IOperationResult from "./result/IOperationResult";
-import NullResult from "./result/NullResult";
-import JsonResult from "./result/JsonResult";
 import { GetQueryIdResponse } from "./hive/Commands/GetQueryIdCommand";
 
 export default class HiveOperation implements IOperation {
@@ -110,53 +107,6 @@ export default class HiveOperation implements IOperation {
         });
     }
 
-    waitUntilReady(progress: boolean, callback: Function): Promise<HiveOperation> {
-        return this.status(progress).then(response => {
-            let error: Error | null = null;
-            let next = false;
-            
-            switch(response.operationState) {
-                case this.TCLIService_type.TOperationState.INITIALIZED_STATE:
-                    next = true;
-                    break;
-                case this.TCLIService_type.TOperationState.RUNNING_STATE:
-                    next = true;
-                    break;
-                case this.TCLIService_type.TOperationState.FINISHED_STATE:
-                    break;
-                case this.TCLIService_type.TOperationState.CANCELED_STATE:
-                    error = new Error('The operation was canceled by a client');
-                    break;    
-                case this.TCLIService_type.TOperationState.CLOSED_STATE:
-                    error = new Error('The operation was closed by a client');
-                    break;    
-                case this.TCLIService_type.TOperationState.ERROR_STATE:
-                    error = new Error('The operation failed due to an error');
-                    break;    
-                case this.TCLIService_type.TOperationState.PENDING_STATE:
-                    error = new Error('The operation is in a pending state');
-                    break;    
-                case this.TCLIService_type.TOperationState.TIMEDOUT_STATE:
-                    error = new Error('The operation is in a timedout state');
-                    break;    
-                case this.TCLIService_type.TOperationState.UKNOWN_STATE:
-                default:
-                    error = new Error('The operation is in an unrecognized state');
-                    break;    
-            }
-
-            return this.executeCallback(callback.bind(null, error, response)).then(() => {
-                if (error) {
-                    return Promise.reject(error);
-                } else if (next) {
-                    return this.waitUntilReady(progress, callback);
-                }
-            });
-        }).then(() => {
-            return this;
-        });
-    }
-
     finished(): boolean {
         return this.state === this.TCLIService_type.TOperationState.FINISHED_STATE;
     }
@@ -173,21 +123,12 @@ export default class HiveOperation implements IOperation {
         this.fetchType = fetchType;
     }
 
-    result(resultHandler?: IOperationResult): IOperationResult {
-        if (this.schema === null) {
-            return new NullResult();
-        }
+    getSchema(): TableSchema | null {
+        return this.schema;
+    }
 
-        if (!resultHandler) {
-            resultHandler = new JsonResult(
-                this.TCLIService_type
-            );
-        }
-        
-        resultHandler.setSchema(this.schema);
-        resultHandler.setData(this.data);
-
-        return resultHandler;
+    getData(): Array<RowSet> {
+        return this.data;
     }
 
     getQueryId(): Promise<string> {
@@ -237,7 +178,7 @@ export default class HiveOperation implements IOperation {
             throw status.getError();
         }
 
-        this._hasMoreRows = !!response.hasMoreRows;
+        this._hasMoreRows = this.checkIfOperationHasMoreRows(response);
 
         if (response.results) {
             this.data.push(response.results);
@@ -246,13 +187,28 @@ export default class HiveOperation implements IOperation {
         return status;
     }
 
-    private executeCallback(callback: Function): Promise<any> {
-        const result = callback();
-
-        if (result instanceof Promise) {
-            return result;
-        } else {
-            return Promise.resolve(result);
+    private checkIfOperationHasMoreRows(response: FetchResultsResponse): boolean {
+        if (response.hasMoreRows) {
+            return true;
         }
+
+        const columns = response.results?.columns || [];
+
+        if (!columns.length) {
+            return false;
+        }
+
+        const column: Column = columns[0];
+
+        const columnValue = column[ColumnCode.binaryVal]
+            || column[ColumnCode.boolVal]
+            || column[ColumnCode.byteVal]
+            || column[ColumnCode.doubleVal]
+            || column[ColumnCode.i16Val]
+            || column[ColumnCode.i32Val]
+            || column[ColumnCode.i64Val]
+            || column[ColumnCode.stringVal];
+
+        return columnValue?.values?.length > 0;
     }
 }

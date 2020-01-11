@@ -1,7 +1,7 @@
 import { TableSchema, RowSet } from "../hive/Types";
+import IOperation from "../contracts/IOperation";
 
 export default interface IOperationResult {
-    setSchema(schema: TableSchema): void;
-    setData(data: Array<RowSet>): void;
+    setOperation(operation: IOperation): void;
     getValue(): any;
 }

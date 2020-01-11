@@ -3,9 +3,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var Types_1 = require("./hive/Types");
 var StatusFactory_1 = __importDefault(require("./factory/StatusFactory"));
-var NullResult_1 = __importDefault(require("./result/NullResult"));
-var JsonResult_1 = __importDefault(require("./result/JsonResult"));
 var HiveOperation = /** @class */ (function () {
     function HiveOperation(driver, operationHandle, TCLIService_type) {
         this.maxRows = 100;
@@ -76,52 +75,6 @@ var HiveOperation = /** @class */ (function () {
             return _this.statusFactory.create(response.status);
         });
     };
-    HiveOperation.prototype.waitUntilReady = function (progress, callback) {
-        var _this = this;
-        return this.status(progress).then(function (response) {
-            var error = null;
-            var next = false;
-            switch (response.operationState) {
-                case _this.TCLIService_type.TOperationState.INITIALIZED_STATE:
-                    next = true;
-                    break;
-                case _this.TCLIService_type.TOperationState.RUNNING_STATE:
-                    next = true;
-                    break;
-                case _this.TCLIService_type.TOperationState.FINISHED_STATE:
-                    break;
-                case _this.TCLIService_type.TOperationState.CANCELED_STATE:
-                    error = new Error('The operation was canceled by a client');
-                    break;
-                case _this.TCLIService_type.TOperationState.CLOSED_STATE:
-                    error = new Error('The operation was closed by a client');
-                    break;
-                case _this.TCLIService_type.TOperationState.ERROR_STATE:
-                    error = new Error('The operation failed due to an error');
-                    break;
-                case _this.TCLIService_type.TOperationState.PENDING_STATE:
-                    error = new Error('The operation is in a pending state');
-                    break;
-                case _this.TCLIService_type.TOperationState.TIMEDOUT_STATE:
-                    error = new Error('The operation is in a timedout state');
-                    break;
-                case _this.TCLIService_type.TOperationState.UKNOWN_STATE:
-                default:
-                    error = new Error('The operation is in an unrecognized state');
-                    break;
-            }
-            return _this.executeCallback(callback.bind(null, error, response)).then(function () {
-                if (error) {
-                    return Promise.reject(error);
-                }
-                else if (next) {
-                    return _this.waitUntilReady(progress, callback);
-                }
-            });
-        }).then(function () {
-            return _this;
-        });
-    };
     HiveOperation.prototype.finished = function () {
         return this.state === this.TCLIService_type.TOperationState.FINISHED_STATE;
     };
@@ -134,16 +87,11 @@ var HiveOperation = /** @class */ (function () {
     HiveOperation.prototype.setFetchType = function (fetchType) {
         this.fetchType = fetchType;
     };
-    HiveOperation.prototype.result = function (resultHandler) {
-        if (this.schema === null) {
-            return new NullResult_1.default();
-        }
-        if (!resultHandler) {
-            resultHandler = new JsonResult_1.default(this.TCLIService_type);
-        }
-        resultHandler.setSchema(this.schema);
-        resultHandler.setData(this.data);
-        return resultHandler;
+    HiveOperation.prototype.getSchema = function () {
+        return this.schema;
+    };
+    HiveOperation.prototype.getData = function () {
+        return this.data;
     };
     HiveOperation.prototype.getQueryId = function () {
         return this.driver.getQueryId({
@@ -185,20 +133,31 @@ var HiveOperation = /** @class */ (function () {
         if (status.error()) {
             throw status.getError();
         }
-        this._hasMoreRows = !!response.hasMoreRows;
+        this._hasMoreRows = this.checkIfOperationHasMoreRows(response);
         if (response.results) {
             this.data.push(response.results);
         }
         return status;
     };
-    HiveOperation.prototype.executeCallback = function (callback) {
-        var result = callback();
-        if (result instanceof Promise) {
-            return result;
+    HiveOperation.prototype.checkIfOperationHasMoreRows = function (response) {
+        var _a, _b, _c;
+        if (response.hasMoreRows) {
+            return true;
         }
-        else {
-            return Promise.resolve(result);
+        var columns = ((_a = response.results) === null || _a === void 0 ? void 0 : _a.columns) || [];
+        if (!columns.length) {
+            return false;
         }
+        var column = columns[0];
+        var columnValue = column[Types_1.ColumnCode.binaryVal]
+            || column[Types_1.ColumnCode.boolVal]
+            || column[Types_1.ColumnCode.byteVal]
+            || column[Types_1.ColumnCode.doubleVal]
+            || column[Types_1.ColumnCode.i16Val]
+            || column[Types_1.ColumnCode.i32Val]
+            || column[Types_1.ColumnCode.i64Val]
+            || column[Types_1.ColumnCode.stringVal];
+        return ((_c = (_b = columnValue) === null || _b === void 0 ? void 0 : _b.values) === null || _c === void 0 ? void 0 : _c.length) > 0;
     };
     return HiveOperation;
 }());

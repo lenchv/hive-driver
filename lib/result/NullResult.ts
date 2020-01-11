@@ -1,10 +1,8 @@
 import IOperationResult from "./IOperationResult";
-import { TableSchema, RowSet } from "../hive/Types";
+import IOperation from "../contracts/IOperation";
 
 export default class NullResult implements IOperationResult {
-    setSchema(schema: TableSchema) {}
-
-    setData(data: Array<RowSet>) {}
+    setOperation(operation: IOperation) {}
 
     getValue(): null {
         return null;

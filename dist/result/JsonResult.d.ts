@@ -1,12 +1,12 @@
-import { TCLIServiceTypes, RowSet, TableSchema } from "../hive/Types";
+import { TCLIServiceTypes } from "../hive/Types";
 import IOperationResult from "./IOperationResult";
+import IOperation from "../contracts/IOperation";
 export default class JsonResult implements IOperationResult {
     private TCLIService_types;
     private schema;
     private data;
     constructor(TCLIService_types: TCLIServiceTypes);
-    setSchema(schema: TableSchema): void;
-    setData(data: Array<RowSet>): void;
+    setOperation(operation: IOperation): void;
     getValue(): Array<object>;
     private getSchemaColumns;
     private getRows;

@@ -1,5 +1,6 @@
 import { TCLIServiceTypes, RowSet, TableSchema, ColumnDesc, Column, PrimitiveTypeEntry, ColumnCode, ColumnType, TBoolColumn, TByteColumn, ThriftBuffer } from "../hive/Types";
 import IOperationResult from "./IOperationResult";
+import IOperation from "../contracts/IOperation";
 
 export default class JsonResult implements IOperationResult {
     private TCLIService_types: TCLIServiceTypes;
@@ -12,12 +13,9 @@ export default class JsonResult implements IOperationResult {
         this.data = null;
     }
 
-    setSchema(schema: TableSchema): void {
-        this.schema = schema;
-    }
-
-    setData(data: Array<RowSet>): void {
-        this.data = data;
+    setOperation(operation: IOperation): void {
+        this.schema = operation.getSchema();
+        this.data = operation.getData();
     }
 
     getValue(): Array<object> {

@@ -3,8 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var NullResult = /** @class */ (function () {
     function NullResult() {
     }
-    NullResult.prototype.setSchema = function (schema) { };
-    NullResult.prototype.setData = function (data) { };
+    NullResult.prototype.setOperation = function (operation) { };
     NullResult.prototype.getValue = function () {
         return null;
     };

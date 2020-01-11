@@ -14,11 +14,9 @@ var JsonResult = /** @class */ (function () {
         this.schema = null;
         this.data = null;
     }
-    JsonResult.prototype.setSchema = function (schema) {
-        this.schema = schema;
-    };
-    JsonResult.prototype.setData = function (data) {
-        this.data = data;
+    JsonResult.prototype.setOperation = function (operation) {
+        this.schema = operation.getSchema();
+        this.data = operation.getData();
     };
     JsonResult.prototype.getValue = function () {
         var _this = this;

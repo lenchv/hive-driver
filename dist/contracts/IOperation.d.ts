@@ -1,14 +1,14 @@
 import { GetOperationStatusResponse } from "../hive/Commands/GetOperationStatusCommand";
 import Status from "../dto/Status";
-import IOperationResult from "../result/IOperationResult";
+import { TableSchema, RowSet } from "../hive/Types";
 export default interface IOperation {
     fetch(): Promise<Status>;
     status(progress: boolean): Promise<GetOperationStatusResponse>;
     cancel(): Promise<Status>;
     close(): Promise<Status>;
-    waitUntilReady(progress: boolean, callback: Function): void;
     finished(): boolean;
     hasMoreRows(): boolean;
-    result(): IOperationResult;
+    getSchema(): TableSchema | null;
+    getData(): Array<RowSet>;
     getQueryId(): Promise<string>;
 }
