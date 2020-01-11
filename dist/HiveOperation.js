@@ -4,9 +4,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var StatusFactory_1 = __importDefault(require("./factory/StatusFactory"));
-var OperationResult_1 = __importDefault(require("./dto/OperationResult"));
-var Operation = /** @class */ (function () {
-    function Operation(driver, operationHandle, TCLIService_type) {
+var NullResult_1 = __importDefault(require("./result/NullResult"));
+var JsonResult_1 = __importDefault(require("./result/JsonResult"));
+var HiveOperation = /** @class */ (function () {
+    function HiveOperation(driver, operationHandle, TCLIService_type) {
         this.maxRows = 100;
         this.fetchType = 0;
         this._hasMoreRows = false;
@@ -19,7 +20,7 @@ var Operation = /** @class */ (function () {
         this.schema = null;
         this.data = [];
     }
-    Operation.prototype.fetch = function () {
+    HiveOperation.prototype.fetch = function () {
         var _this = this;
         if (!this.hasResultSet) {
             return Promise.resolve(this.statusFactory.create({
@@ -37,17 +38,11 @@ var Operation = /** @class */ (function () {
                 return _this.firstFetch();
             }).then(function (response) { return _this.processFetchResponse(response); });
         }
-        else if (this.hasMoreRows()) {
-            return this.nextFetch().then(this.processFetchResponse);
-        }
         else {
-            var status_1 = this.statusFactory.create({
-                statusCode: this.TCLIService_type.TStatusCode.SUCCESS_STATUS
-            });
-            return Promise.resolve(status_1);
+            return this.nextFetch().then(function (response) { return _this.processFetchResponse(response); });
         }
     };
-    Operation.prototype.status = function (progress) {
+    HiveOperation.prototype.status = function (progress) {
         var _this = this;
         if (progress === void 0) { progress = false; }
         return this.driver.getOperationStatus({
@@ -65,7 +60,7 @@ var Operation = /** @class */ (function () {
             return response;
         });
     };
-    Operation.prototype.cancel = function () {
+    HiveOperation.prototype.cancel = function () {
         var _this = this;
         return this.driver.cancelOperation({
             operationHandle: this.operationHandle
@@ -73,7 +68,7 @@ var Operation = /** @class */ (function () {
             return _this.statusFactory.create(response.status);
         });
     };
-    Operation.prototype.close = function () {
+    HiveOperation.prototype.close = function () {
         var _this = this;
         return this.driver.closeOperation({
             operationHandle: this.operationHandle
@@ -81,55 +76,83 @@ var Operation = /** @class */ (function () {
             return _this.statusFactory.create(response.status);
         });
     };
-    Operation.prototype.waitUntilReady = function (progress, callback) {
+    HiveOperation.prototype.waitUntilReady = function (progress, callback) {
         var _this = this;
-        this.status(progress).then(function (response) {
+        return this.status(progress).then(function (response) {
+            var error = null;
+            var next = false;
             switch (response.operationState) {
                 case _this.TCLIService_type.TOperationState.INITIALIZED_STATE:
-                    callback(null, response);
-                    return _this.waitUntilReady(progress, callback);
+                    next = true;
+                    break;
                 case _this.TCLIService_type.TOperationState.RUNNING_STATE:
-                    callback(null, response);
-                    return _this.waitUntilReady(progress, callback);
+                    next = true;
+                    break;
                 case _this.TCLIService_type.TOperationState.FINISHED_STATE:
-                    return callback(null, response);
+                    break;
                 case _this.TCLIService_type.TOperationState.CANCELED_STATE:
-                    return callback(new Error('The operation was canceled by a client'), response);
+                    error = new Error('The operation was canceled by a client');
+                    break;
                 case _this.TCLIService_type.TOperationState.CLOSED_STATE:
-                    return callback(new Error('The operation was closed by a client'), response);
+                    error = new Error('The operation was closed by a client');
+                    break;
                 case _this.TCLIService_type.TOperationState.ERROR_STATE:
-                    return callback(new Error('The operation failed due to an error'), response);
+                    error = new Error('The operation failed due to an error');
+                    break;
                 case _this.TCLIService_type.TOperationState.PENDING_STATE:
-                    return callback(new Error('The operation is in an pending state'), response);
+                    error = new Error('The operation is in a pending state');
+                    break;
                 case _this.TCLIService_type.TOperationState.TIMEDOUT_STATE:
-                    return callback(new Error('The operation is in an timedout state'), response);
+                    error = new Error('The operation is in a timedout state');
+                    break;
                 case _this.TCLIService_type.TOperationState.UKNOWN_STATE:
                 default:
-                    return callback(new Error('The operation is in an unrecognized state'), response);
+                    error = new Error('The operation is in an unrecognized state');
+                    break;
             }
-        }, function (error) {
-            callback(error);
+            return _this.executeCallback(callback.bind(null, error, response)).then(function () {
+                if (error) {
+                    return Promise.reject(error);
+                }
+                else if (next) {
+                    return _this.waitUntilReady(progress, callback);
+                }
+            });
+        }).then(function () {
+            return _this;
         });
     };
-    Operation.prototype.finished = function () {
+    HiveOperation.prototype.finished = function () {
         return this.state === this.TCLIService_type.TOperationState.FINISHED_STATE;
     };
-    Operation.prototype.hasMoreRows = function () {
+    HiveOperation.prototype.hasMoreRows = function () {
         return this._hasMoreRows;
     };
-    Operation.prototype.setMaxRows = function (maxRows) {
+    HiveOperation.prototype.setMaxRows = function (maxRows) {
         this.maxRows = maxRows;
     };
-    Operation.prototype.setFetchType = function (fetchType) {
+    HiveOperation.prototype.setFetchType = function (fetchType) {
         this.fetchType = fetchType;
     };
-    Operation.prototype.result = function () {
+    HiveOperation.prototype.result = function (resultHandler) {
         if (this.schema === null) {
-            return null;
+            return new NullResult_1.default();
         }
-        return new OperationResult_1.default(this.schema, this.data, this.TCLIService_type);
+        if (!resultHandler) {
+            resultHandler = new JsonResult_1.default(this.TCLIService_type);
+        }
+        resultHandler.setSchema(this.schema);
+        resultHandler.setData(this.data);
+        return resultHandler;
     };
-    Operation.prototype.initializeSchema = function () {
+    HiveOperation.prototype.getQueryId = function () {
+        return this.driver.getQueryId({
+            operationHandle: this.operationHandle
+        }).then(function (response) {
+            return response.queryId;
+        });
+    };
+    HiveOperation.prototype.initializeSchema = function () {
         var _this = this;
         return this.driver.getResultSetMetadata({
             operationHandle: this.operationHandle
@@ -141,7 +164,7 @@ var Operation = /** @class */ (function () {
             return schema.schema;
         });
     };
-    Operation.prototype.firstFetch = function () {
+    HiveOperation.prototype.firstFetch = function () {
         return this.driver.fetchResults({
             operationHandle: this.operationHandle,
             orientation: this.TCLIService_type.TFetchOrientation.FETCH_FIRST,
@@ -149,7 +172,7 @@ var Operation = /** @class */ (function () {
             fetchType: this.fetchType,
         });
     };
-    Operation.prototype.nextFetch = function () {
+    HiveOperation.prototype.nextFetch = function () {
         return this.driver.fetchResults({
             operationHandle: this.operationHandle,
             orientation: this.TCLIService_type.TFetchOrientation.FETCH_NEXT,
@@ -157,7 +180,7 @@ var Operation = /** @class */ (function () {
             fetchType: this.fetchType,
         });
     };
-    Operation.prototype.processFetchResponse = function (response) {
+    HiveOperation.prototype.processFetchResponse = function (response) {
         var status = this.statusFactory.create(response.status);
         if (status.error()) {
             throw status.getError();
@@ -168,7 +191,16 @@ var Operation = /** @class */ (function () {
         }
         return status;
     };
-    return Operation;
+    HiveOperation.prototype.executeCallback = function (callback) {
+        var result = callback();
+        if (result instanceof Promise) {
+            return result;
+        }
+        else {
+            return Promise.resolve(result);
+        }
+    };
+    return HiveOperation;
 }());
-exports.default = Operation;
-//# sourceMappingURL=Operation.js.map
+exports.default = HiveOperation;
+//# sourceMappingURL=HiveOperation.js.map

@@ -6,9 +6,12 @@ import { GetOperationStatusResponse } from "./hive/Commands/GetOperationStatusCo
 import { GetResultSetMetadataResponse } from "./hive/Commands/GetResultSetMetadataCommand";
 import { FetchResultsResponse } from "./hive/Commands/FetchResultsCommand";
 import StatusFactory from "./factory/StatusFactory";
-import OperationResult from "./dto/OperationResult";
+import IOperationResult from "./result/IOperationResult";
+import NullResult from "./result/NullResult";
+import JsonResult from "./result/JsonResult";
+import { GetQueryIdResponse } from "./hive/Commands/GetQueryIdCommand";
 
-export default class Operation implements IOperation {
+export default class HiveOperation implements IOperation {
     private driver: HiveDriver;
     private operationHandle: OperationHandle;
     private TCLIService_type: TCLIServiceTypes;
@@ -63,14 +66,10 @@ export default class Operation implements IOperation {
             }).then(
                 response => this.processFetchResponse(response)
             );
-        } else if (this.hasMoreRows()) {
-            return this.nextFetch().then(this.processFetchResponse)
         } else {
-            const status = this.statusFactory.create({
-                statusCode: this.TCLIService_type.TStatusCode.SUCCESS_STATUS
-            });
-
-            return Promise.resolve(status);
+            return this.nextFetch().then(
+                response => this.processFetchResponse(response)
+            );
         }
     }
 
@@ -111,33 +110,50 @@ export default class Operation implements IOperation {
         });
     }
 
-    waitUntilReady(progress: boolean, callback: Function): void {
-        this.status(progress).then(response => {
+    waitUntilReady(progress: boolean, callback: Function): Promise<HiveOperation> {
+        return this.status(progress).then(response => {
+            let error: Error | null = null;
+            let next = false;
+            
             switch(response.operationState) {
                 case this.TCLIService_type.TOperationState.INITIALIZED_STATE:
-                    callback(null, response);
-                    return this.waitUntilReady(progress, callback);
+                    next = true;
+                    break;
                 case this.TCLIService_type.TOperationState.RUNNING_STATE:
-                    callback(null, response);
-                    return this.waitUntilReady(progress, callback);
+                    next = true;
+                    break;
                 case this.TCLIService_type.TOperationState.FINISHED_STATE:
-                    return callback(null, response);
+                    break;
                 case this.TCLIService_type.TOperationState.CANCELED_STATE:
-                    return callback(new Error('The operation was canceled by a client'), response);
+                    error = new Error('The operation was canceled by a client');
+                    break;    
                 case this.TCLIService_type.TOperationState.CLOSED_STATE:
-                    return callback(new Error('The operation was closed by a client'), response);
+                    error = new Error('The operation was closed by a client');
+                    break;    
                 case this.TCLIService_type.TOperationState.ERROR_STATE:
-                    return callback(new Error('The operation failed due to an error'), response);
+                    error = new Error('The operation failed due to an error');
+                    break;    
                 case this.TCLIService_type.TOperationState.PENDING_STATE:
-                    return callback(new Error('The operation is in an pending state'), response);
+                    error = new Error('The operation is in a pending state');
+                    break;    
                 case this.TCLIService_type.TOperationState.TIMEDOUT_STATE:
-                    return callback(new Error('The operation is in an timedout state'), response);
+                    error = new Error('The operation is in a timedout state');
+                    break;    
                 case this.TCLIService_type.TOperationState.UKNOWN_STATE:
                 default:
-                    return callback(new Error('The operation is in an unrecognized state'), response);
+                    error = new Error('The operation is in an unrecognized state');
+                    break;    
             }
-        }, (error) => {
-            callback(error);
+
+            return this.executeCallback(callback.bind(null, error, response)).then(() => {
+                if (error) {
+                    return Promise.reject(error);
+                } else if (next) {
+                    return this.waitUntilReady(progress, callback);
+                }
+            });
+        }).then(() => {
+            return this;
         });
     }
 
@@ -157,16 +173,29 @@ export default class Operation implements IOperation {
         this.fetchType = fetchType;
     }
 
-    result(): OperationResult | null {
+    result(resultHandler?: IOperationResult): IOperationResult {
         if (this.schema === null) {
-            return null;
+            return new NullResult();
+        }
+
+        if (!resultHandler) {
+            resultHandler = new JsonResult(
+                this.TCLIService_type
+            );
         }
         
-        return new OperationResult(
-            this.schema,
-            this.data,
-            this.TCLIService_type
-        );
+        resultHandler.setSchema(this.schema);
+        resultHandler.setData(this.data);
+
+        return resultHandler;
+    }
+
+    getQueryId(): Promise<string> {
+        return this.driver.getQueryId({
+            operationHandle: this.operationHandle
+        }).then((response: GetQueryIdResponse) => {
+            return response.queryId;
+        });
     }
 
     private initializeSchema(): Promise<TableSchema> {
@@ -215,5 +244,15 @@ export default class Operation implements IOperation {
         }
 
         return status;
+    }
+
+    private executeCallback(callback: Function): Promise<any> {
+        const result = callback();
+
+        if (result instanceof Promise) {
+            return result;
+        } else {
+            return Promise.resolve(result);
+        }
     }
 }

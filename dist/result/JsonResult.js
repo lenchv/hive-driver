@@ -8,14 +8,23 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var Types_1 = require("../hive/Types");
-var OperationResult = /** @class */ (function () {
-    function OperationResult(schema, data, TCLIService_types) {
+var JsonResult = /** @class */ (function () {
+    function JsonResult(TCLIService_types) {
         this.TCLIService_types = TCLIService_types;
-        this.schema = schema;
-        this.data = data;
+        this.schema = null;
+        this.data = null;
     }
-    OperationResult.prototype.getValue = function () {
+    JsonResult.prototype.setSchema = function (schema) {
+        this.schema = schema;
+    };
+    JsonResult.prototype.setData = function (data) {
+        this.data = data;
+    };
+    JsonResult.prototype.getValue = function () {
         var _this = this;
+        if (!this.data) {
+            return [];
+        }
         var descriptors = this.getSchemaColumns();
         return this.data.reduce(function (result, rowSet) {
             var columns = rowSet.columns || [];
@@ -23,10 +32,13 @@ var OperationResult = /** @class */ (function () {
             return result.concat(rows);
         }, []);
     };
-    OperationResult.prototype.getSchemaColumns = function () {
+    JsonResult.prototype.getSchemaColumns = function () {
+        if (!this.schema) {
+            return [];
+        }
         return __spreadArrays((this.schema.columns)).sort(function (c1, c2) { return c1.position > c2.position ? 1 : c1.position < c2.position ? -1 : 0; });
     };
-    OperationResult.prototype.getRows = function (columns, descriptors) {
+    JsonResult.prototype.getRows = function (columns, descriptors) {
         var _this = this;
         return descriptors.reduce(function (rows, descriptor) {
             return _this.getSchemaValues(descriptor, columns[descriptor.position - 1]).reduce(function (result, value, i) {
@@ -39,24 +51,24 @@ var OperationResult = /** @class */ (function () {
             }, rows);
         }, []);
     };
-    OperationResult.prototype.getSchemaValues = function (descriptor, column) {
+    JsonResult.prototype.getSchemaValues = function (descriptor, column) {
         var _this = this;
         var _a;
-        var typeDescriptor = ((_a = descriptor.typeDesc.types[0]) === null || _a === void 0 ? void 0 : _a.primitiveEntry) || {}; //(column?.typeDesc?.types || [{}])[0].primitiveEntry || {};
+        var typeDescriptor = ((_a = descriptor.typeDesc.types[0]) === null || _a === void 0 ? void 0 : _a.primitiveEntry) || {};
         return this.eachValue(typeDescriptor, column, function (value) {
             return _this.convertData(typeDescriptor, value);
         });
     };
-    OperationResult.prototype.getColumnName = function (column) {
+    JsonResult.prototype.getColumnName = function (column) {
         var name = column.columnName || '';
         return name.split('.').pop() || '';
     };
-    OperationResult.prototype.map = function (arr, callback) {
+    JsonResult.prototype.map = function (arr, callback) {
         return arr.map(function (value, i) {
             return callback(value, i);
         });
     };
-    OperationResult.prototype.eachValue = function (typeDescriptor, column, callback) {
+    JsonResult.prototype.eachValue = function (typeDescriptor, column, callback) {
         switch (typeDescriptor.type) {
             case this.TCLIService_types.TTypeId.BOOLEAN_TYPE:
                 return this.map(column[Types_1.ColumnCode.boolVal].values, callback);
@@ -78,7 +90,7 @@ var OperationResult = /** @class */ (function () {
                 return this.map(column[Types_1.ColumnCode.stringVal].values, callback);
         }
     };
-    OperationResult.prototype.convertData = function (typeDescriptor, value) {
+    JsonResult.prototype.convertData = function (typeDescriptor, value) {
         switch (typeDescriptor.type) {
             case this.TCLIService_types.TTypeId.TIMESTAMP_TYPE:
             case this.TCLIService_types.TTypeId.DATE_TYPE:
@@ -111,7 +123,7 @@ var OperationResult = /** @class */ (function () {
                 return value;
         }
     };
-    OperationResult.prototype.toJSON = function (value, defaultValue) {
+    JsonResult.prototype.toJSON = function (value, defaultValue) {
         try {
             return JSON.parse(value);
         }
@@ -119,10 +131,10 @@ var OperationResult = /** @class */ (function () {
             return defaultValue;
         }
     };
-    OperationResult.prototype.convertBigInt = function (value) {
+    JsonResult.prototype.convertBigInt = function (value) {
         return value.toNumber();
     };
-    return OperationResult;
+    return JsonResult;
 }());
-exports.default = OperationResult;
-//# sourceMappingURL=OperationResult.js.map
+exports.default = JsonResult;
+//# sourceMappingURL=JsonResult.js.map

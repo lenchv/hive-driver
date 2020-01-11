@@ -3,7 +3,7 @@ import IHiveSession, { ExecuteStatementOptions } from './contracts/IHiveSession'
 import { SessionHandle, TCLIServiceTypes } from "./hive/Types";
 import { ExecuteStatementResponse } from "./hive/Commands/ExecuteStatementCommand";
 import IOperation from "./contracts/IOperation";
-import Operation from "./Operation";
+import HiveOperation from "./HiveOperation";
 import InfoResponse from "./responses/InfoResponse";
 import Status from "./dto/Status";
 import StatusFactory from "./factory/StatusFactory";
@@ -50,7 +50,7 @@ export default class HiveSession implements IHiveSession {
                 return Promise.reject(status.getError());
             }
 
-            const operation = new Operation(
+            const operation = new HiveOperation(
                 this.driver,
                 response.operationHandle,
                 this.TCLIService_types,

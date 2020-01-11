@@ -14,7 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var Operation_1 = __importDefault(require("./Operation"));
+var HiveOperation_1 = __importDefault(require("./HiveOperation"));
 var InfoResponse_1 = __importDefault(require("./responses/InfoResponse"));
 var Status_1 = __importDefault(require("./dto/Status"));
 var StatusFactory_1 = __importDefault(require("./factory/StatusFactory"));
@@ -46,7 +46,7 @@ var HiveSession = /** @class */ (function () {
             if (status.error()) {
                 return Promise.reject(status.getError());
             }
-            var operation = new Operation_1.default(_this.driver, response.operationHandle, _this.TCLIService_types);
+            var operation = new HiveOperation_1.default(_this.driver, response.operationHandle, _this.TCLIService_types);
             return operation;
         });
     };

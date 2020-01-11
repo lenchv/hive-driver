@@ -1,6 +1,6 @@
 import { GetOperationStatusResponse } from "../hive/Commands/GetOperationStatusCommand";
 import Status from "../dto/Status";
-import OperationResult from "../dto/OperationResult";
+import IOperationResult from "../result/IOperationResult";
 export default interface IOperation {
     fetch(): Promise<Status>;
     status(progress: boolean): Promise<GetOperationStatusResponse>;
@@ -9,5 +9,6 @@ export default interface IOperation {
     waitUntilReady(progress: boolean, callback: Function): void;
     finished(): boolean;
     hasMoreRows(): boolean;
-    result(): OperationResult | null;
+    result(): IOperationResult;
+    getQueryId(): Promise<string>;
 }

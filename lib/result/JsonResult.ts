@@ -1,17 +1,30 @@
 import { TCLIServiceTypes, RowSet, TableSchema, ColumnDesc, Column, PrimitiveTypeEntry, ColumnCode, ColumnType, TBoolColumn, TByteColumn, ThriftBuffer } from "../hive/Types";
+import IOperationResult from "./IOperationResult";
 
-export default class OperationResult {
+export default class JsonResult implements IOperationResult {
     private TCLIService_types: TCLIServiceTypes;
-    private schema: TableSchema;
-    private data: Array<RowSet>;
+    private schema: TableSchema | null;
+    private data: Array<RowSet> | null;
 
-    constructor(schema: TableSchema, data: Array<RowSet>, TCLIService_types: TCLIServiceTypes) {
+    constructor(TCLIService_types: TCLIServiceTypes) {
         this.TCLIService_types = TCLIService_types;
+        this.schema = null;
+        this.data = null;
+    }
+
+    setSchema(schema: TableSchema): void {
         this.schema = schema;
+    }
+
+    setData(data: Array<RowSet>): void {
         this.data = data;
     }
 
     getValue(): Array<object> {
+        if (!this.data) {
+            return [];
+        }
+
         const descriptors = this.getSchemaColumns();
 
         return this.data.reduce((result: Array<any>, rowSet: RowSet) => {
@@ -26,6 +39,10 @@ export default class OperationResult {
     }
 
     private getSchemaColumns(): Array<ColumnDesc> {
+        if (!this.schema) {
+            return [];
+        }
+
         return [...(this.schema.columns)]
             .sort((c1, c2) => c1.position > c2.position ? 1 : c1.position < c2.position ? -1 : 0);
     }
@@ -50,7 +67,7 @@ export default class OperationResult {
     }
 
     private getSchemaValues(descriptor: ColumnDesc, column: Column): Array<any> {
-        const typeDescriptor = descriptor.typeDesc.types[0]?.primitiveEntry || {};//(column?.typeDesc?.types || [{}])[0].primitiveEntry || {};
+        const typeDescriptor = descriptor.typeDesc.types[0]?.primitiveEntry || {};
 
         return this.eachValue(typeDescriptor, column, (value: any) => {
             return this.convertData(typeDescriptor, value);

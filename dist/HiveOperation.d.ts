@@ -3,8 +3,8 @@ import HiveDriver from "./hive/HiveDriver";
 import { OperationHandle, TCLIServiceTypes } from "./hive/Types";
 import Status from "./dto/Status";
 import { GetOperationStatusResponse } from "./hive/Commands/GetOperationStatusCommand";
-import OperationResult from "./dto/OperationResult";
-export default class Operation implements IOperation {
+import IOperationResult from "./result/IOperationResult";
+export default class HiveOperation implements IOperation {
     private driver;
     private operationHandle;
     private TCLIService_type;
@@ -21,14 +21,16 @@ export default class Operation implements IOperation {
     status(progress?: boolean): Promise<GetOperationStatusResponse>;
     cancel(): Promise<Status>;
     close(): Promise<Status>;
-    waitUntilReady(progress: boolean, callback: Function): void;
+    waitUntilReady(progress: boolean, callback: Function): Promise<HiveOperation>;
     finished(): boolean;
     hasMoreRows(): boolean;
     setMaxRows(maxRows: number): void;
     setFetchType(fetchType: number): void;
-    result(): OperationResult | null;
+    result(resultHandler?: IOperationResult): IOperationResult;
+    getQueryId(): Promise<string>;
     private initializeSchema;
     private firstFetch;
     private nextFetch;
     private processFetchResponse;
+    private executeCallback;
 }

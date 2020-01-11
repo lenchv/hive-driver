@@ -17,12 +17,10 @@ client.connect({
     options: {}
 }, connection).then(client => {
     return client.openSession({
-        client_protocol: TCLIService_types.TProtocolVersion.HIVE_CLI_SERVICE_PROTOCOL_V9
+        client_protocol: TCLIService_types.TProtocolVersion.HIVE_CLI_SERVICE_PROTOCOL_V10
     });
 }).then((session) => {
     return createTable(session)
-        .then(() => loadData(session))
-        .then(() => loadData(session))
         .then(() => loadData(session))
         .then(() => select(session))
         .then(
@@ -44,21 +42,6 @@ client.connect({
     console.log(error);
 });
 
-const fetchAll = (operation) => {
-    return operation.fetch()
-        .then((status) => {
-            if (status.error()) {
-                return Promise.reject(statue.getError());
-            }
-        
-            if (!operation.hasMoreRows()) {
-                return operation;
-            }
-
-            return fetchAll(operation);
-        });
-};
-
 const dropTable = (session) => {
     return execute(session, 'drop table pokes').then(result => {
         console.log('drop table:', result);
@@ -79,39 +62,51 @@ const loadData = (session) => {
 };
 
 const select = (session) => {
-    return execute(session, 'select COUNT(*) from pokes').then(result => {
+    return execute(session, 'select * from pokes order by foo').then(result => {
         console.log(result, result.length);
     });
 };
 
 const execute = (session, statement) => {
     return session.executeStatement(statement, { runAsync: true })
-        .then((operation) => new Promise((resolve, reject) => {
-            operation.setMaxRows(1000);
-            operation.waitUntilReady(true, (error, stateResponse) => {
-                if (error) {
-                    reject(error);
-                }
-
-                console.log(stateResponse.taskStatus);
-                if (operation.finished()) {
-                    return resolve(operation);
-                }
-            });
-        }))
         .then((operation) => {
-            return fetchAll(operation);
-        })
-        .then(operation => {
-            const result = operation.result();
+            return handleOperation(operation, {
+                progress: false,
+                callback: (error, stateResponse) => {
+                    if (error) {
+                        console.error(error.message);
+                    }
 
-            return operation.close().then(() => {
-                if (!result) {
-                    return result;
+                    console.log(stateResponse.taskStatus);
                 }
-
-                return result.getValue();
             });
-        })
+        });
+};
+
+const handleOperation = (operation, {
+    progress = false,
+    callback = () => {},
+}) => {
+    return operation.waitUntilReady(progress, callback)
+    .then((operation) => {
+        return fetchAll(operation);
+    })
+    .then(operation => {
+        return operation.close();
+    })
+    .then(() => {
+        return operation.result().getValue();
+    })
+};
+
+const fetchAll = (operation) => {
+    return operation.fetch()
+        .then(() => {
+            if (operation.hasMoreRows()) {
+                return fetchAll(operation);
+            } else {
+                return operation;
+            }
+        });
 };
 
