@@ -20,25 +20,24 @@ export default class GetResult {
      *                      If resultHandler is not specified, the internal handler will interpret result as Json.
      */
     execute(resultHandler?: IOperationResult): IOperationResult {
-        if (resultHandler) {
-            resultHandler.setOperation(this.operation);
-
-            return resultHandler;
+        if (!resultHandler) {
+            resultHandler = this.getDefaultHandler();
         }
-
-        const schema = this.operation.getSchema();
-
-        if (schema === null) {
-            return new NullResult();
-        }
-        
-        resultHandler = new JsonResult(
-            this.TCLIService_types
-        );
 
         resultHandler.setOperation(this.operation);
 
         return resultHandler;
     }
 
+    private getDefaultHandler(): IOperationResult {
+        const schema = this.operation.getSchema();
+
+        if (schema === null) {
+            return new NullResult();
+        } else {
+            return new JsonResult(
+                this.TCLIService_types
+            );
+        }
+    }
 }

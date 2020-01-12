@@ -48,13 +48,12 @@ var HiveOperation = /** @class */ (function () {
             operationHandle: this.operationHandle,
             getProgressUpdate: progress
         }).then(function (response) {
+            var _a;
             var status = _this.statusFactory.create(response.status);
             if (status.error()) {
                 return Promise.reject(status.getError());
             }
-            _this.state = response.operationState === undefined
-                ? _this.state
-                : response.operationState;
+            _this.state = (_a = response.operationState, (_a !== null && _a !== void 0 ? _a : _this.state));
             _this.hasResultSet = !!response.hasResultSet;
             return response;
         });

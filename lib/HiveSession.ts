@@ -100,10 +100,7 @@ export default class HiveSession implements IHiveSession {
         return this.driver.closeSession({
             sessionHandle: this.sessionHandle
         }).then((response) => {
-            return new Status(
-                response.status,
-                this.TCLIService_types
-            );
+            return this.statusFactory.create(response.status);
         });
     }
 }

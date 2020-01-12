@@ -8,6 +8,9 @@ var BaseCommand = /** @class */ (function () {
     BaseCommand.prototype.executeCommand = function (request, command) {
         var _this = this;
         return new Promise(function (resolve, reject) {
+            if (typeof command !== 'function') {
+                return reject(new Error('Hive driver: the operation does not exist, try to choose another Thrift file.'));
+            }
             try {
                 command.call(_this.client, request, function (err, response) {
                     if (err) {

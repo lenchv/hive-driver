@@ -9,8 +9,12 @@ export default abstract class BaseCommand {
         this.TCLIService_types = TCLIService_types;
     }
 
-    executeCommand<Response>(request: object, command: Function): Promise<Response> {
+    executeCommand<Response>(request: object, command: Function | void): Promise<Response> {
         return new Promise((resolve, reject) => {
+            if (typeof command !== 'function') {
+                return reject(new Error('Hive driver: the operation does not exist, try to choose another Thrift file.'));
+            }
+
             try {
                 command.call(this.client, request, (err: Error, response: Response) => {
                     if (err) {

@@ -81,10 +81,7 @@ export default class HiveOperation implements IOperation {
                 return Promise.reject(status.getError());
             }
 
-            this.state = response.operationState === undefined
-                ? this.state
-                : response.operationState;
-
+            this.state = response.operationState ?? this.state;
             this.hasResultSet = !!response.hasResultSet;
 
             return response;

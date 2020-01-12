@@ -12,4 +12,5 @@ export default class GetResult {
      *                      If resultHandler is not specified, the internal handler will interpret result as Json.
      */
     execute(resultHandler?: IOperationResult): IOperationResult;
+    private getDefaultHandler;
 }

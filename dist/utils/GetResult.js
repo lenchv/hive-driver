@@ -17,17 +17,20 @@ var GetResult = /** @class */ (function () {
      *                      If resultHandler is not specified, the internal handler will interpret result as Json.
      */
     GetResult.prototype.execute = function (resultHandler) {
-        if (resultHandler) {
-            resultHandler.setOperation(this.operation);
-            return resultHandler;
+        if (!resultHandler) {
+            resultHandler = this.getDefaultHandler();
         }
+        resultHandler.setOperation(this.operation);
+        return resultHandler;
+    };
+    GetResult.prototype.getDefaultHandler = function () {
         var schema = this.operation.getSchema();
         if (schema === null) {
             return new NullResult_1.default();
         }
-        resultHandler = new JsonResult_1.default(this.TCLIService_types);
-        resultHandler.setOperation(this.operation);
-        return resultHandler;
+        else {
+            return new JsonResult_1.default(this.TCLIService_types);
+        }
     };
     return GetResult;
 }());
