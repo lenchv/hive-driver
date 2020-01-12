@@ -25,6 +25,8 @@ var HiveSession = /** @class */ (function () {
         this.statusFactory = new StatusFactory_1.default(TCLIService_types);
     }
     /**
+     * Returns general information about the data source
+     *
      * @param infoType one of the values TCLIService_types.TGetInfoType
      */
     HiveSession.prototype.getInfo = function (infoType) {
@@ -36,35 +38,109 @@ var HiveSession = /** @class */ (function () {
             return new InfoResponse_1.default(response, _this.TCLIService_types);
         });
     };
+    /**
+     * Executes DDL/DML statements
+     *
+     * @param statement DDL/DDL statement
+     * @param options
+     */
     HiveSession.prototype.executeStatement = function (statement, options) {
         var _this = this;
         if (options === void 0) { options = {}; }
         options = __assign({ runAsync: false }, options);
         return this.driver.executeStatement(__assign({ sessionHandle: this.sessionHandle, statement: statement }, options)).then(function (response) {
-            var status = _this.statusFactory.create(response.status);
-            if (status.error()) {
-                return Promise.reject(status.getError());
-            }
-            var operation = new HiveOperation_1.default(_this.driver, response.operationHandle, _this.TCLIService_types);
-            return operation;
+            _this.assertStatus(response.status);
+            return _this.createOperation(response.operationHandle);
         });
     };
-    // getTypeInfo(): IOperation {
-    // }
-    // getCatalogs(): IOperation {
-    // }
-    // getSchemas(): IOperation {
-    // }
-    // getTables(): IOperation {
-    // }
-    // getTableTypes(): IOperation {
-    // }
-    // getColumns(): IOperation {
-    // }
-    // getFunctions(functionName: string): IOperation {
-    // }
-    // getPrimaryKeys(dbName: string, tableName: string): IOperation {
-    // }
+    HiveSession.prototype.getTypeInfo = function () {
+        var _this = this;
+        return this.driver.getTypeInfo({
+            sessionHandle: this.sessionHandle
+        }).then(function (response) {
+            _this.assertStatus(response.status);
+            return _this.createOperation(response.operationHandle);
+        });
+    };
+    HiveSession.prototype.getCatalogs = function () {
+        var _this = this;
+        return this.driver.getCatalogs({
+            sessionHandle: this.sessionHandle
+        }).then(function (response) {
+            _this.assertStatus(response.status);
+            return _this.createOperation(response.operationHandle);
+        });
+    };
+    HiveSession.prototype.getSchemas = function (schemaName, catalogName) {
+        var _this = this;
+        return this.driver.getSchemas({
+            sessionHandle: this.sessionHandle,
+            catalogName: catalogName,
+            schemaName: schemaName,
+        }).then(function (response) {
+            _this.assertStatus(response.status);
+            return _this.createOperation(response.operationHandle);
+        });
+    };
+    HiveSession.prototype.getTables = function (catalogName, schemaName, tableName, tableTypes) {
+        var _this = this;
+        return this.driver.getTables({
+            sessionHandle: this.sessionHandle,
+            catalogName: catalogName,
+            schemaName: schemaName,
+            tableName: tableName,
+            tableTypes: tableTypes,
+        }).then(function (response) {
+            _this.assertStatus(response.status);
+            return _this.createOperation(response.operationHandle);
+        });
+    };
+    HiveSession.prototype.getTableTypes = function () {
+        var _this = this;
+        return this.driver.getTableTypes({
+            sessionHandle: this.sessionHandle,
+        }).then(function (response) {
+            _this.assertStatus(response.status);
+            return _this.createOperation(response.operationHandle);
+        });
+    };
+    HiveSession.prototype.getColumns = function (catalogName, schemaName, tableName, columnName) {
+        var _this = this;
+        return this.driver.getColumns({
+            sessionHandle: this.sessionHandle,
+            catalogName: catalogName,
+            schemaName: schemaName,
+            tableName: tableName,
+            columnName: columnName,
+        }).then(function (response) {
+            _this.assertStatus(response.status);
+            return _this.createOperation(response.operationHandle);
+        });
+    };
+    HiveSession.prototype.getFunctions = function (functionName, catalogName, schemaName) {
+        var _this = this;
+        return this.driver.getFunctions({
+            sessionHandle: this.sessionHandle,
+            functionName: functionName,
+            schemaName: schemaName,
+            catalogName: catalogName,
+        }).then(function (response) {
+            _this.assertStatus(response.status);
+            return _this.createOperation(response.operationHandle);
+        });
+    };
+    HiveSession.prototype.getPrimaryKeys = function (schemaName, tableName, catalogName) {
+        var _this = this;
+        return this.driver.getPrimaryKeys({
+            sessionHandle: this.sessionHandle,
+            catalogName: catalogName,
+            schemaName: schemaName,
+            tableName: tableName,
+        }).then(function (response) {
+            _this.assertStatus(response.status);
+            return _this.createOperation(response.operationHandle);
+        });
+    };
     // getCrossReference(request: CrossReferenceRequest): IOperation {
     // }
     // getDelegationToken(owner: string, renewer: string): string {
@@ -80,6 +156,15 @@ var HiveSession = /** @class */ (function () {
         }).then(function (response) {
             return _this.statusFactory.create(response.status);
         });
+    };
+    HiveSession.prototype.createOperation = function (handle) {
+        return new HiveOperation_1.default(this.driver, handle, this.TCLIService_types);
+    };
+    HiveSession.prototype.assertStatus = function (responseStatus) {
+        var status = this.statusFactory.create(responseStatus);
+        if (status.error()) {
+            throw status.getError();
+        }
     };
     return HiveSession;
 }());

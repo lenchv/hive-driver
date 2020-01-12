@@ -3,8 +3,8 @@ import { Status, SessionHandle, OperationHandle } from "../Types";
 
 export type GetSchemasRequest = {
     sessionHandle: SessionHandle,
-    catalogName: string,
-    schemaName: string
+    catalogName?: string,
+    schemaName?: string
 };
 
 export type GetSchemasResponse = {

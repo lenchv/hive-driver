@@ -2,8 +2,8 @@ import BaseCommand from "./BaseCommand";
 import { Status, SessionHandle, OperationHandle } from "../Types";
 export declare type GetSchemasRequest = {
     sessionHandle: SessionHandle;
-    catalogName: string;
-    schemaName: string;
+    catalogName?: string;
+    schemaName?: string;
 };
 export declare type GetSchemasResponse = {
     status: Status;
