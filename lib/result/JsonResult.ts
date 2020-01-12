@@ -66,8 +66,13 @@ export default class JsonResult implements IOperationResult {
 
     private getSchemaValues(descriptor: ColumnDesc, column: Column): Array<any> {
         const typeDescriptor = descriptor.typeDesc.types[0]?.primitiveEntry || {};
+        const columnValue = this.getColumnValue(column);
 
-        return this.eachValue(typeDescriptor, column, (value: any) => {
+        if (!columnValue) {
+            return [];
+        }
+
+        return columnValue.values.map((value: any) => {
             return this.convertData(typeDescriptor, value);
         });
     }
@@ -76,35 +81,6 @@ export default class JsonResult implements IOperationResult {
 	    const name = column.columnName || '';
 
 	    return name.split('.').pop() || '';
-    }
-
-    private map<T>(arr: Array<T>, callback: Function): Array<any> {
-        return arr.map((value: T, i: number) => {
-            return callback(value, i);
-        });
-    }
-
-    private eachValue(typeDescriptor: PrimitiveTypeEntry, column: Column, callback: Function): Array<any> {
-        switch (typeDescriptor.type) {
-            case this.TCLIService_types.TTypeId.BOOLEAN_TYPE:
-                return this.map(column[ColumnCode.boolVal].values, callback);
-            case this.TCLIService_types.TTypeId.TINYINT_TYPE:
-                return this.map(column[ColumnCode.byteVal].values, callback);
-            case this.TCLIService_types.TTypeId.SMALLINT_TYPE:
-                return this.map(column[ColumnCode.i16Val].values, callback);
-            case this.TCLIService_types.TTypeId.INT_TYPE:
-                return this.map(column[ColumnCode.i32Val].values, callback);
-            case this.TCLIService_types.TTypeId.BIGINT_TYPE:
-            case this.TCLIService_types.TTypeId.TIMESTAMP_TYPE:
-                return this.map(column[ColumnCode.i64Val].values, callback);
-            case this.TCLIService_types.TTypeId.FLOAT_TYPE:
-            case this.TCLIService_types.TTypeId.DOUBLE_TYPE:
-                return this.map(column[ColumnCode.doubleVal].values, callback);
-            case this.TCLIService_types.TTypeId.BINARY_TYPE:
-                return this.map(column[ColumnCode.binaryVal].values, callback);
-            default:
-                return this.map(column[ColumnCode.stringVal].values, callback);
-        }
     }
 
     private convertData(typeDescriptor: PrimitiveTypeEntry, value: ColumnType): any {
@@ -151,5 +127,16 @@ export default class JsonResult implements IOperationResult {
 
     private convertBigInt(value: any): any {
         return value.toNumber();
+    }
+
+    private getColumnValue(column: Column) {
+        return column[ColumnCode.binaryVal]
+            || column[ColumnCode.boolVal]
+            || column[ColumnCode.byteVal]
+            || column[ColumnCode.doubleVal]
+            || column[ColumnCode.i16Val]
+            || column[ColumnCode.i32Val]
+            || column[ColumnCode.i64Val]
+            || column[ColumnCode.stringVal];
     }
 }

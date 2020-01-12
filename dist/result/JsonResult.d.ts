@@ -12,9 +12,8 @@ export default class JsonResult implements IOperationResult {
     private getRows;
     private getSchemaValues;
     private getColumnName;
-    private map;
-    private eachValue;
     private convertData;
     private toJSON;
     private convertBigInt;
+    private getColumnValue;
 }

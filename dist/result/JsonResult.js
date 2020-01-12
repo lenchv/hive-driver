@@ -53,40 +53,17 @@ var JsonResult = /** @class */ (function () {
         var _this = this;
         var _a;
         var typeDescriptor = ((_a = descriptor.typeDesc.types[0]) === null || _a === void 0 ? void 0 : _a.primitiveEntry) || {};
-        return this.eachValue(typeDescriptor, column, function (value) {
+        var columnValue = this.getColumnValue(column);
+        if (!columnValue) {
+            return [];
+        }
+        return columnValue.values.map(function (value) {
             return _this.convertData(typeDescriptor, value);
         });
     };
     JsonResult.prototype.getColumnName = function (column) {
         var name = column.columnName || '';
         return name.split('.').pop() || '';
-    };
-    JsonResult.prototype.map = function (arr, callback) {
-        return arr.map(function (value, i) {
-            return callback(value, i);
-        });
-    };
-    JsonResult.prototype.eachValue = function (typeDescriptor, column, callback) {
-        switch (typeDescriptor.type) {
-            case this.TCLIService_types.TTypeId.BOOLEAN_TYPE:
-                return this.map(column[Types_1.ColumnCode.boolVal].values, callback);
-            case this.TCLIService_types.TTypeId.TINYINT_TYPE:
-                return this.map(column[Types_1.ColumnCode.byteVal].values, callback);
-            case this.TCLIService_types.TTypeId.SMALLINT_TYPE:
-                return this.map(column[Types_1.ColumnCode.i16Val].values, callback);
-            case this.TCLIService_types.TTypeId.INT_TYPE:
-                return this.map(column[Types_1.ColumnCode.i32Val].values, callback);
-            case this.TCLIService_types.TTypeId.BIGINT_TYPE:
-            case this.TCLIService_types.TTypeId.TIMESTAMP_TYPE:
-                return this.map(column[Types_1.ColumnCode.i64Val].values, callback);
-            case this.TCLIService_types.TTypeId.FLOAT_TYPE:
-            case this.TCLIService_types.TTypeId.DOUBLE_TYPE:
-                return this.map(column[Types_1.ColumnCode.doubleVal].values, callback);
-            case this.TCLIService_types.TTypeId.BINARY_TYPE:
-                return this.map(column[Types_1.ColumnCode.binaryVal].values, callback);
-            default:
-                return this.map(column[Types_1.ColumnCode.stringVal].values, callback);
-        }
     };
     JsonResult.prototype.convertData = function (typeDescriptor, value) {
         switch (typeDescriptor.type) {
@@ -131,6 +108,16 @@ var JsonResult = /** @class */ (function () {
     };
     JsonResult.prototype.convertBigInt = function (value) {
         return value.toNumber();
+    };
+    JsonResult.prototype.getColumnValue = function (column) {
+        return column[Types_1.ColumnCode.binaryVal]
+            || column[Types_1.ColumnCode.boolVal]
+            || column[Types_1.ColumnCode.byteVal]
+            || column[Types_1.ColumnCode.doubleVal]
+            || column[Types_1.ColumnCode.i16Val]
+            || column[Types_1.ColumnCode.i32Val]
+            || column[Types_1.ColumnCode.i64Val]
+            || column[Types_1.ColumnCode.stringVal];
     };
     return JsonResult;
 }());

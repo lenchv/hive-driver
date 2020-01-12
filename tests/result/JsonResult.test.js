@@ -18,7 +18,7 @@ const getColumnSchema = (name, type, position) => {
 }
 
 describe('JsonResult', () => {
-    it('should convert schema and data to json', () => {
+    it('should convert schema with primitive types to json', () => {
         const schema = {
             columns: [
                 getColumnSchema('table.str', TCLIService_types.TTypeId.STRING_TYPE, 1),
@@ -32,6 +32,11 @@ describe('JsonResult', () => {
                 getColumnSchema('table.small_int', TCLIService_types.TTypeId.SMALLINT_TYPE, 9),
                 getColumnSchema('table.tiny_int', TCLIService_types.TTypeId.TINYINT_TYPE, 10),
                 getColumnSchema('table.varch', TCLIService_types.TTypeId.VARCHAR_TYPE, 11),
+                getColumnSchema('table.dec', TCLIService_types.TTypeId.DECIMAL_TYPE, 12),
+                getColumnSchema('table.ts', TCLIService_types.TTypeId.TIMESTAMP_TYPE, 13),
+                getColumnSchema('table.date', TCLIService_types.TTypeId.DATE_TYPE, 14),
+                getColumnSchema('table.day_interval', TCLIService_types.TTypeId.INTERVAL_DAY_TIME_TYPE, 15),
+                getColumnSchema('table.month_interval', TCLIService_types.TTypeId.INTERVAL_YEAR_MONTH_TYPE, 16),
             ]
         };
         const data = [
@@ -58,6 +63,16 @@ describe('JsonResult', () => {
                     byteVal: { values: [5, 6] } 
                 }, {
                     stringVal: { values: ['e', 'f'] } 
+                }, {
+                    stringVal: { values: ['2.1', '2.2'] } 
+                }, {
+                    stringVal: { values: ['2020-01-17 00:17:13.0', '2020-01-17 00:17:13.0'] } 
+                }, {
+                    stringVal: { values: ['2020-01-17', '2020-01-17'] } 
+                }, {
+                    stringVal: { values: ['1 00:00:00.000000000', '1 00:00:00.000000000'] } 
+                }, {
+                    stringVal: { values: ['0-1', '0-1'] } 
                 }]
             }
         ];
@@ -79,7 +94,12 @@ describe('JsonResult', () => {
             "int":1,
             "small_int":3,
             "tiny_int":5,
-            "varch":"e"
+            "varch":"e",
+            "dec": 2.1,
+            "ts": "2020-01-17 00:17:13.0",
+            "date": "2020-01-17",
+            "day_interval": "1 00:00:00.000000000",
+            "month_interval": "0-1",
         }, {
             "str":"b",
             "int64":565157600297474,
@@ -91,7 +111,87 @@ describe('JsonResult', () => {
             "int":2,
             "small_int":4,
             "tiny_int":6,
-            "varch":"f"
+            "varch":"f",
+            "dec": 2.2,
+            "ts": "2020-01-17 00:17:13.0",
+            "date": "2020-01-17",
+            "day_interval": "1 00:00:00.000000000",
+            "month_interval": "0-1",
         }]);
+    });
+
+    it('should convert complex types', () => {
+        const schema = {
+            columns: [
+                getColumnSchema('table.array', TCLIService_types.TTypeId.ARRAY_TYPE, 1),
+                getColumnSchema('table.map', TCLIService_types.TTypeId.MAP_TYPE, 2),
+                getColumnSchema('table.struct', TCLIService_types.TTypeId.STRUCT_TYPE, 3),
+                getColumnSchema('table.union', TCLIService_types.TTypeId.UNION_TYPE, 4)
+            ]
+        };
+        const data = [
+            {
+                columns: [{
+                    stringVal: { values: ['["a", "b"]', '["c", "d"]'] }
+                }, {
+                    stringVal: { values: ['{ "key": 12 }', '{ "key": 13 }'] }
+                }, {
+                    stringVal: { values: ['{ "name": "Jon", "surname": "Doe" }', '{ "name": "Jane", "surname": "Doe" }'] }
+                }, {
+                    stringVal: { values: ['{0:12}', '{1:"foo"}'] }
+                }]
+            }
+        ];
+
+        const result = new JsonResult(TCLIService_types);
+        result.setOperation({
+            getSchema: () => schema,
+            getData: () => data,
+        });
+
+        expect(result.getValue()).to.be.deep.eq([{
+            array: ["a", "b"],
+            map: { "key": 12 },
+            struct: { "name": "Jon", "surname": "Doe" },
+            union: '{0:12}',
+        }, {
+            array: ["c", "d"],
+            map: { "key": 13 },
+            struct: { "name": "Jane", "surname": "Doe" },
+            union: '{1:"foo"}',
+        }]);
+    });
+
+    it('should merge data items', () => {
+        const schema = {
+            columns: [
+                getColumnSchema('table.id', TCLIService_types.TTypeId.STRING_TYPE, 1),
+            ]
+        };
+        const data = [
+            {
+                columns: [{
+                    stringVal: { values: ['0', '1'] }
+                }]
+            },
+            {
+                columns: [{
+                    stringVal: { values: ['2', '3'] }
+                }]
+            }
+        ];
+
+        const result = new JsonResult(TCLIService_types);
+        result.setOperation({
+            getSchema: () => schema,
+            getData: () => data,
+        });
+
+        expect(result.getValue()).to.be.deep.eq([
+            { id: "0" },
+            { id: "1" },
+            { id: "2" },
+            { id: "3" },
+        ]);
     });
 });
