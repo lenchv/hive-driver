@@ -28,4 +28,15 @@ export default class HiveUtils {
 
         return getResult.execute(resultHandler);
     }
+
+    fetchAll(operation: IOperation): Promise<IOperation> {
+        return operation.fetch()
+            .then(() => {
+                if (operation.hasMoreRows()) {
+                    return this.fetchAll(operation);
+                } else {
+                    return operation;
+                }
+            });
+    }
 }

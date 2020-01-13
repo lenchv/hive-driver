@@ -71,25 +71,25 @@ var HiveSession = /** @class */ (function () {
             return _this.createOperation(response.operationHandle);
         });
     };
-    HiveSession.prototype.getSchemas = function (schemaName, catalogName) {
+    HiveSession.prototype.getSchemas = function (request) {
         var _this = this;
         return this.driver.getSchemas({
             sessionHandle: this.sessionHandle,
-            catalogName: catalogName,
-            schemaName: schemaName,
+            catalogName: request.catalogName,
+            schemaName: request.schemaName,
         }).then(function (response) {
             _this.assertStatus(response.status);
             return _this.createOperation(response.operationHandle);
         });
     };
-    HiveSession.prototype.getTables = function (catalogName, schemaName, tableName, tableTypes) {
+    HiveSession.prototype.getTables = function (request) {
         var _this = this;
         return this.driver.getTables({
             sessionHandle: this.sessionHandle,
-            catalogName: catalogName,
-            schemaName: schemaName,
-            tableName: tableName,
-            tableTypes: tableTypes,
+            catalogName: request.catalogName,
+            schemaName: request.schemaName,
+            tableName: request.tableName,
+            tableTypes: request.tableTypes,
         }).then(function (response) {
             _this.assertStatus(response.status);
             return _this.createOperation(response.operationHandle);
@@ -104,38 +104,38 @@ var HiveSession = /** @class */ (function () {
             return _this.createOperation(response.operationHandle);
         });
     };
-    HiveSession.prototype.getColumns = function (catalogName, schemaName, tableName, columnName) {
+    HiveSession.prototype.getColumns = function (request) {
         var _this = this;
         return this.driver.getColumns({
             sessionHandle: this.sessionHandle,
-            catalogName: catalogName,
-            schemaName: schemaName,
-            tableName: tableName,
-            columnName: columnName,
+            catalogName: request.catalogName,
+            schemaName: request.schemaName,
+            tableName: request.tableName,
+            columnName: request.columnName,
         }).then(function (response) {
             _this.assertStatus(response.status);
             return _this.createOperation(response.operationHandle);
         });
     };
-    HiveSession.prototype.getFunctions = function (functionName, catalogName, schemaName) {
+    HiveSession.prototype.getFunctions = function (request) {
         var _this = this;
         return this.driver.getFunctions({
             sessionHandle: this.sessionHandle,
-            functionName: functionName,
-            schemaName: schemaName,
-            catalogName: catalogName,
+            functionName: request.functionName,
+            schemaName: request.schemaName,
+            catalogName: request.catalogName,
         }).then(function (response) {
             _this.assertStatus(response.status);
             return _this.createOperation(response.operationHandle);
         });
     };
-    HiveSession.prototype.getPrimaryKeys = function (schemaName, tableName, catalogName) {
+    HiveSession.prototype.getPrimaryKeys = function (request) {
         var _this = this;
         return this.driver.getPrimaryKeys({
             sessionHandle: this.sessionHandle,
-            catalogName: catalogName,
-            schemaName: schemaName,
-            tableName: tableName,
+            catalogName: request.catalogName,
+            schemaName: request.schemaName,
+            tableName: request.tableName,
         }).then(function (response) {
             _this.assertStatus(response.status);
             return _this.createOperation(response.operationHandle);

@@ -6,4 +6,5 @@ export default class HiveUtils {
     constructor(TCLIService_types: TCLIServiceTypes);
     waitUntilReady(operation: IOperation, progress?: boolean, callback?: Function): Promise<IOperation>;
     getResult(operation: IOperation, resultHandler?: IOperationResult): IOperationResult;
+    fetchAll(operation: IOperation): Promise<IOperation>;
 }

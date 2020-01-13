@@ -17,6 +17,18 @@ var HiveUtils = /** @class */ (function () {
         var getResult = new GetResult_1.default(operation, this.TCLIService_types);
         return getResult.execute(resultHandler);
     };
+    HiveUtils.prototype.fetchAll = function (operation) {
+        var _this = this;
+        return operation.fetch()
+            .then(function () {
+            if (operation.hasMoreRows()) {
+                return _this.fetchAll(operation);
+            }
+            else {
+                return operation;
+            }
+        });
+    };
     return HiveUtils;
 }());
 exports.default = HiveUtils;

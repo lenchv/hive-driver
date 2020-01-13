@@ -8,6 +8,37 @@ import InfoResponse from "./responses/InfoResponse";
 import Status from "./dto/Status";
 import StatusFactory from "./factory/StatusFactory";
 
+type SchemasRequest = {
+    schemaName?: string,
+    catalogName?: string
+};
+
+type TablesRequest = {
+    catalogName?: string,
+    schemaName?: string,
+    tableName?: string,
+    tableTypes?: Array<string>,
+};
+
+type ColumnRequest = {
+    catalogName?: string,
+    schemaName?: string,
+    tableName?: string,
+    columnName?: string,
+};
+
+type FunctionNameRequest = {
+    functionName: string,
+    catalogName?: string,
+    schemaName?: string,
+};
+
+type PrimaryKeysRequest = {
+    schemaName: string,
+    tableName: string,
+    catalogName?: string,
+};
+
 export default class HiveSession implements IHiveSession {
     private driver: HiveDriver;
     private sessionHandle: SessionHandle;
@@ -78,11 +109,11 @@ export default class HiveSession implements IHiveSession {
         });
     }
 
-    getSchemas(schemaName?: string, catalogName?: string): Promise<IOperation> {
+    getSchemas(request: SchemasRequest): Promise<IOperation> {
         return this.driver.getSchemas({
             sessionHandle: this.sessionHandle,
-            catalogName,
-            schemaName,
+            catalogName: request.catalogName,
+            schemaName: request.schemaName,
         }).then(response => {
             this.assertStatus(response.status);
 
@@ -90,18 +121,13 @@ export default class HiveSession implements IHiveSession {
         });
     }
 
-    getTables(
-        catalogName?: string,
-        schemaName?: string,
-        tableName?: string,
-        tableTypes?: Array<string>,
-    ): Promise<IOperation> {
+    getTables(request: TablesRequest): Promise<IOperation> {
         return this.driver.getTables({
             sessionHandle: this.sessionHandle,
-            catalogName,
-            schemaName,
-            tableName,
-            tableTypes,
+            catalogName: request.catalogName,
+            schemaName: request.schemaName,
+            tableName: request.tableName,
+            tableTypes: request.tableTypes,
         }).then(response => {
             this.assertStatus(response.status);
 
@@ -119,18 +145,13 @@ export default class HiveSession implements IHiveSession {
         });
     }
 
-    getColumns(
-        catalogName?: string,
-        schemaName?: string,
-        tableName?: string,
-        columnName?: string,
-    ): Promise<IOperation> {
+    getColumns(request: ColumnRequest): Promise<IOperation> {
         return this.driver.getColumns({
             sessionHandle: this.sessionHandle,
-            catalogName,
-            schemaName,
-            tableName,
-            columnName,
+            catalogName: request.catalogName,
+            schemaName: request.schemaName,
+            tableName: request.tableName,
+            columnName: request.columnName,
         }).then(response => {
             this.assertStatus(response.status);
 
@@ -138,12 +159,12 @@ export default class HiveSession implements IHiveSession {
         });
     }
 
-    getFunctions(functionName: string, catalogName?: string, schemaName?: string): Promise<IOperation> {
+    getFunctions(request: FunctionNameRequest): Promise<IOperation> {
         return this.driver.getFunctions({
             sessionHandle: this.sessionHandle,
-            functionName,
-            schemaName,
-            catalogName,
+            functionName: request.functionName,
+            schemaName: request.schemaName,
+            catalogName: request.catalogName,
         }).then(response => {
             this.assertStatus(response.status);
 
@@ -151,12 +172,12 @@ export default class HiveSession implements IHiveSession {
         });
     }
 
-    getPrimaryKeys(schemaName: string, tableName: string, catalogName?: string): Promise<IOperation> {
+    getPrimaryKeys(request: PrimaryKeysRequest): Promise<IOperation> {
         return this.driver.getPrimaryKeys({
             sessionHandle: this.sessionHandle,
-            catalogName,
-            schemaName,
-            tableName,
+            catalogName: request.catalogName,
+            schemaName: request.schemaName,
+            tableName: request.tableName,
         }).then(response => {
             this.assertStatus(response.status);
 

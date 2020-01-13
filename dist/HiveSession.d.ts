@@ -4,6 +4,32 @@ import { SessionHandle, TCLIServiceTypes } from "./hive/Types";
 import IOperation from "./contracts/IOperation";
 import InfoResponse from "./responses/InfoResponse";
 import Status from "./dto/Status";
+declare type SchemasRequest = {
+    schemaName?: string;
+    catalogName?: string;
+};
+declare type TablesRequest = {
+    catalogName?: string;
+    schemaName?: string;
+    tableName?: string;
+    tableTypes?: Array<string>;
+};
+declare type ColumnRequest = {
+    catalogName?: string;
+    schemaName?: string;
+    tableName?: string;
+    columnName?: string;
+};
+declare type FunctionNameRequest = {
+    functionName: string;
+    catalogName?: string;
+    schemaName?: string;
+};
+declare type PrimaryKeysRequest = {
+    schemaName: string;
+    tableName: string;
+    catalogName?: string;
+};
 export default class HiveSession implements IHiveSession {
     private driver;
     private sessionHandle;
@@ -25,13 +51,14 @@ export default class HiveSession implements IHiveSession {
     executeStatement(statement: string, options?: ExecuteStatementOptions): Promise<IOperation>;
     getTypeInfo(): Promise<IOperation>;
     getCatalogs(): Promise<IOperation>;
-    getSchemas(schemaName?: string, catalogName?: string): Promise<IOperation>;
-    getTables(catalogName?: string, schemaName?: string, tableName?: string, tableTypes?: Array<string>): Promise<IOperation>;
+    getSchemas(request: SchemasRequest): Promise<IOperation>;
+    getTables(request: TablesRequest): Promise<IOperation>;
     getTableTypes(): Promise<IOperation>;
-    getColumns(catalogName?: string, schemaName?: string, tableName?: string, columnName?: string): Promise<IOperation>;
-    getFunctions(functionName: string, catalogName?: string, schemaName?: string): Promise<IOperation>;
-    getPrimaryKeys(schemaName: string, tableName: string, catalogName?: string): Promise<IOperation>;
+    getColumns(request: ColumnRequest): Promise<IOperation>;
+    getFunctions(request: FunctionNameRequest): Promise<IOperation>;
+    getPrimaryKeys(request: PrimaryKeysRequest): Promise<IOperation>;
     close(): Promise<Status>;
     private createOperation;
     private assertStatus;
 }
+export {};

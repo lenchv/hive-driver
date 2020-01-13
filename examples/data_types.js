@@ -185,7 +185,7 @@ const handleOperation = (operation, {
 }) => {
     return utils.waitUntilReady(operation, progress, callback)
     .then((operation) => {
-        return fetchAll(operation);
+        return utils.fetchAll(operation);
     })
     .then(operation => {
         return operation.close();
@@ -193,16 +193,5 @@ const handleOperation = (operation, {
     .then(() => {
         return utils.getResult(operation).getValue();
     })
-};
-
-const fetchAll = (operation) => {
-    return operation.fetch()
-        .then(() => {
-            if (operation.hasMoreRows()) {
-                return fetchAll(operation);
-            } else {
-                return operation;
-            }
-        });
 };
 
