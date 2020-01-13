@@ -1,4 +1,4 @@
-declare type Options = {
+export declare type Options = {
     username?: string;
     password?: string;
     ssl?: boolean;
@@ -8,6 +8,8 @@ declare type Options = {
     retry_max_delay?: number;
     connect_timeout?: number;
     timeout?: number;
+    headers?: object;
+    path?: string;
     [key: string]: any;
 };
 export default interface IConnectionOptions {
@@ -15,4 +17,3 @@ export default interface IConnectionOptions {
     port: number;
     options?: Options;
 }
-export {};

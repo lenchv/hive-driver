@@ -1,4 +1,4 @@
-type Options = {
+export type Options = {
     username?: string,
     password?: string,
     ssl?: boolean,
@@ -8,6 +8,8 @@ type Options = {
     retry_max_delay?: number,
     connect_timeout?: number,
     timeout?: number,
+    headers?: object,
+    path?: string,
     [key: string] : any,
 };
 
