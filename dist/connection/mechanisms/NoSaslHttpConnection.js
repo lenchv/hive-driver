@@ -20,12 +20,26 @@ var NoSaslHttpConnection = /** @class */ (function () {
     function NoSaslHttpConnection() {
     }
     NoSaslHttpConnection.prototype.connect = function (options) {
-        var _a, _b, _c;
-        var connection = thrift.createHttpConnection(options.host, options.port, __assign(__assign({ transport: thrift.TBufferedTransport, protocol: thrift.TBinaryProtocol }, options.options), { headers: __assign(__assign({}, (((_a = options.options) === null || _a === void 0 ? void 0 : _a.headers) || {})), { Authorization: this.getAuthorization(((_b = options.options) === null || _b === void 0 ? void 0 : _b.username) || 'anonymous', ((_c = options.options) === null || _c === void 0 ? void 0 : _c.password) || 'anonymous') }) }));
+        var _a, _b, _c, _d, _e;
+        var connection = thrift.createHttpConnection(options.host, options.port, __assign(__assign({ transport: thrift.TBufferedTransport, protocol: thrift.TBinaryProtocol }, options.options), { headers: __assign(__assign({}, (((_a = options.options) === null || _a === void 0 ? void 0 : _a.headers) || {})), { Authorization: this.getAuthorization(((_b = options.options) === null || _b === void 0 ? void 0 : _b.username) || 'anonymous', ((_c = options.options) === null || _c === void 0 ? void 0 : _c.password) || 'anonymous') }), nodeOptions: __assign(__assign({}, (((_d = options.options) === null || _d === void 0 ? void 0 : _d.nodeOptions) || {})), this.getNodeOptions(((_e = options) === null || _e === void 0 ? void 0 : _e.options) || {})) }));
         return Promise.resolve(new Connection_1.default(connection));
     };
     NoSaslHttpConnection.prototype.getAuthorization = function (username, password) {
         return 'Basic ' + Buffer.from(username + ":" + password).toString('base64');
+    };
+    NoSaslHttpConnection.prototype.getNodeOptions = function (options) {
+        var ca = options.ca, cert = options.cert, key = options.key;
+        var nodeOptions = {};
+        if (ca) {
+            nodeOptions.ca = ca;
+        }
+        if (cert) {
+            nodeOptions.cert = cert;
+        }
+        if (key) {
+            nodeOptions.key = key;
+        }
+        return nodeOptions;
     };
     return NoSaslHttpConnection;
 }());

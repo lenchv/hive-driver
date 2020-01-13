@@ -10,6 +10,9 @@ export type Options = {
     timeout?: number,
     headers?: object,
     path?: string,
+    ca?: Buffer | string,
+    cert?: Buffer | string,
+    key?: Buffer | string,
     [key: string] : any,
 };
 

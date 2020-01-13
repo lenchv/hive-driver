@@ -1,3 +1,4 @@
+/// <reference types="node" />
 export declare type Options = {
     username?: string;
     password?: string;
@@ -10,6 +11,9 @@ export declare type Options = {
     timeout?: number;
     headers?: object;
     path?: string;
+    ca?: Buffer | string;
+    cert?: Buffer | string;
+    key?: Buffer | string;
     [key: string]: any;
 };
 export default interface IConnectionOptions {
