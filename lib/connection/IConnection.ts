@@ -9,7 +9,10 @@ export default interface IConnection {
 
     removeListener(eventName: string, listener: Function): void;
 
+    emit(eventName: string): void;
+
     write(data: Buffer | String): void;
 
     end(): void;
+
 }

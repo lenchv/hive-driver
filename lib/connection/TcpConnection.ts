@@ -34,4 +34,8 @@ export default class TcpConnection implements IConnection {
     end(): void {
         return this.connection.end();
     }
+
+    emit(eventName: string): void {
+        this.connection.emit(eventName);
+    }
 }

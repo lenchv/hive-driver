@@ -26,16 +26,17 @@ var ThriftConnection = thrift.Connection;
 var TcpConnection_1 = __importDefault(require("../TcpConnection"));
 var AuthHelper_1 = __importStar(require("../utils/AuthHelper"));
 var Connection_1 = __importDefault(require("../Connection"));
+var TlsConnection_1 = __importDefault(require("../TlsConnection"));
 var PlainTcpConnection = /** @class */ (function () {
     function PlainTcpConnection() {
     }
     PlainTcpConnection.prototype.connect = function (options) {
         var _this = this;
-        var _a, _b, _c, _d;
-        // const createConnection = options.options?.ssl ? thrift.createSSLConnection : thrift.createConnection;
-        var connection = new TcpConnection_1.default(options.host, options.port);
-        var username = ((_b = (_a = options) === null || _a === void 0 ? void 0 : _a.options) === null || _b === void 0 ? void 0 : _b.username) || 'anonymous';
-        var password = ((_d = (_c = options) === null || _c === void 0 ? void 0 : _c.options) === null || _d === void 0 ? void 0 : _d.password) || 'anonymous';
+        var _a, _b, _c, _d, _e, _f;
+        var connection = ((_a = options.options) === null || _a === void 0 ? void 0 : _a.ssl) ? new TlsConnection_1.default(options.host, options.port, __assign({}, (((_b = options) === null || _b === void 0 ? void 0 : _b.options) || {})))
+            : new TcpConnection_1.default(options.host, options.port);
+        var username = ((_d = (_c = options) === null || _c === void 0 ? void 0 : _c.options) === null || _d === void 0 ? void 0 : _d.username) || 'anonymous';
+        var password = ((_f = (_e = options) === null || _e === void 0 ? void 0 : _e.options) === null || _f === void 0 ? void 0 : _f.password) || 'anonymous';
         return this.authenticate(connection, username, password).then(function (connection) {
             return _this.createThriftConnection(connection, options);
         });
@@ -83,7 +84,7 @@ var PlainTcpConnection = /** @class */ (function () {
         var instance = new ThriftConnection(stream, __assign({ transport: thrift.TFramedTransport, protocol: thrift.TBinaryProtocol }, (((_a = options) === null || _a === void 0 ? void 0 : _a.options) || {})));
         instance.host = options.host;
         instance.port = options.port;
-        stream.emit('connect');
+        connection.emit('connect');
         return new Connection_1.default(instance);
     };
     PlainTcpConnection.AUTH_MECH = 'PLAIN';

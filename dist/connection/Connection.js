@@ -23,6 +23,9 @@ var Connection = /** @class */ (function () {
     Connection.prototype.end = function () {
         return this.connection.end();
     };
+    Connection.prototype.emit = function (eventName) {
+        return this.connection.emit(eventName);
+    };
     return Connection;
 }());
 exports.default = Connection;

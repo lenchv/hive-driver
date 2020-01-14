@@ -7,13 +7,15 @@ import TcpConnection from "../TcpConnection";
 import IConnection from "../IConnection";
 import AuthHelper, { StatusCode } from "../utils/AuthHelper";
 import Connection from "../Connection";
+import TlsConnection from "../TlsConnection";
 
 export default class PlainTcpConnection implements IConnectionProvider {
     static AUTH_MECH: string = 'PLAIN';
 
     connect(options: IConnectionOptions): Promise<IConnection> {
-        // const createConnection = options.options?.ssl ? thrift.createSSLConnection : thrift.createConnection;
-        const connection = new TcpConnection(options.host, options.port);
+        const connection = options.options?.ssl
+            ? new TlsConnection(options.host, options.port, { ...(options?.options || {}) })
+            : new TcpConnection(options.host, options.port);
         const username = options?.options?.username || 'anonymous';
         const password = options?.options?.password || 'anonymous';
 
@@ -82,7 +84,7 @@ export default class PlainTcpConnection implements IConnectionProvider {
         instance.host = options.host;
         instance.port = options.port;
 
-        stream.emit('connect');
+        connection.emit('connect');
 
         return new Connection(instance);
     }

@@ -11,4 +11,5 @@ export default class TcpConnection implements IConnection {
     removeListener(eventName: string, listener: Function): void;
     write(data: Buffer | String): void;
     end(): void;
+    emit(eventName: string): void;
 }

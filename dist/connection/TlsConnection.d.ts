@@ -1,8 +1,12 @@
 /// <reference types="node" />
 import IConnection, { ThriftConnection } from "./IConnection";
-export default class Connection implements IConnection {
-    connection: ThriftConnection;
-    constructor(connection: ThriftConnection);
+import { TlsOptions } from "tls";
+export default class TlsConnection implements IConnection {
+    private host;
+    private port;
+    private connection;
+    private options;
+    constructor(host: string, port: number, options?: TlsOptions);
     getConnection(): ThriftConnection;
     connect(): any;
     addListener(eventName: string, listener: Function): void;

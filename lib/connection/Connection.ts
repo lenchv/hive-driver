@@ -31,4 +31,7 @@ export default class Connection implements IConnection {
         return this.connection.end();
     }
 
+    emit(eventName: string): void {
+        return this.connection.emit(eventName);
+    }   
 }

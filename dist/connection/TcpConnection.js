@@ -25,6 +25,9 @@ var TcpConnection = /** @class */ (function () {
     TcpConnection.prototype.end = function () {
         return this.connection.end();
     };
+    TcpConnection.prototype.emit = function (eventName) {
+        this.connection.emit(eventName);
+    };
     return TcpConnection;
 }());
 exports.default = TcpConnection;
