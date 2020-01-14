@@ -1,24 +1,12 @@
-const TCLIService = require('../thrift/gen-nodejs/TCLIService');
 const TCLIService_types = require('../thrift/gen-nodejs/TCLIService_types');
-const HiveClient = require('../index').HiveClient;
 const HiveUtils = require('../index').HiveUtils;
-const mech = require('../index').mechanisms;
+const connection = require('./connections/noSaslHttp');
 
 const utils = new HiveUtils(
     TCLIService_types
 );
-const connection = new mech.NoSaslTcpConnection();
 
-const client = new HiveClient(
-    TCLIService,
-    TCLIService_types
-);
-
-client.connect({
-    host: '192.168.99.100',
-    port: 10000,
-    options: {}
-}, connection).then(client => {
+connection().then(client => {
     return client.openSession({
         client_protocol: TCLIService_types.TProtocolVersion.HIVE_CLI_SERVICE_PROTOCOL_V10
     });
@@ -176,7 +164,7 @@ const execute = (session, statement) => {
                     console.log(stateResponse.taskStatus);
                 }
             });
-        });
+        }).then(console.log);
 };
 
 const handleOperation = (operation, {

@@ -1,15 +1,17 @@
 const thrift = require('thrift');
 
-import IConnectionProvider from './connection/IConnectionProvider';
-import IConnectionOptions from './connection/IConnectionOptions';
 import { ThriftClient, TCLIServiceTypes } from './hive/Types/';
-import IConnection from './connection/IConnection';
 import IHiveClient from './contracts/IHiveClient';
 import HiveDriver from './hive/HiveDriver';
 import { OpenSessionRequest, OpenSessionResponse } from './hive/Commands/OpenSessionCommand';
 import HiveSession from './HiveSession';
 import IHiveSession from './contracts/IHiveSession';
-import NoSaslTcpConnection from './connection/mechanisms/NoSaslTcpConnection';
+import IThriftConnection from './connection/contracts/IThriftConnection';
+import IConnectionProvider from './connection/contracts/IConnectionProvider';
+import IAuthentication from './connection/contracts/IAuthentication';
+import NoSaslAuthentication from './connection/auth/NoSaslAuthentication';
+import TcpConnection from './connection/connections/TcpConnection';
+import IConnectionOptions from './connection/contracts/IConnectionOptions';
 
 export default class HiveClient implements IHiveClient {
     private TCLIService: object;
@@ -27,21 +29,27 @@ export default class HiveClient implements IHiveClient {
         this.client = null;
     }
 
-    connect(options: IConnectionOptions, connectionProvider?: IConnectionProvider): Promise<HiveClient> {
+    async connect(
+        options: IConnectionOptions,
+        connectionProvider?: IConnectionProvider,
+        authProvider?: IAuthentication
+    ): Promise<HiveClient> {
+        if (!authProvider) {
+            authProvider = new NoSaslAuthentication();
+        }
+
         if (!connectionProvider) {
-            connectionProvider = new NoSaslTcpConnection();
+            connectionProvider = new TcpConnection();
         }
         
-        return connectionProvider
-            .connect(options)
-            .then((connection: IConnection) => {
-                this.client = thrift.createClient(
-                    this.TCLIService,
-                    connection.getConnection()
-                );
+        const connection: IThriftConnection = await connectionProvider.connect(options, authProvider);
 
-                return this;
-            });
+        this.client = thrift.createClient(
+            this.TCLIService,
+            connection.getConnection()
+        );
+
+        return this;
     }
 
     openSession(request: OpenSessionRequest): Promise<IHiveSession> {
