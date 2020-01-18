@@ -3,6 +3,7 @@ version: "3"
 services:
   namenode:
     image: bde2020/hadoop-namenode:2.0.0-hadoop2.7.4-java8
+    hostname: "volodymyr.local"
     volumes:
       - namenode:/hadoop/dfs/name
     environment:
@@ -13,6 +14,7 @@ services:
       - "50070:50070"
   datanode:
     image: bde2020/hadoop-datanode:2.0.0-hadoop2.7.4-java8
+    hostname: "volodymyr.local"
     volumes:
       - datanode:/hadoop/dfs/data
     env_file:
@@ -25,26 +27,32 @@ services:
     image: bde2020/hive:2.3.2-postgresql-metastore
     env_file:
       - ./hadoop-hive.env
+    hostname: "volodymyr.local"
     environment:
       HIVE_CORE_CONF_javax_jdo_option_ConnectionURL: "jdbc:postgresql://hive-metastore/metastore"
       SERVICE_PRECONDITION: "hive-metastore:9083"
     ports:
       - "10000:10000"
+      - "10001:10001"
     volumes:
-      - ./conf/hive-site.xml:/opt/hive/conf/hive-site.xml
+      - ./conf/hive-site.xml.http.nosasl:/opt/hive/conf/hive-site.xml
+      - ./ssl/:/opt/ssl/
   hive-metastore:
     image: bde2020/hive:2.3.2-postgresql-metastore
     env_file:
       - ./hadoop-hive.env
+    hostname: "volodymyr.local"
     command: /opt/hive/bin/hive --service metastore
     environment:
       SERVICE_PRECONDITION: "namenode:50070 datanode:50075 hive-metastore-postgresql:5432"
     ports:
       - "9083:9083"
     volumes:
-      - ./conf/hive-site.xml:/opt/hive/conf/hive-site.xml
+      - ./conf/hive-site.xml.http.nosasl:/opt/hive/conf/hive-site.xml
+      - ./ssl/:/opt/ssl/
   hive-metastore-postgresql:
     image: bde2020/hive-metastore-postgresql:2.3.0
+    hostname: "volodymyr.local"
 
 volumes:
   namenode:

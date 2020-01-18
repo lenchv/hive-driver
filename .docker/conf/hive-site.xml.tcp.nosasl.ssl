@@ -52,5 +52,16 @@
 <property><name>javax.jdo.option.ConnectionPassword</name><value>hive</value></property>
 <property><name>javax.jdo.option.ConnectionUserName</name><value>hive</value></property>
 <property><name>hive.server2.thrift.max.worker.threads </name><value>10</value></property>
-
+<property>
+    <name>hive.server2.use.SSL</name>
+    <value>true</value>
+</property>
+<property>
+    <name>hive.server2.keystore.path</name>
+    <value>/opt/ssl/keystore.jks</value>
+</property>
+<property>
+    <name>hive.server2.keystore.password</name>
+    <value>1a2b3c</value>
+</property>
 </configuration>

@@ -37,7 +37,11 @@
 </property>
 <property>
 	<name>hive.server2.authentication</name>
-	<value>nosasl</value>
+	<value>NONE</value>
+</property>
+<property>
+    <name>hive.metastore.sasl.enabled</name>
+    <value>false</value>
 </property>
 <property><name>hive.metastore.uris</name><value>thrift://hive-metastore:9083</value></property>
 <property><name>datanucleus.autoCreateSchema</name><value>false</value></property>

@@ -37,7 +37,11 @@
 </property>
 <property>
 	<name>hive.server2.authentication</name>
-	<value>nosasl</value>
+	<value>NONE</value>
+</property>
+<property>
+    <name>hive.metastore.sasl.enabled</name>
+    <value>false</value>
 </property>
 <property><name>hive.metastore.uris</name><value>thrift://hive-metastore:9083</value></property>
 <property><name>datanucleus.autoCreateSchema</name><value>false</value></property>
@@ -52,5 +56,16 @@
 <property><name>javax.jdo.option.ConnectionPassword</name><value>hive</value></property>
 <property><name>javax.jdo.option.ConnectionUserName</name><value>hive</value></property>
 <property><name>hive.server2.thrift.max.worker.threads </name><value>10</value></property>
-
+<property>
+    <name>hive.server2.use.SSL</name>
+    <value>true</value>
+</property>
+<property>
+    <name>hive.server2.keystore.path</name>
+    <value>/opt/ssl/keystore.jks</value>
+</property>
+<property>
+    <name>hive.server2.keystore.password</name>
+    <value>1a2b3c</value>
+</property>
 </configuration>

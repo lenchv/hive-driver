@@ -21,11 +21,11 @@
 </property>
 <property>
 	<name>hive.server2.transport.mode</name>
-	<value>binary</value>
+	<value>http</value>
 </property>	
 <property>
 	<name>hive.server2.thrift.http.port</name>
-	<value>10002</value>
+	<value>10001</value>
 </property>	
 <property>
 	<name>hive.server2.thrift.port</name>
@@ -33,7 +33,7 @@
 </property>
 <property>
 	<name>hive.server2.thrift.http.path</name>
-	<value>/hive</value>
+	<value>hive</value>
 </property>
 <property>
 	<name>hive.server2.authentication</name>
