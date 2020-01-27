@@ -1,5 +1,5 @@
 const { expect } = require('chai');
-const OpenSessionCommand = require('../../../dist/hive/commands/OpenSessionCommand').default;
+const OpenSessionCommand = require('../../../dist/hive/Commands/OpenSessionCommand').default;
 
 const CLIENT_PROTOCOL = 8;
 

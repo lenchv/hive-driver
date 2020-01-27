@@ -1,5 +1,5 @@
 const { expect } = require('chai');
-const ExecuteStatementCommand = require('../../../dist/hive/commands/ExecuteStatementCommand').default;
+const ExecuteStatementCommand = require('../../../dist/hive/Commands/ExecuteStatementCommand').default;
 
 const requestMock = {
     sessionHandle: {

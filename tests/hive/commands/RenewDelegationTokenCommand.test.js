@@ -1,5 +1,5 @@
 const { expect } = require('chai');
-const RenewDelegationTokenCommand = require('../../../dist/hive/commands/RenewDelegationTokenCommand').default;
+const RenewDelegationTokenCommand = require('../../../dist/hive/Commands/RenewDelegationTokenCommand').default;
 
 const requestMock = {
     sessionHandle: {

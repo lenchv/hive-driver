@@ -1,5 +1,5 @@
 const { expect } = require('chai');
-const GetTablesCommand = require('../../../dist/hive/commands/GetTablesCommand').default;
+const GetTablesCommand = require('../../../dist/hive/Commands/GetTablesCommand').default;
 
 const requestMock = {
     sessionHandle: {

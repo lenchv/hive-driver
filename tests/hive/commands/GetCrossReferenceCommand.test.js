@@ -1,5 +1,5 @@
 const { expect } = require('chai');
-const GetCrossReferenceCommand = require('../../../dist/hive/commands/GetCrossReferenceCommand').default;
+const GetCrossReferenceCommand = require('../../../dist/hive/Commands/GetCrossReferenceCommand').default;
 
 const requestMock = {
     sessionHandle: {

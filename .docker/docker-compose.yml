@@ -35,7 +35,7 @@ services:
       - "10000:10000"
       - "10001:10001"
     volumes:
-      - ./conf/hive-site.xml.http.nosasl:/opt/hive/conf/hive-site.xml
+      - ./conf/hive-site.xml.tcp.plain:/opt/hive/conf/hive-site.xml
       - ./ssl/:/opt/ssl/
   hive-metastore:
     image: bde2020/hive:2.3.2-postgresql-metastore
@@ -48,7 +48,7 @@ services:
     ports:
       - "9083:9083"
     volumes:
-      - ./conf/hive-site.xml.http.nosasl:/opt/hive/conf/hive-site.xml
+      - ./conf/hive-site.xml.tcp.plain:/opt/hive/conf/hive-site.xml
       - ./ssl/:/opt/ssl/
   hive-metastore-postgresql:
     image: bde2020/hive-metastore-postgresql:2.3.0

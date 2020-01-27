@@ -1,5 +1,5 @@
 const { expect } = require('chai');
-const GetColumnsCommand = require('../../../dist/hive/commands/GetColumnsCommand').default;
+const GetColumnsCommand = require('../../../dist/hive/Commands/GetColumnsCommand').default;
 
 const requestMock = {
     sessionHandle: {

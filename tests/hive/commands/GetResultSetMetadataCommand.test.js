@@ -1,5 +1,5 @@
 const { expect } = require('chai');
-const GetResultSetMetadataCommand = require('../../../dist/hive/commands/GetResultSetMetadataCommand').default;
+const GetResultSetMetadataCommand = require('../../../dist/hive/Commands/GetResultSetMetadataCommand').default;
 
 const requestMock = {
     operationHandle: {

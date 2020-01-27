@@ -1,5 +1,5 @@
 const { expect } = require('chai');
-const CancelDelegationTokenCommand = require('../../../dist/hive/commands/CancelDelegationTokenCommand').default;
+const CancelDelegationTokenCommand = require('../../../dist/hive/Commands/CancelDelegationTokenCommand').default;
 
 const requestMock = {
     sessionHandle: {

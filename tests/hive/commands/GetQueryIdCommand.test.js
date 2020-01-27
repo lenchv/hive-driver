@@ -1,5 +1,5 @@
 const { expect } = require('chai');
-const GetQueryIdCommand = require('../../../dist/hive/commands/GetQueryIdCommand').default;
+const GetQueryIdCommand = require('../../../dist/hive/Commands/GetQueryIdCommand').default;
 
 const requestMock = {
     operationHandle: {

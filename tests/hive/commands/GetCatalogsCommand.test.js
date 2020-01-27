@@ -1,5 +1,5 @@
 const { expect } = require('chai');
-const GetCatalogsCommand = require('../../../dist/hive/commands/GetCatalogsCommand').default;
+const GetCatalogsCommand = require('../../../dist/hive/Commands/GetCatalogsCommand').default;
 
 const requestMock = {
     sessionHandle: {

@@ -1,5 +1,5 @@
 const { expect } = require('chai');
-const CloseSessionCommand = require('../../../dist/hive/commands/CloseSessionCommand').default;
+const CloseSessionCommand = require('../../../dist/hive/Commands/CloseSessionCommand').default;
 
 const TCLIService_types = {
     TCloseSessionReq: function (options) {

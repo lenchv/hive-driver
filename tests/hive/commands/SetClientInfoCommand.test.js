@@ -1,5 +1,5 @@
 const { expect } = require('chai');
-const SetClientInfoCommand = require('../../../dist/hive/commands/SetClientInfoCommand').default;
+const SetClientInfoCommand = require('../../../dist/hive/Commands/SetClientInfoCommand').default;
 
 const requestMock = {
     sessionHandle: {

@@ -1,5 +1,5 @@
 // const { expect } = require('chai');
-// const FetchResult = require('../../../dist/hive/commands/FetchResult').default;
+// const FetchResult = require('../../../dist/hive/Commands/FetchResult').default;
 
 // const TCLIService_types = {
 //     TFetchOrientation: {

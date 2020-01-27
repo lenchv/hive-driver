@@ -41,7 +41,7 @@
 </property>
 <property>
     <name>hive.metastore.sasl.enabled</name>
-    <value>false</value>
+    <value>true</value>
 </property>
 <property><name>hive.metastore.uris</name><value>thrift://hive-metastore:9083</value></property>
 <property><name>datanucleus.autoCreateSchema</name><value>false</value></property>
