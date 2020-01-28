@@ -30,6 +30,10 @@ export default class TlsTransport implements ITransport {
         };
     }
 
+    getOptions(): object {
+        return {};
+    }
+
     getTransport(): any {
         return this.connection;
     }

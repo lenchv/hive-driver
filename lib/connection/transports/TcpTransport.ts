@@ -4,18 +4,29 @@ import ITransport from "../contracts/ITransport";
 export default class TcpTransport implements ITransport {
     private host: string;
     private port: number;
+    private options: object;
     private connection: any;
 
     constructor(host: string, port: number) {
         this.host = host;
         this.port = port;
+        this.options = {};
     }
 
     getTransport(): any {
         return this.connection;
     }
 
-    setOptions() {}
+    setOptions(option: string, value: any) {
+        this.options = {
+            ...this.options,
+            [option]: value
+        };
+    }
+
+    getOptions(): object {
+        return this.options;
+    }
 
     connect(): any {
         this.connection = net.createConnection(this.port, this.host);

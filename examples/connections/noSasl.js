@@ -13,7 +13,6 @@ const client = new HiveClient(
 );
 
 module.exports = () => client.connect({
-    host: '192.168.99.100',
+    host: 'localhost',
     port: 10000,
-    options: {}
 }, connection, authProvider);

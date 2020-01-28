@@ -37,7 +37,7 @@ var TcpConnection = /** @class */ (function () {
     TcpConnection.prototype.createConnection = function (transport, options) {
         var _a;
         var stream = transport.getTransport();
-        var instance = new ThriftConnection(stream, __assign({ transport: thrift.TFramedTransport, protocol: thrift.TBinaryProtocol }, (((_a = options) === null || _a === void 0 ? void 0 : _a.options) || {})));
+        var instance = new ThriftConnection(stream, __assign(__assign({ transport: thrift.TFramedTransport, protocol: thrift.TBinaryProtocol }, (((_a = options) === null || _a === void 0 ? void 0 : _a.options) || {})), transport.getOptions()));
         instance.host = options.host;
         instance.port = options.port;
         transport.emit('connect');

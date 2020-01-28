@@ -5,6 +5,8 @@ export default interface ITransport {
 
     setOptions(option: string, value: any): void;
 
+    getOptions(): object;
+
     connect(): any;
 
     addListener(eventName: string, listener: Function): void;

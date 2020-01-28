@@ -8,6 +8,7 @@ export default class TlsTransport implements ITransport {
     private options;
     constructor(host: string, port: number, options?: TlsOptions);
     setOptions(option: string, value: any): void;
+    getOptions(): object;
     getTransport(): any;
     connect(): any;
     addListener(eventName: string, listener: Function): void;

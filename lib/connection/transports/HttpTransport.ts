@@ -1,9 +1,9 @@
 import ITransport from "../contracts/ITransport";
 
 export default class HttpTransport implements ITransport {
-    private httpOptions: any;
+    private httpOptions: object;
 
-    constructor(httpOptions: any = {}) {
+    constructor(httpOptions: object = {}) {
         this.httpOptions = httpOptions;
     }
 
@@ -18,7 +18,7 @@ export default class HttpTransport implements ITransport {
         };
     }
 
-    getOptions(): any {
+    getOptions(): object {
         return this.httpOptions;
     }
 

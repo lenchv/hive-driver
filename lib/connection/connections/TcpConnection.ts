@@ -35,7 +35,8 @@ export default class TcpConnection implements IConnectionProvider, IThriftConnec
             {
                 transport: thrift.TFramedTransport,
 			    protocol: thrift.TBinaryProtocol,
-                ...(options?.options || {})
+                ...(options?.options || {}),
+                ...transport.getOptions()
             }
         );
 

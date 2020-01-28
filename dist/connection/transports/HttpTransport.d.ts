@@ -1,10 +1,10 @@
 import ITransport from "../contracts/ITransport";
 export default class HttpTransport implements ITransport {
     private httpOptions;
-    constructor(httpOptions?: any);
+    constructor(httpOptions?: object);
     getTransport(): any;
     setOptions(option: string, value: any): void;
-    getOptions(): any;
+    getOptions(): object;
     connect(): void;
     addListener(): void;
     removeListener(): void;

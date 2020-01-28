@@ -25,6 +25,9 @@ var TlsTransport = /** @class */ (function () {
         var _a;
         this.options = __assign(__assign({}, this.options), (_a = {}, _a[option] = value, _a));
     };
+    TlsTransport.prototype.getOptions = function () {
+        return {};
+    };
     TlsTransport.prototype.getTransport = function () {
         return this.connection;
     };

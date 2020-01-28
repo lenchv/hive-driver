@@ -3,10 +3,12 @@ import ITransport from "../contracts/ITransport";
 export default class TcpTransport implements ITransport {
     private host;
     private port;
+    private options;
     private connection;
     constructor(host: string, port: number);
     getTransport(): any;
-    setOptions(): void;
+    setOptions(option: string, value: any): void;
+    getOptions(): object;
     connect(): any;
     addListener(eventName: string, listener: Function): void;
     removeListener(eventName: string, listener: Function): void;
