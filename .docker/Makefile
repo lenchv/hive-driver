@@ -1,3 +1,4 @@
-current_branch := $(shell git rev-parse --abbrev-ref HEAD)
 build:
-	docker build -t bde2020/hive:$(current_branch) ./
+	cd hive && docker build -t lenchv/hive:2.3.6 .
+generate_ssl:
+	cd ./ssl && ./generateSsl.sh

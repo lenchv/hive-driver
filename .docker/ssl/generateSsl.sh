@@ -1,15 +1,39 @@
 #!/bin/bash
 
-HIVE_HOSTNAME="$(hostname -f)"
 SSL_PASSWORD="1a2b3c"
+KEYSTORE_FILE=keystore.jks
+TRUSTTORE_FILE=truststore.jks
+ALIASNAME="$(hostname -f)"
 
 keytool -genkey -noprompt \
-	-alias $HIVE_HOSTNAME \
-	-dname "CN=$HIVE_HOSTNAME, OU=, O=lenchv, L=, S=, C=" \
+	-alias $ALIASNAME \
+	-dname "CN=$ALIASNAME, OU=, O=lenchv, L=, S=, C=" \
 	-keyalg RSA \
-	-keystore keystore.jks \
+	-keystore $KEYSTORE_FILE \
 	-keysize 2048 \
 	-storepass $SSL_PASSWORD \
  	-keypass $SSL_PASSWORD
-keytool -export -alias $HIVE_HOSTNAME -file hive_ssl.crt -keystore keystore.jks
-keytool -import -trustcacerts -alias $HIVE_HOSTNAME -file hive_ssl.crt -keystore truststore.jks
+keytool -export -alias $ALIASNAME -file hive_ssl.crt -keystore $KEYSTORE_FILE -storepass $SSL_PASSWORD -noprompt;
+keytool -import -trustcacerts -alias $ALIASNAME -file hive_ssl.crt -keystore $TRUSTTORE_FILE -storepass $SSL_PASSWORD -noprompt;
+
+keytool -importkeystore \
+	-srckeystore $KEYSTORE_FILE \
+	-destkeystore ${ALIASNAME}.p12 \
+	-srcalias $ALIASNAME \
+	-srcstoretype jks \
+	-deststoretype pkcs12 \
+	-srcstorepass $SSL_PASSWORD \
+	-deststorepass $SSL_PASSWORD;
+
+keytool -importkeystore \
+	-srckeystore $TRUSTTORE_FILE \
+	-destkeystore ${ALIASNAME}_trust.p12 \
+	-srcalias $ALIASNAME \
+	-srcstoretype jks \
+	-deststoretype pkcs12 \
+	-srcstorepass $SSL_PASSWORD \
+	-deststorepass $SSL_PASSWORD;
+
+openssl pkcs12 -in ${ALIASNAME}.p12 -nokeys -out cert.pem -passin pass:$SSL_PASSWORD;
+openssl pkcs12 -in ${ALIASNAME}_trust.p12 -nokeys -out ca.pem -passin pass:$SSL_PASSWORD;
+openssl pkcs12 -in ${ALIASNAME}.p12 -nodes -nocerts -out key.key -passin pass:$SSL_PASSWORD;

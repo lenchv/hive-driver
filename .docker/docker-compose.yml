@@ -1,59 +1,25 @@
 version: "3"
 
 services:
-  namenode:
-    image: bde2020/hadoop-namenode:2.0.0-hadoop2.7.4-java8
-    hostname: "volodymyr.local"
-    volumes:
-      - namenode:/hadoop/dfs/name
-    environment:
-      - CLUSTER_NAME=test
-    env_file:
-      - ./hadoop-hive.env
-    ports:
-      - "50070:50070"
-  datanode:
-    image: bde2020/hadoop-datanode:2.0.0-hadoop2.7.4-java8
-    hostname: "volodymyr.local"
-    volumes:
-      - datanode:/hadoop/dfs/data
-    env_file:
-      - ./hadoop-hive.env
-    environment:
-      SERVICE_PRECONDITION: "namenode:50070"
-    ports:
-      - "50075:50075"
   hive-server:
-    image: bde2020/hive:2.3.2-postgresql-metastore
-    env_file:
-      - ./hadoop-hive.env
-    hostname: "volodymyr.local"
-    environment:
-      HIVE_CORE_CONF_javax_jdo_option_ConnectionURL: "jdbc:postgresql://hive-metastore/metastore"
-      SERVICE_PRECONDITION: "hive-metastore:9083"
+    image: lenchv/hive:2.3.6
     ports:
       - "10000:10000"
       - "10001:10001"
+      - "10002:10002"
+    command: /opt/apache-hive-2.3.6-bin/bin/hiveserver2
+    environment:
+      - HOSTNAME
     volumes:
-      - ./conf/hive-site.xml.tcp.plain:/opt/hive/conf/hive-site.xml
+      - ./confs/hive-site.xml:/opt/apache-hive-2.3.6-bin/conf/hive-site.xml
       - ./ssl/:/opt/ssl/
   hive-metastore:
-    image: bde2020/hive:2.3.2-postgresql-metastore
-    env_file:
-      - ./hadoop-hive.env
-    hostname: "volodymyr.local"
-    command: /opt/hive/bin/hive --service metastore
+    image: lenchv/hive:2.3.6
     environment:
-      SERVICE_PRECONDITION: "namenode:50070 datanode:50075 hive-metastore-postgresql:5432"
+      - HOSTNAME
     ports:
       - "9083:9083"
     volumes:
-      - ./conf/hive-site.xml.tcp.plain:/opt/hive/conf/hive-site.xml
+      - ./confs/hive-site.xml:/opt/apache-hive-2.3.6-bin/conf/hive-site.xml
       - ./ssl/:/opt/ssl/
-  hive-metastore-postgresql:
-    image: bde2020/hive-metastore-postgresql:2.3.0
-    hostname: "volodymyr.local"
-
-volumes:
-  namenode:
-  datanode:
+    command: /opt/apache-hive-2.3.6-bin/bin/hive --service metastore
