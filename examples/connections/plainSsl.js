@@ -1,5 +1,5 @@
 const fs = require('fs');
-const path = require('path');
+const config = require('./config');
 const TCLIService = require('../../thrift/gen-nodejs/TCLIService');
 const TCLIService_types = require('../../thrift/gen-nodejs/TCLIService_types');
 const HiveClient = require('../../index').HiveClient;
@@ -14,15 +14,15 @@ const client = new HiveClient(
     TCLIService_types
 );
 
-module.exports = () => client.connect({
-    host: 'volodymyr.local',
+module.exports = () => config().then(({ hostname, ca, cert, key }) => client.connect({
+    host: hostname,
     port: 10000,
     options: {
         username: 'hive',
         password: 'hive',
         ssl: true,
-        ca: fs.readFileSync(path.join(__dirname, '../../.docker/ssl/volodymyr.local_ca.pem')),
-		cert: fs.readFileSync(path.join(__dirname, '../../.docker/ssl/volodymyr.local.pem')),
-		key: fs.readFileSync(path.join(__dirname, '../../.docker/ssl/volodymyr.local.key')),
+        ca: fs.readFileSync(ca),
+		cert: fs.readFileSync(cert),
+		key: fs.readFileSync(key),
     }
-}, connection, authProvider);
+}, connection, authProvider));

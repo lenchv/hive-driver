@@ -1,4 +1,5 @@
 const fs = require('fs');
+const config = require('./config');
 const TCLIService = require('../../thrift/gen-nodejs/TCLIService');
 const TCLIService_types = require('../../thrift/gen-nodejs/TCLIService_types');
 const HiveClient = require('../../index').HiveClient;
@@ -12,14 +13,18 @@ const client = new HiveClient(
     TCLIService,
     TCLIService_types
 );
-
-module.exports = () => client.connect({
-    host: 'volodymyr.local',
-    port: 10000,
-    options: {
-        ssl: true,
-        ca: fs.readFileSync('C:\\Users\\lench\\docker_projects\\docker-hive\\ssl\\volodymyr.local_ca.pem'),
-		cert: fs.readFileSync('C:\\Users\\lench\\docker_projects\\docker-hive\\ssl\\volodymyr.local.pem'),
-		key: fs.readFileSync('C:\\Users\\lench\\docker_projects\\docker-hive\\ssl\\volodymyr.local.key'),
-    }
-}, connection, authProvider);
+// !connect jdbc:hive2://volodymyr.local:10000/default;ssl=true;sslTrustStore=/opt/ssl/truststore.jks;trustStorePassword=1a2b3c;auth=noSasl hive hive
+module.exports = () => config().then(({ hostname, ca, cert, key }) => {
+    return client.connect({
+        host: hostname,
+        port: 10000,
+        options: {
+            ssl: true,
+            username: 'hive',
+            password: 'hive',
+            ca: fs.readFileSync(ca),
+            cert: fs.readFileSync(cert),
+            key: fs.readFileSync(key),
+        }
+    }, connection, authProvider);
+});

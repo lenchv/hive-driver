@@ -1,6 +1,6 @@
 const TCLIService_types = require('../thrift/gen-nodejs/TCLIService_types');
 const HiveUtils = require('../index').HiveUtils;
-const connection = require('./connections/plain');
+const connection = require('./connections/noSaslSsl');
 
 const utils = new HiveUtils(
     TCLIService_types

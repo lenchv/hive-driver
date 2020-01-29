@@ -8,13 +8,13 @@ services:
       - "10001:10001"
       - "10002:10002"
     command: /opt/apache-hive-2.3.6-bin/bin/hiveserver2
-    hostname: volodymyr.local
+    hostname: HOSTNAME_VALUE
     volumes:
       - ./confs/hive-site.xml:/opt/apache-hive-2.3.6-bin/conf/hive-site.xml
       - ./ssl/:/opt/ssl/
   hive-metastore:
     image: lenchv/hive:2.3.6
-    hostname: volodymyr.local
+    hostname: HOSTNAME_VALUE
     ports:
       - "9083:9083"
     volumes:

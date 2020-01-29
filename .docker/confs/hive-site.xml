@@ -7,7 +7,7 @@
     </property>
     <property>
         <name>hive.server2.transport.mode</name>
-        <value>http</value>
+        <value>binary</value>
     </property>
     <property>
         <name>hive.server2.thrift.http.port</name>
@@ -19,13 +19,12 @@
     </property>
     <property>
         <name>hive.server2.thrift.http.path</name>
-        <value>hive</value>
+        <value>/hive</value>
     </property>
     <property>
         <name>hive.server2.authentication</name>
         <value>nosasl</value>
     </property>
-
     <property>
         <name>hive.server2.use.SSL</name>
         <value>true</value>
@@ -38,7 +37,6 @@
         <name>hive.server2.keystore.password</name>
         <value>1a2b3c</value>
     </property>
-
     <property>
         <name>hive.metastore.schema.verification</name>
         <value>false</value>
@@ -64,5 +62,4 @@
         <name>datanucleus.schema.autoCreateTables</name>
         <value>true</value>
     </property>
-
 </configuration>
