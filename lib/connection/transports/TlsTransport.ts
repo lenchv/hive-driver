@@ -7,12 +7,13 @@ export default class TlsTransport implements ITransport {
     private host: string;
     private port: number;
     private connection: any;
-    private options: TlsOptions;
+    private tlsOptions: TlsOptions;
+    private options: object;
 
     constructor(host: string, port: number, options: TlsOptions = {}) {
         this.host = host;
         this.port = port;
-        this.options = {
+        this.tlsOptions = {
             secureProtocol: 'SSLv23_method',
             secureOptions: constants.SSL_OP_NO_SSLv2 | constants.SSL_OP_NO_SSLv3,
             rejectUnauthorized: false,
@@ -21,6 +22,7 @@ export default class TlsTransport implements ITransport {
             key: options?.key,
             ...options
         };
+        this.options = {};
     }
 
     setOptions(option: string, value: any) {
@@ -31,7 +33,7 @@ export default class TlsTransport implements ITransport {
     }
 
     getOptions(): object {
-        return {};
+        return this.options;
     }
 
     getTransport(): any {
@@ -39,7 +41,7 @@ export default class TlsTransport implements ITransport {
     }
 
     connect(): any {
-        this.connection = tls.connect(this.port, this.host, this.options);
+        this.connection = tls.connect(this.port, this.host, this.tlsOptions);
         this.connection.setMaxSendFragment(65536);
         this.connection.setNoDelay(true);
     };
