@@ -1,6 +1,14 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var SaslPackageFactory_1 = require("./helpers/SaslPackageFactory");
+var StatusCode;
+(function (StatusCode) {
+    StatusCode[StatusCode["START"] = 1] = "START";
+    StatusCode[StatusCode["OK"] = 2] = "OK";
+    StatusCode[StatusCode["BAD"] = 3] = "BAD";
+    StatusCode[StatusCode["ERROR"] = 4] = "ERROR";
+    StatusCode[StatusCode["COMPLETE"] = 5] = "COMPLETE";
+})(StatusCode = exports.StatusCode || (exports.StatusCode = {}));
+;
 var PlainTcpAuthentication = /** @class */ (function () {
     function PlainTcpAuthentication(authOptions) {
         var _a, _b, _c;
@@ -16,8 +24,8 @@ var PlainTcpAuthentication = /** @class */ (function () {
         var _this = this;
         return new Promise(function (resolve, reject) {
             var onConnect = function () {
-                transport.write(SaslPackageFactory_1.SaslPackageFactory.create(SaslPackageFactory_1.StatusCode.START, Buffer.from(PlainTcpAuthentication.AUTH_MECH)));
-                transport.write(SaslPackageFactory_1.SaslPackageFactory.create(SaslPackageFactory_1.StatusCode.OK, Buffer.concat([
+                transport.write(_this.createPackage(StatusCode.START, Buffer.from(PlainTcpAuthentication.AUTH_MECH)));
+                transport.write(_this.createPackage(StatusCode.OK, Buffer.concat([
                     Buffer.from(_this.username || ""),
                     Buffer.from([0]),
                     Buffer.from(_this.username || ""),
@@ -27,7 +35,7 @@ var PlainTcpAuthentication = /** @class */ (function () {
             };
             var onData = function (data) {
                 var result = data[0];
-                if (result === SaslPackageFactory_1.StatusCode.COMPLETE) {
+                if (result === StatusCode.COMPLETE) {
                     onSuccess();
                 }
                 else {
@@ -50,8 +58,13 @@ var PlainTcpAuthentication = /** @class */ (function () {
             transport.addListener('error', onError);
         });
     };
+    PlainTcpAuthentication.prototype.createPackage = function (status, body) {
+        var bodyLength = new Buffer(4);
+        bodyLength.writeUInt32BE(body.length, 0);
+        return Buffer.concat([Buffer.from([status]), bodyLength, body]);
+    };
     PlainTcpAuthentication.AUTH_MECH = 'PLAIN';
     return PlainTcpAuthentication;
 }());
 exports.default = PlainTcpAuthentication;
-//# sourceMappingURL=PlainTcpAuthentication.js.map
+//# sourceMappingURL=PlainTcpAuthentication copy.js.map

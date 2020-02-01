@@ -1,14 +1,7 @@
 import IAuthentication from "../contracts/IAuthentication";
 import ITransport from "../contracts/ITransport";
 import { AuthOptions } from '../types/AuthOptions';
-
-export enum StatusCode {
-    START=1,
-    OK=2,
-    BAD=3,
-    ERROR=4,
-    COMPLETE=5,
-};
+import { SaslPackageFactory, StatusCode } from "./helpers/SaslPackageFactory";
 
 export default class PlainTcpAuthentication implements IAuthentication {
     static AUTH_MECH = 'PLAIN';
@@ -28,11 +21,11 @@ export default class PlainTcpAuthentication implements IAuthentication {
     authenticate(transport: ITransport): Promise<ITransport> {
         return new Promise((resolve, reject) => {
             const onConnect = () => {
-                transport.write(this.createPackage(
+                transport.write(SaslPackageFactory.create(
                     StatusCode.START,
                     Buffer.from(PlainTcpAuthentication.AUTH_MECH)
                 ));
-                transport.write(this.createPackage(StatusCode.OK, Buffer.concat([
+                transport.write(SaslPackageFactory.create(StatusCode.OK, Buffer.concat([
                     Buffer.from(this.username || ""),
                     Buffer.from([0]),
                     Buffer.from(this.username || ""),
@@ -69,13 +62,5 @@ export default class PlainTcpAuthentication implements IAuthentication {
             transport.addListener('data', onData);    
             transport.addListener('error', onError);
         });
-    }
-
-    private createPackage(status: StatusCode, body: Buffer) {
-        const bodyLength = new Buffer(4);
-
-        bodyLength.writeUInt32BE(body.length, 0);
-
-        return Buffer.concat([ Buffer.from([ status ]), bodyLength, body ]);
     }
 }
