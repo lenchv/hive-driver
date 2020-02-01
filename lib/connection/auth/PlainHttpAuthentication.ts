@@ -13,7 +13,7 @@ export default class PlainHttpAuthentication implements IAuthentication {
 
     constructor(options: HttpAuthOptions) {
         this.username = options?.username || 'anonymous';
-        this.password = options?.password || 'anonymous';
+        this.password = options?.password !== undefined ? options?.password : 'anonymous';
         this.headers = options?.headers || {};
     }
     
