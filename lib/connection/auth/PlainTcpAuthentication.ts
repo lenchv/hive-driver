@@ -17,7 +17,12 @@ export default class PlainTcpAuthentication implements IAuthentication {
 
     constructor(authOptions?: AuthOptions) {
         this.username = authOptions?.username || 'anonymous';
-        this.password = authOptions?.password || 'anonymous';
+        
+        if (authOptions?.password === undefined) {
+            this.password = 'anonymous';
+        } else {
+            this.password = authOptions?.password;
+        }
     }
 
     authenticate(transport: ITransport): Promise<ITransport> {

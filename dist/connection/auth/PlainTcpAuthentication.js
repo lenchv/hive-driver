@@ -11,9 +11,14 @@ var StatusCode;
 ;
 var PlainTcpAuthentication = /** @class */ (function () {
     function PlainTcpAuthentication(authOptions) {
-        var _a, _b;
+        var _a, _b, _c;
         this.username = ((_a = authOptions) === null || _a === void 0 ? void 0 : _a.username) || 'anonymous';
-        this.password = ((_b = authOptions) === null || _b === void 0 ? void 0 : _b.password) || 'anonymous';
+        if (((_b = authOptions) === null || _b === void 0 ? void 0 : _b.password) === undefined) {
+            this.password = 'anonymous';
+        }
+        else {
+            this.password = (_c = authOptions) === null || _c === void 0 ? void 0 : _c.password;
+        }
     }
     PlainTcpAuthentication.prototype.authenticate = function (transport) {
         var _this = this;
