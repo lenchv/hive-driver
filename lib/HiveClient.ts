@@ -17,6 +17,7 @@ export default class HiveClient implements IHiveClient {
     private TCLIService: object;
     private TCLIService_types: TCLIServiceTypes;
     private client: ThriftClient | null;
+    private connection: IThriftConnection | null;
 
     /**
      * 
@@ -27,6 +28,7 @@ export default class HiveClient implements IHiveClient {
         this.TCLIService = TCLIService;
         this.TCLIService_types = TCLIService_types;
         this.client = null;
+        this.connection = null;
     }
 
     async connect(
@@ -42,11 +44,11 @@ export default class HiveClient implements IHiveClient {
             connectionProvider = new TcpConnection();
         }
         
-        const connection: IThriftConnection = await connectionProvider.connect(options, authProvider);
+        this.connection = await connectionProvider.connect(options, authProvider);
 
         this.client = thrift.createClient(
             this.TCLIService,
-            connection.getConnection()
+            this.connection.getConnection()
         );
 
         return this;
@@ -79,5 +81,17 @@ export default class HiveClient implements IHiveClient {
         }
 
         return this.client;
+    }
+
+    close(): void {
+        if (!this.connection) {
+            return;
+        }
+
+        const thriftConnection = this.connection.getConnection()
+
+        if (typeof thriftConnection.end === 'function') {
+            this.connection.getConnection().end();
+        }
     }
 }

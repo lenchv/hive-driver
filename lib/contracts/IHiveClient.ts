@@ -8,4 +8,6 @@ export default interface IHiveClient {
     connect(options: IConnectionOptions, connectionProvider: IConnectionProvider, authProvider: IAuthentication): Promise<IHiveClient>;
 
     openSession(request: OpenSessionRequest): Promise<IHiveSession>;
+
+    close(): void;
 }

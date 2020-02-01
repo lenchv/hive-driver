@@ -54,12 +54,13 @@ var HiveClient = /** @class */ (function () {
         this.TCLIService = TCLIService;
         this.TCLIService_types = TCLIService_types;
         this.client = null;
+        this.connection = null;
     }
     HiveClient.prototype.connect = function (options, connectionProvider, authProvider) {
         return __awaiter(this, void 0, void 0, function () {
-            var connection;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
+            var _a;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
                     case 0:
                         if (!authProvider) {
                             authProvider = new NoSaslAuthentication_1.default();
@@ -67,10 +68,11 @@ var HiveClient = /** @class */ (function () {
                         if (!connectionProvider) {
                             connectionProvider = new TcpConnection_1.default();
                         }
+                        _a = this;
                         return [4 /*yield*/, connectionProvider.connect(options, authProvider)];
                     case 1:
-                        connection = _a.sent();
-                        this.client = thrift.createClient(this.TCLIService, connection.getConnection());
+                        _a.connection = _b.sent();
+                        this.client = thrift.createClient(this.TCLIService, this.connection.getConnection());
                         return [2 /*return*/, this];
                 }
             });
@@ -92,6 +94,15 @@ var HiveClient = /** @class */ (function () {
             throw new Error('HiveClient: client is not initialized');
         }
         return this.client;
+    };
+    HiveClient.prototype.close = function () {
+        if (!this.connection) {
+            return;
+        }
+        var thriftConnection = this.connection.getConnection();
+        if (typeof thriftConnection.end === 'function') {
+            this.connection.getConnection().end();
+        }
     };
     return HiveClient;
 }());

@@ -9,6 +9,7 @@ export default class HiveClient implements IHiveClient {
     private TCLIService;
     private TCLIService_types;
     private client;
+    private connection;
     /**
      *
      * @param TCLIService generated from TCLIService.thrift (https://github.com/apache/hive/blob/master/service-rpc/if/TCLIService.thrift)
@@ -18,4 +19,5 @@ export default class HiveClient implements IHiveClient {
     connect(options: IConnectionOptions, connectionProvider?: IConnectionProvider, authProvider?: IAuthentication): Promise<HiveClient>;
     openSession(request: OpenSessionRequest): Promise<IHiveSession>;
     getClient(): ThriftClient;
+    close(): void;
 }

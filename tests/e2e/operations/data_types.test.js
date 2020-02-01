@@ -57,10 +57,10 @@ const handleOperation = (operation, {
     .then(() => utils.getResult(operation).getValue());
 };
 
-before(runInstance);
-after(stopInstance);
-
 describe('Data types', () => {
+    before(runInstance);
+    after(stopInstance);
+
     it('primitive data types should presented correctly', () => {
         return openSession().then(session => {
             return execute(session, `DROP TABLE IF EXISTS primitiveTypes`)

@@ -9,21 +9,24 @@ const utils = new HiveUtils(
 connection().then(client => {
     return client.openSession({
         client_protocol: TCLIService_types.TProtocolVersion.HIVE_CLI_SERVICE_PROTOCOL_V10
+    }).then((session) => {
+        return testPrimitiveTypes(session)
+            .then(() => testComplexTypes(session))
+            .then(() => testIntervals(session))
+            .then(() => {
+                return session.close();
+            });
+    }).then(status => {
+        if (!status.success()) {
+            throw status.getError();
+        }
+        console.log(status.success());
+
+        return client.close();
+    }).catch(error => {
+        console.log(error);
+        return client.close();
     });
-}).then((session) => {
-    return testPrimitiveTypes(session)
-        .then(() => testComplexTypes(session))
-        .then(() => testIntervals(session))
-        .then(() => {
-            return session.close();
-        });
-}).then(status => {
-    if (!status.success()) {
-        throw status.getError();
-    }
-    console.log(status.success());
-}).catch(error => {
-    console.log(error);
 });
 
 const testPrimitiveTypes = (session) => {
