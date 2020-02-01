@@ -1,20 +1,28 @@
 import IAuthentication from "../contracts/IAuthentication";
 import ITransport from "../contracts/ITransport";
-import IConnectionOptions from "../contracts/IConnectionOptions";
+import { AuthOptions } from '../types/AuthOptions';
+
+type HttpAuthOptions = AuthOptions & {
+    headers?: object
+};
 
 export default class PlainHttpAuthentication implements IAuthentication {
-    private options: IConnectionOptions;
-    
-    constructor(options: IConnectionOptions) {
-        this.options = options;
+    private username: string;
+    private password: string;
+    private headers: object;
+
+    constructor(options: HttpAuthOptions) {
+        this.username = options?.username || 'anonymous';
+        this.password = options?.password || 'anonymous';
+        this.headers = options?.headers || {};
     }
     
     authenticate(transport: ITransport): Promise<ITransport> {
         transport.setOptions('headers', {
-            ...(this.options.options?.headers || {}),
+            ...(this.headers),
             Authorization: this.getToken(
-                this.options.options?.username || 'anonymous',
-                this.options.options?.password || 'anonymous',
+                this.username,
+                this.password,
             )
         });
 

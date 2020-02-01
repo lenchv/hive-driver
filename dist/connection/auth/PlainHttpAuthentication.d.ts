@@ -1,9 +1,15 @@
 import IAuthentication from "../contracts/IAuthentication";
 import ITransport from "../contracts/ITransport";
-import IConnectionOptions from "../contracts/IConnectionOptions";
+import { AuthOptions } from '../types/AuthOptions';
+declare type HttpAuthOptions = AuthOptions & {
+    headers?: object;
+};
 export default class PlainHttpAuthentication implements IAuthentication {
-    private options;
-    constructor(options: IConnectionOptions);
+    private username;
+    private password;
+    private headers;
+    constructor(options: HttpAuthOptions);
     authenticate(transport: ITransport): Promise<ITransport>;
     private getToken;
 }
+export {};

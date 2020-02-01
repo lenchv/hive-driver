@@ -11,7 +11,7 @@
     </property>
     <property>
         <name>hive.server2.thrift.http.port</name>
-        <value>10002</value>
+        <value>10001</value>
     </property>
     <property>
         <name>hive.server2.thrift.port</name>

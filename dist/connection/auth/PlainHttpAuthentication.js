@@ -13,11 +13,13 @@ var __assign = (this && this.__assign) || function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var PlainHttpAuthentication = /** @class */ (function () {
     function PlainHttpAuthentication(options) {
-        this.options = options;
+        var _a, _b, _c;
+        this.username = ((_a = options) === null || _a === void 0 ? void 0 : _a.username) || 'anonymous';
+        this.password = ((_b = options) === null || _b === void 0 ? void 0 : _b.password) || 'anonymous';
+        this.headers = ((_c = options) === null || _c === void 0 ? void 0 : _c.headers) || {};
     }
     PlainHttpAuthentication.prototype.authenticate = function (transport) {
-        var _a, _b, _c;
-        transport.setOptions('headers', __assign(__assign({}, (((_a = this.options.options) === null || _a === void 0 ? void 0 : _a.headers) || {})), { Authorization: this.getToken(((_b = this.options.options) === null || _b === void 0 ? void 0 : _b.username) || 'anonymous', ((_c = this.options.options) === null || _c === void 0 ? void 0 : _c.password) || 'anonymous') }));
+        transport.setOptions('headers', __assign(__assign({}, (this.headers)), { Authorization: this.getToken(this.username, this.password) }));
         return Promise.resolve(transport);
     };
     PlainHttpAuthentication.prototype.getToken = function (username, password) {

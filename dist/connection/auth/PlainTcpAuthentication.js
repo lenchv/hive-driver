@@ -10,11 +10,10 @@ var StatusCode;
 })(StatusCode = exports.StatusCode || (exports.StatusCode = {}));
 ;
 var PlainTcpAuthentication = /** @class */ (function () {
-    function PlainTcpAuthentication(username, password) {
-        if (username === void 0) { username = 'anonymous'; }
-        if (password === void 0) { password = 'anonymous'; }
-        this.username = username;
-        this.password = password;
+    function PlainTcpAuthentication(authOptions) {
+        var _a, _b;
+        this.username = ((_a = authOptions) === null || _a === void 0 ? void 0 : _a.username) || 'anonymous';
+        this.password = ((_b = authOptions) === null || _b === void 0 ? void 0 : _b.password) || 'anonymous';
     }
     PlainTcpAuthentication.prototype.authenticate = function (transport) {
         var _this = this;

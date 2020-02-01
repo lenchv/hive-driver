@@ -1,5 +1,6 @@
 import IAuthentication from "../contracts/IAuthentication";
 import ITransport from "../contracts/ITransport";
+import { AuthOptions } from '../types/AuthOptions';
 
 export enum StatusCode {
     START=1,
@@ -14,9 +15,9 @@ export default class PlainTcpAuthentication implements IAuthentication {
     private username: string;
     private password: string;
 
-    constructor(username: string = 'anonymous', password: string = 'anonymous') {
-        this.username = username;
-        this.password = password;
+    constructor(authOptions?: AuthOptions) {
+        this.username = authOptions?.username || 'anonymous';
+        this.password = authOptions?.password || 'anonymous';
     }
 
     authenticate(transport: ITransport): Promise<ITransport> {
