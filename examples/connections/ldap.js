@@ -7,7 +7,7 @@ const connections = require('../../index').connections;
 
 const connection = new connections.TcpConnection();
 const authProvider = new auth.PlainTcpAuthentication(
-    'hbase',
+    'admin',
     '123456'
 );
 
