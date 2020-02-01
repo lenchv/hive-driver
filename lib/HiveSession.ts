@@ -1,43 +1,12 @@
 import HiveDriver from "./hive/HiveDriver";
-import IHiveSession, { ExecuteStatementOptions } from './contracts/IHiveSession';
+import IHiveSession, { ExecuteStatementOptions, SchemasRequest, TablesRequest, ColumnRequest, PrimaryKeysRequest, FunctionNameRequest } from './contracts/IHiveSession';
 import { SessionHandle, TCLIServiceTypes, Status as TStatus, OperationHandle } from "./hive/Types";
 import { ExecuteStatementResponse } from "./hive/Commands/ExecuteStatementCommand";
 import IOperation from "./contracts/IOperation";
 import HiveOperation from "./HiveOperation";
-import InfoResponse from "./responses/InfoResponse";
 import Status from "./dto/Status";
 import StatusFactory from "./factory/StatusFactory";
-
-type SchemasRequest = {
-    schemaName?: string,
-    catalogName?: string
-};
-
-type TablesRequest = {
-    catalogName?: string,
-    schemaName?: string,
-    tableName?: string,
-    tableTypes?: Array<string>,
-};
-
-type ColumnRequest = {
-    catalogName?: string,
-    schemaName?: string,
-    tableName?: string,
-    columnName?: string,
-};
-
-type FunctionNameRequest = {
-    functionName: string,
-    catalogName?: string,
-    schemaName?: string,
-};
-
-type PrimaryKeysRequest = {
-    schemaName: string,
-    tableName: string,
-    catalogName?: string,
-};
+import InfoResult from "./result/InfoResult";
 
 export default class HiveSession implements IHiveSession {
     private driver: HiveDriver;
@@ -57,12 +26,12 @@ export default class HiveSession implements IHiveSession {
      * 
      * @param infoType one of the values TCLIService_types.TGetInfoType
      */
-    getInfo(infoType: number): Promise<InfoResponse> {
+    getInfo(infoType: number): Promise<InfoResult> {
         return this.driver.getInfo({
             sessionHandle: this.sessionHandle,
             infoType
         }).then(response => {
-            return new InfoResponse(response, this.TCLIService_types);
+            return new InfoResult(response, this.TCLIService_types);
         });
     }
 
@@ -185,18 +154,6 @@ export default class HiveSession implements IHiveSession {
         });
     }
 
-    // getCrossReference(request: CrossReferenceRequest): IOperation {
-
-    // }
-    // getDelegationToken(owner: string, renewer: string): string {
-
-    // }
-    // cancelDelegationToken(token: string): Status {
-
-    // }
-    // renewDelegationToken(token: string): Status {
-
-    // }
     close(): Promise<Status> {
         return this.driver.closeSession({
             sessionHandle: this.sessionHandle

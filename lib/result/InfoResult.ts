@@ -3,7 +3,7 @@ import InfoValue from "../dto/InfoValue";
 import { GetInfoResponse } from "../hive/Commands/GetInfoCommand";
 import { TCLIServiceTypes } from "../hive/Types";
 
-export default class InfoResponse {
+export default class InfoResult {
     public status: Status;
     public value: InfoValue;
 

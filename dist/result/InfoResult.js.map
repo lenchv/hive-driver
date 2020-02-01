@@ -1,0 +1,1 @@
+{"version":3,"file":"InfoResult.js","sourceRoot":"","sources":["../../lib/result/InfoResult.ts"],"names":[],"mappings":";;;;;AAAA,yDAAmC;AACnC,+DAAyC;AAIzC;IAII,oBAAY,QAAyB,EAAE,iBAAmC;QACtE,IAAI,CAAC,MAAM,GAAG,IAAI,gBAAM,CACpB,QAAQ,CAAC,MAAM,EACf,iBAAiB,CACpB,CAAC;QACF,IAAI,CAAC,KAAK,GAAG,IAAI,mBAAS,CAAC,QAAQ,CAAC,SAAS,CAAC,CAAC;IACnD,CAAC;IACL,iBAAC;AAAD,CAAC,AAXD,IAWC"}

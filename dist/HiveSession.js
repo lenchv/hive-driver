@@ -15,8 +15,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var HiveOperation_1 = __importDefault(require("./HiveOperation"));
-var InfoResponse_1 = __importDefault(require("./responses/InfoResponse"));
 var StatusFactory_1 = __importDefault(require("./factory/StatusFactory"));
+var InfoResult_1 = __importDefault(require("./result/InfoResult"));
 var HiveSession = /** @class */ (function () {
     function HiveSession(driver, sessionHandle, TCLIService_types) {
         this.driver = driver;
@@ -35,7 +35,7 @@ var HiveSession = /** @class */ (function () {
             sessionHandle: this.sessionHandle,
             infoType: infoType
         }).then(function (response) {
-            return new InfoResponse_1.default(response, _this.TCLIService_types);
+            return new InfoResult_1.default(response, _this.TCLIService_types);
         });
     };
     /**
@@ -141,14 +141,6 @@ var HiveSession = /** @class */ (function () {
             return _this.createOperation(response.operationHandle);
         });
     };
-    // getCrossReference(request: CrossReferenceRequest): IOperation {
-    // }
-    // getDelegationToken(owner: string, renewer: string): string {
-    // }
-    // cancelDelegationToken(token: string): Status {
-    // }
-    // renewDelegationToken(token: string): Status {
-    // }
     HiveSession.prototype.close = function () {
         var _this = this;
         return this.driver.closeSession({

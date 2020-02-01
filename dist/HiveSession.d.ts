@@ -1,35 +1,9 @@
 import HiveDriver from "./hive/HiveDriver";
-import IHiveSession, { ExecuteStatementOptions } from './contracts/IHiveSession';
+import IHiveSession, { ExecuteStatementOptions, SchemasRequest, TablesRequest, ColumnRequest, PrimaryKeysRequest, FunctionNameRequest } from './contracts/IHiveSession';
 import { SessionHandle, TCLIServiceTypes } from "./hive/Types";
 import IOperation from "./contracts/IOperation";
-import InfoResponse from "./responses/InfoResponse";
 import Status from "./dto/Status";
-declare type SchemasRequest = {
-    schemaName?: string;
-    catalogName?: string;
-};
-declare type TablesRequest = {
-    catalogName?: string;
-    schemaName?: string;
-    tableName?: string;
-    tableTypes?: Array<string>;
-};
-declare type ColumnRequest = {
-    catalogName?: string;
-    schemaName?: string;
-    tableName?: string;
-    columnName?: string;
-};
-declare type FunctionNameRequest = {
-    functionName: string;
-    catalogName?: string;
-    schemaName?: string;
-};
-declare type PrimaryKeysRequest = {
-    schemaName: string;
-    tableName: string;
-    catalogName?: string;
-};
+import InfoResult from "./result/InfoResult";
 export default class HiveSession implements IHiveSession {
     private driver;
     private sessionHandle;
@@ -41,7 +15,7 @@ export default class HiveSession implements IHiveSession {
      *
      * @param infoType one of the values TCLIService_types.TGetInfoType
      */
-    getInfo(infoType: number): Promise<InfoResponse>;
+    getInfo(infoType: number): Promise<InfoResult>;
     /**
      * Executes DDL/DML statements
      *
@@ -61,4 +35,3 @@ export default class HiveSession implements IHiveSession {
     private createOperation;
     private assertStatus;
 }
-export {};
