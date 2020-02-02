@@ -89,6 +89,6 @@ export class KerberosStep {
     }
 
     fourth(payload: string, cb: Function) {
-        throw new Error('Process has finished');
+        return cb(new Error('Process finished'));
     }
 } 

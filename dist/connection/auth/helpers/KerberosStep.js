@@ -73,7 +73,7 @@ var KerberosStep = /** @class */ (function () {
         });
     };
     KerberosStep.prototype.fourth = function (payload, cb) {
-        throw new Error('Process has finished');
+        return cb(new Error('Process finished'));
     };
     return KerberosStep;
 }());
