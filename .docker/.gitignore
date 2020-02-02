@@ -1,2 +1,2 @@
 docker-compose.yml
-./confs/hive-site.xml
+confs/hive-site.xml
