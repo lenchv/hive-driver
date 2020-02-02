@@ -12,8 +12,9 @@ import IAuthentication from './connection/contracts/IAuthentication';
 import NoSaslAuthentication from './connection/auth/NoSaslAuthentication';
 import TcpConnection from './connection/connections/TcpConnection';
 import IConnectionOptions from './connection/contracts/IConnectionOptions';
+import { EventEmitter } from 'events';
 
-export default class HiveClient implements IHiveClient {
+export default class HiveClient extends EventEmitter implements IHiveClient {
     private TCLIService: object;
     private TCLIService_types: TCLIServiceTypes;
     private client: ThriftClient | null;
@@ -25,6 +26,7 @@ export default class HiveClient implements IHiveClient {
      * @param TCLIService_types object generated from TCLIService.thrift 
      */
     constructor(TCLIService: object, TCLIService_types: TCLIServiceTypes) {
+        super();
         this.TCLIService = TCLIService;
         this.TCLIService_types = TCLIService_types;
         this.client = null;
@@ -50,6 +52,10 @@ export default class HiveClient implements IHiveClient {
             this.TCLIService,
             this.connection.getConnection()
         );
+
+        this.connection.getConnection().on('error', (error: Error) => {
+            this.emit('error', error);
+        });
 
         return this;
     }

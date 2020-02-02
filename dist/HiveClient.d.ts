@@ -1,3 +1,4 @@
+/// <reference types="node" />
 import { ThriftClient, TCLIServiceTypes } from './hive/Types/';
 import IHiveClient from './contracts/IHiveClient';
 import { OpenSessionRequest } from './hive/Commands/OpenSessionCommand';
@@ -5,7 +6,8 @@ import IHiveSession from './contracts/IHiveSession';
 import IConnectionProvider from './connection/contracts/IConnectionProvider';
 import IAuthentication from './connection/contracts/IAuthentication';
 import IConnectionOptions from './connection/contracts/IConnectionOptions';
-export default class HiveClient implements IHiveClient {
+import { EventEmitter } from 'events';
+export default class HiveClient extends EventEmitter implements IHiveClient {
     private TCLIService;
     private TCLIService_types;
     private client;

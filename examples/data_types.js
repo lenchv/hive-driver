@@ -1,12 +1,16 @@
 const TCLIService_types = require('../thrift/gen-nodejs/TCLIService_types');
 const HiveUtils = require('../index').HiveUtils;
-const connection = require('./connections/ldap');
+const connection = require('./connections/kerberosHttp');
 
 const utils = new HiveUtils(
     TCLIService_types
 );
 
 connection().then(client => {
+    client.on('error', (error) => {
+        console.error(error);
+    });
+    
     return client.openSession({
         client_protocol: TCLIService_types.TProtocolVersion.HIVE_CLI_SERVICE_PROTOCOL_V10
     }).then((session) => {
