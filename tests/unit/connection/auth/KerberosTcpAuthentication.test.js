@@ -45,31 +45,19 @@ const getTransportMock = () => {
     };
 };
 
-const getKerberosClientMock = () => {
-    return {
-        wrap(payload, data, cb) {
-            expect(payload).to.be.eq(Buffer.from([1, 0, 0, 0, 4]).toString('base64'));
-            return cb(null, payload);
-        },
-        unwrap(payload, cb) {
-            expect(Buffer.from(payload, 'base64').toString()).to.be.eq('transition2');
-            return cb(null, Buffer.from([1, 0, 0, 0, 4]).toString('base64'));
-        },
-    };
-};
-
 const getAuthProcessMock = () => {
     let cursor = 0;
     const transitions = [
         [ '', 'token' ],
-        [ 'transition1', 'transition1' ]
+        [ 'transition1', 'transition1' ],
+        [ 'transition2', Buffer.from([1, 0, 0, 0, 4]).toString() ],
     ];
     
     return {
-        init(username, password, cb) {
+        init({ username, password }, cb) {
             expect(username).to.be.eq('hive/hive.driver@EXAMPLE.COM');
             expect(password).to.be.eq('hive');
-            return cb(null, getKerberosClientMock());
+            return cb(null);
         },
         transition(payload, cb) {
             const data = transitions[cursor++];
