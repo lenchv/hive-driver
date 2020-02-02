@@ -1,12 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var SaslPackageFactory_1 = require("./helpers/SaslPackageFactory");
-var QOP;
-(function (QOP) {
-    QOP[QOP["AUTH"] = 1] = "AUTH";
-    QOP[QOP["AUTH_INTEGRITY"] = 2] = "AUTH_INTEGRITY";
-    QOP[QOP["AUTH_CONFIDENTIALITY"] = 4] = "AUTH_CONFIDENTIALITY";
-})(QOP || (QOP = {}));
 var KerberosTcpAuthentication = /** @class */ (function () {
     function KerberosTcpAuthentication(options, authProcess) {
         var _a, _b, _c;
@@ -17,9 +11,10 @@ var KerberosTcpAuthentication = /** @class */ (function () {
     KerberosTcpAuthentication.prototype.authenticate = function (transport) {
         var _this = this;
         return new Promise(function (resolve, reject) {
-            var transition = 0;
-            var qualityOfProtection = QOP.AUTH;
-            _this.authProcess.init(_this.username, _this.password, function (error, client) {
+            _this.authProcess.init({
+                password: _this.password,
+                username: _this.username,
+            }, function (error, client) {
                 if (error) {
                     return reject(error);
                 }
@@ -36,18 +31,9 @@ var KerberosTcpAuthentication = /** @class */ (function () {
                     _this.onConnect(transport).catch(onError);
                 };
                 var onData = function (data) {
-                    transition++;
                     var status = data[0];
                     if (status === SaslPackageFactory_1.StatusCode.OK) {
-                        var payload = data.slice(5).toString('base64');
-                        if (transition < 2) {
-                            _this.nextTransition(transport, payload).catch(onError);
-                        }
-                        else {
-                            _this.thirdTransition(transport, client, payload).then(function (qop) {
-                                qualityOfProtection = qop;
-                            }).catch(onError);
-                        }
+                        _this.nextTransition(transport, data).catch(onError);
                     }
                     else if (status === SaslPackageFactory_1.StatusCode.COMPLETE) {
                         onSuccess();
@@ -77,33 +63,16 @@ var KerberosTcpAuthentication = /** @class */ (function () {
             });
         });
     };
-    KerberosTcpAuthentication.prototype.nextTransition = function (transport, payload) {
+    KerberosTcpAuthentication.prototype.nextTransition = function (transport, data) {
         var _this = this;
         return new Promise(function (resolve, reject) {
+            var payload = data.slice(5).toString('base64');
             _this.authProcess.transition(payload, function (err, response) {
                 if (err) {
                     return reject(err);
                 }
                 transport.write(SaslPackageFactory_1.SaslPackageFactory.create(SaslPackageFactory_1.StatusCode.OK, Buffer.from(response || '', 'base64')));
                 resolve();
-            });
-        });
-    };
-    KerberosTcpAuthentication.prototype.thirdTransition = function (transport, client, payload) {
-        var _this = this;
-        return new Promise(function (resolve, reject) {
-            client.unwrap(payload, function (err, response) {
-                if (err) {
-                    return reject(err);
-                }
-                var qop = Buffer.from(response, 'base64')[0];
-                client.wrap(response, { user: _this.username }, function (err, wrapped) {
-                    if (err) {
-                        return reject(err);
-                    }
-                    transport.write(SaslPackageFactory_1.SaslPackageFactory.create(SaslPackageFactory_1.StatusCode.OK, Buffer.from(wrapped || '', 'base64')));
-                    resolve(qop);
-                });
             });
         });
     };

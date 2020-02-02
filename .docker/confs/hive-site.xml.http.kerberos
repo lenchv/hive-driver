@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 <?xml-stylesheet type="text/xsl" href="configuration.xsl" ?>
-<!-- !connect jdbc:hive2://localhost:10000/;principal=hive/hive.driver@KERBEROS.SERVER -->
+<!-- !connect jdbc:hive2://localhost:10001/;principal=hive/hive.driver@KERBEROS.SERVER;transportMode=http;httpPath=/hive -->
 <configuration>
     <property>
         <name>hive.server2.thrift.bind.host</name>
@@ -8,7 +8,7 @@
     </property>
     <property>
         <name>hive.server2.transport.mode</name>
-        <value>binary</value>
+        <value>http</value>
     </property>
     <property>
         <name>hive.server2.thrift.http.port</name>

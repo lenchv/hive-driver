@@ -5,12 +5,6 @@ import { SaslPackageFactory, StatusCode } from "./helpers/SaslPackageFactory";
 import { IKerberosAuthProcess } from "../contracts/IKerberosAuthProcess";
 import { IKerberosClient } from "../contracts/IKerberosClient";
 
-enum QOP {
-    AUTH = 1,
-    AUTH_INTEGRITY = 2,
-    AUTH_CONFIDENTIALITY = 4,
-}
-
 export default class KerberosTcpAuthentication implements IAuthentication {
     static AUTH_MECH = 'GSSAPI';
     private username: string;
@@ -25,11 +19,11 @@ export default class KerberosTcpAuthentication implements IAuthentication {
 
     authenticate(transport: ITransport): Promise<ITransport> {
         return new Promise((resolve, reject) => {
-            let transition = 0;
-            let qualityOfProtection = QOP.AUTH;
             this.authProcess.init(
-                this.username,
-                this.password,
+                {
+                    password: this.password,
+                    username: this.username,
+                },
                 (error: Error, client: IKerberosClient) => {
                     if (error) {
                         return reject(error);
@@ -52,18 +46,10 @@ export default class KerberosTcpAuthentication implements IAuthentication {
                     };
 
                     const onData = (data: Buffer) => {
-                        transition++;
                         const status = data[0];
 
                         if (status === StatusCode.OK) {
-                            const payload = data.slice(5).toString('base64');
-                            if (transition < 2) {
-                                this.nextTransition(transport, payload).catch(onError);
-                            } else {
-                                this.thirdTransition(transport, client, payload).then((qop: QOP) => {
-                                    qualityOfProtection = qop;
-                                }).catch(onError);
-                            }
+                            this.nextTransition(transport, data).catch(onError);
                         } else if (status === StatusCode.COMPLETE) {
                             onSuccess();
                         } else {
@@ -105,8 +91,10 @@ export default class KerberosTcpAuthentication implements IAuthentication {
         });
     }
 
-    private nextTransition(transport: ITransport, payload: string): Promise<void> {
+    private nextTransition(transport: ITransport, data: Buffer): Promise<void> {
         return new Promise((resolve, reject) => {
+            const payload = data.slice(5).toString('base64');
+
             this.authProcess.transition(payload, (err: Error, response: string) => {
                 if (err) {
                     return reject(err);
@@ -118,31 +106,6 @@ export default class KerberosTcpAuthentication implements IAuthentication {
                 ));
 
                 resolve();
-            });
-        });
-    }
-
-    private thirdTransition(transport: ITransport, client: IKerberosClient, payload: string): Promise<QOP> {
-        return new Promise((resolve, reject) => {
-            client.unwrap(payload, (err: Error, response: string) => {
-                if (err) {
-                    return reject(err);
-                }
-
-                const qop: QOP = Buffer.from(response, 'base64')[0];
-
-                client.wrap(response, { user: this.username }, (err: Error, wrapped: string) => {
-                    if (err) {
-                        return reject(err);
-                    }
-    
-                    transport.write(SaslPackageFactory.create(
-                        StatusCode.OK,
-                        Buffer.from(wrapped || '', 'base64')
-                    ));
-
-                    resolve(qop);
-                });
             });
         });
     }

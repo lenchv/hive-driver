@@ -11,5 +11,4 @@ export default class KerberosTcpAuthentication implements IAuthentication {
     authenticate(transport: ITransport): Promise<ITransport>;
     private onConnect;
     private nextTransition;
-    private thirdTransition;
 }

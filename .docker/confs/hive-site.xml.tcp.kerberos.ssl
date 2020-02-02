@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 <?xml-stylesheet type="text/xsl" href="configuration.xsl" ?>
-<!-- !connect jdbc:hive2://localhost:10000/;principal=hive/hive.driver@KERBEROS.SERVER -->
 <configuration>
     <property>
         <name>hive.server2.thrift.bind.host</name>
@@ -89,4 +88,16 @@
         <value>false</value>
     </property>
 
+    <property>
+        <name>hive.server2.use.SSL</name>
+        <value>true</value>
+    </property>
+    <property>
+        <name>hive.server2.keystore.path</name>
+        <value>/opt/ssl/keystore.jks</value>
+    </property>
+    <property>
+        <name>hive.server2.keystore.password</name>
+        <value>1a2b3c</value>
+    </property>
 </configuration>

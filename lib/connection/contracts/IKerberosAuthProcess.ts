@@ -1,16 +1,28 @@
+import { KerberosInitializeOptions } from "../types/KerberosInitializeOptions";
+
+export enum QOP {
+    AUTH = 1,
+    AUTH_INTEGRITY = 2,
+    AUTH_CONFIDENTIALITY = 4,
+}
+
 export interface IKerberosAuthProcess {
     /**
      * This method should initiate the kerberos process and return IKerberosClient
-     * @param username 
-     * @param password 
+     * @param options 
      * @param cb 
      */
-    init(username: string, password: string, cb: Function): void;
+    init(options: KerberosInitializeOptions, cb: Function): void;
 
     /**
-     * This method should process three SASL steps. The pyalod should be wrapped/unwrapped with kerberos client
+     * This method should process three SASL steps
      * @param payload 
      * @param cb 
      */
-    transition(payload: Buffer | string, cb: Function): void;
+    transition(payload: string, cb: Function): void;
+
+    /**
+     * Quality of protection
+     */
+    getQOP(): QOP;
 }
