@@ -5,6 +5,7 @@ import IConnectionProvider from "../contracts/IConnectionProvider";
 import IConnectionOptions, { Options } from "../contracts/IConnectionOptions";
 import IAuthentication from "../contracts/IAuthentication";
 import HttpTransport from "../transports/HttpTransport";
+import { IncomingMessage } from "http";
 
 type NodeOptions = {
     ca?: Buffer | string,
@@ -33,6 +34,8 @@ export default class HttpConnection implements IConnectionProvider, IThriftConne
                 httpTransport.getOptions(),
             );
 
+            this.addCookieHandler();
+
             return this;
         });
     }
@@ -56,5 +59,19 @@ export default class HttpConnection implements IConnectionProvider, IThriftConne
         }
 
         return nodeOptions;
+    }
+
+    private addCookieHandler() {
+        const responseCallback = this.connection.responseCallback;
+
+        this.connection.responseCallback = (response: IncomingMessage) => {
+            if (Array.isArray(response.headers['set-cookie'])) {
+                let cookie = [this.connection.nodeOptions.headers['cookie']];
+
+                this.connection.nodeOptions.headers['cookie'] = cookie.concat(response.headers['set-cookie']).join(';');
+            }
+
+            responseCallback.call(this.connection, response);
+        };
     }
 }
