@@ -2,35 +2,13 @@ import IAuthentication from "../contracts/IAuthentication";
 import ITransport from "../contracts/ITransport";
 import { AuthOptions } from '../types/AuthOptions';
 import { SaslPackageFactory, StatusCode } from "./helpers/SaslPackageFactory";
+import { IKerberosAuthProcess } from "../contracts/IKerberosAuthProcess";
+import { IKerberosClient } from "../contracts/IKerberosClient";
 
 enum QOP {
     AUTH = 1,
     AUTH_INTEGRITY = 2,
     AUTH_CONFIDENTIALITY = 4,
-}
-
-type KerberosClient = any;
-
-interface IKerberosAuthProcess {
-    init(username: string, password: string, cb: Function): void;
-
-    transition(payload: Buffer | string, cb: Function): void;
-}
-
-class KerberosAuthProcess implements IKerberosAuthProcess {
-    private client: KerberosClient;
-
-    constructor(host: string, service: string) {
-
-    }
-    
-    init(username: string, password: string, cb: Function): void {
-        cb(null, this.client);
-    }
-
-    transition(payload: Buffer | string, cb: Function): void {
-        cb(null, payload);
-    }
 }
 
 export default class KerberosTcpAuthentication implements IAuthentication {
@@ -52,7 +30,7 @@ export default class KerberosTcpAuthentication implements IAuthentication {
             this.authProcess.init(
                 this.username,
                 this.password,
-                (error: Error, client: KerberosClient) => {
+                (error: Error, client: IKerberosClient) => {
                     if (error) {
                         return reject(error);
                     }
@@ -91,7 +69,7 @@ export default class KerberosTcpAuthentication implements IAuthentication {
                         } else {
                             const message = data.slice(5).toString();
             
-                            onError(new Error('Authenticated error: ' + message));
+                            onError(new Error('Authentication error: ' + message));
                         }
                     };
 
@@ -144,7 +122,7 @@ export default class KerberosTcpAuthentication implements IAuthentication {
         });
     }
 
-    private thirdTransition(transport: ITransport, client: KerberosClient, payload: string): Promise<QOP> {
+    private thirdTransition(transport: ITransport, client: IKerberosClient, payload: string): Promise<QOP> {
         return new Promise((resolve, reject) => {
             client.unwrap(payload, (err: Error, response: string) => {
                 if (err) {

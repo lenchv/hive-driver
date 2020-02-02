@@ -7,17 +7,6 @@ var QOP;
     QOP[QOP["AUTH_INTEGRITY"] = 2] = "AUTH_INTEGRITY";
     QOP[QOP["AUTH_CONFIDENTIALITY"] = 4] = "AUTH_CONFIDENTIALITY";
 })(QOP || (QOP = {}));
-var KerberosAuthProcess = /** @class */ (function () {
-    function KerberosAuthProcess(host, service) {
-    }
-    KerberosAuthProcess.prototype.init = function (username, password, cb) {
-        cb(null, this.client);
-    };
-    KerberosAuthProcess.prototype.transition = function (payload, cb) {
-        cb(null, payload);
-    };
-    return KerberosAuthProcess;
-}());
 var KerberosTcpAuthentication = /** @class */ (function () {
     function KerberosTcpAuthentication(options, authProcess) {
         var _a, _b, _c;
@@ -65,7 +54,7 @@ var KerberosTcpAuthentication = /** @class */ (function () {
                     }
                     else {
                         var message = data.slice(5).toString();
-                        onError(new Error('Authenticated error: ' + message));
+                        onError(new Error('Authentication error: ' + message));
                     }
                 };
                 transport.connect();
