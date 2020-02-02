@@ -1,3 +1,4 @@
+const fs = require('fs');
 const config = require('./config');
 const TCLIService = require('../../thrift/gen-nodejs/TCLIService');
 const TCLIService_types = require('../../thrift/gen-nodejs/TCLIService_types');
@@ -11,11 +12,15 @@ const client = new HiveClient(
     TCLIService_types
 );
 
-module.exports = () => config().then(({ hostname }) => client.connect({
+module.exports = () => config().then(({ hostname, ca, cert, key }) => client.connect({
     host: hostname,
     port: 10001,
     options: {
-        path: '/hive'
+        path: '/hive',
+        https: true,
+        ca: fs.readFileSync(ca),
+		cert: fs.readFileSync(cert),
+		key: fs.readFileSync(key),
     }
 }, new connections.HttpConnection(), new auth.KerberosHttpAuthentication({
     username: 'hive@KERBEROS.SERVER',
