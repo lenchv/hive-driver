@@ -28,10 +28,14 @@ make build-kerberos # in case you will use kerberized Hive
 
 ## Usage
 
-To run Hive instance you should run:
+To use Hive instance you should run:
 
 ```bash
-make up TYPE=<type>
+make up TYPE=<type> # run
+
+make down # stop
+
+make log # watch hive-server logs
 ```
 
 where &lt;type&gt; is the suffix of hive-site.xml configs in the folder confs/.
@@ -51,6 +55,8 @@ kinit hive@KERBEROS.SERVER
 
 password: hive
 ```
+
+To stop instance:
 
 ## Set up kerberos client
 

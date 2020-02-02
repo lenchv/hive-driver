@@ -8,9 +8,9 @@ services:
       - "10001:10001"
       - "10002:10002"
     command: bash -c "chown hive:hive /opt/hive.keytab && kinit hive/hive.driver@KERBEROS.SERVER -k -t /opt/hive.keytab && /opt/apache-hive-2.3.6-bin/bin/hiveserver2"
-    hostname: hive.driver
+    hostname: HOST_NAME
     volumes:
-      - ./confs/hive-site.xml.tcp.kerberos:/opt/apache-hive-2.3.6-bin/conf/hive-site.xml
+      - ./confs/hive-site.xml:/opt/apache-hive-2.3.6-bin/conf/hive-site.xml
       - ./ssl/:/opt/ssl/
       - ./krb/krb5.conf:/etc/krb5.conf
       - ./krb/hive.keytab:/opt/hive.keytab
@@ -20,11 +20,11 @@ services:
       - ./krb/mapred-site.xml:/opt/hadoop-2.9.2/etc/hadoop/mapred-site.xml
   hive-metastore:
     image: lenchv/hive:kerberos
-    hostname: hive.driver
+    hostname: HOST_NAME
     ports:
       - "9083:9083"
     volumes:
-      - ./confs/hive-site.xml.tcp.kerberos:/opt/apache-hive-2.3.6-bin/conf/hive-site.xml
+      - ./confs/hive-site.xml:/opt/apache-hive-2.3.6-bin/conf/hive-site.xml
       - ./ssl/:/opt/ssl/
       - ./krb/krb5.conf:/etc/krb5.conf
       - ./krb/hive.keytab:/opt/hive.keytab
