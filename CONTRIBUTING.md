@@ -10,6 +10,30 @@ To contribute to this repository fork it and send pull request.
 - *tests/e2e/* - end-to-end tests
 - *index.js* - entry point of the driver
 
+## Run the project
+
+Hot compiling of TypeScript
+
+```bash
+npm run watch
+```
+
+Build the project
+
+```bash
+npm run build
+```
+
+Tests:
+
+```bash
+npm run test
+
+npm run e2e
+```
+
+To run develop hive instance see: [.docker](../.docker/README.md)
+
 ## Commit messages
 
 Please follow the [Angular commit style][angular-commit-style].
