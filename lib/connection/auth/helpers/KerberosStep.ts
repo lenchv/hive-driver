@@ -21,7 +21,7 @@ export class KerberosStep {
         this.options = options;
     }
 
-    execute(payload: string, cb: Function) {
+    execute(payload: string, cb: Function): void {
         switch(this.step) {
             case TransitionState.STEP_1:
                 return this.first(payload, cb);
@@ -36,7 +36,7 @@ export class KerberosStep {
         }
     }
 
-    first(payload: string, cb: Function) {
+    first(payload: string, cb: Function): void {
         this.client.step(payload, (error: Error, challenge: string) => {
             if (error) {
                 cb(error);
@@ -48,7 +48,7 @@ export class KerberosStep {
         });
     }
 
-    second(payload: string, cb: Function) {
+    second(payload: string, cb: Function): void {
         this.client.step(payload, (error: Error, challenge: string) => {
             if (error) {
                 if (this.attempts <= 0) {
@@ -66,7 +66,7 @@ export class KerberosStep {
         });
     }
 
-    third(payload: string, cb: Function) {
+    third(payload: string, cb: Function): void {
         this.client.unwrap(payload, (error: Error, data: string) => {
             if (error) {
                 return cb(error);
@@ -88,7 +88,7 @@ export class KerberosStep {
         });
     }
 
-    fourth(payload: string, cb: Function) {
+    fourth(payload: string, cb: Function): void {
         return cb(new Error('Process finished'));
     }
 } 

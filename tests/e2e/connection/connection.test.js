@@ -9,35 +9,61 @@ const HiveClient = driver.HiveClient;
 const auth = driver.auth;
 const connections = driver.connections;
 
-const runConnectionTest = (connect, connectionType, logger) => {
-    return instanceHelper.up(connectionType, logger).then(() => {
-        return connect(
-            new HiveClient(
-                TCLIService,
-                TCLIService_types
-            ),
-            connections,
-            auth
-        ).then(client => {
-            return client.openSession({
-                client_protocol: TCLIService_types.TProtocolVersion.HIVE_CLI_SERVICE_PROTOCOL_V10
-            });
-        }).then(session => {
-            return session.getInfo(TCLIService_types.TGetInfoType.CLI_DBMS_VER).then(infoResponse => {
-                expect(infoResponse.status.success()).to.be.true;
-                expect(infoResponse.value.getValue()).to.eq('2.3.6');
-            }).then(() => {
-                return session.close();
-            }, err => {
-                return session.close().then(() => Promise.error(err));
-            });
+const runInstance = (authType, connectionType, logger) => {
+    if (authType === 'kerberos') {
+        return instanceHelper.upKrb(connectionType, logger);
+    } else {
+        return instanceHelper.up(connectionType, logger);
+    }
+};
+
+const executeTest = (connect) => {
+    return connect(
+        new HiveClient(
+            TCLIService,
+            TCLIService_types
+        ),
+        connections,
+        auth
+    ).then(client => {
+        return client.openSession({
+            client_protocol: TCLIService_types.TProtocolVersion.HIVE_CLI_SERVICE_PROTOCOL_V10
         });
+    }).then(session => {
+        return session.getInfo(TCLIService_types.TGetInfoType.CLI_DBMS_VER).then(infoResponse => {
+            expect(infoResponse.status.success()).to.be.true;
+            expect(infoResponse.value.getValue()).to.eq('2.3.6');
+        }).then(() => {
+            return session.close();
+        }, err => {
+            return session.close().then(() => Promise.reject(err));
+        });
+    });
+};
+
+const runConnectionTest = (connect, connectionType, logger) => {
+    return runInstance('', connectionType, logger).then(() => {
+        return executeTest(connect);
     }).then(() => {
         return instanceHelper.down(logger);
     }).catch(err => {
         return instanceHelper.down(logger).then(() => Promise.reject(err));
     });
 };
+
+const runKerberosConnectionTest = (connect, connectionType, logger) => {
+    return runInstance('kerberos', connectionType, logger).then(() => {
+        return executeTest(connect);
+    }).then(() => {
+        return instanceHelper.down(logger);
+    }).catch(err => {
+        return instanceHelper.down(logger).then(() => Promise.reject(err));
+    });
+};
+
+const sleep = (t) => new Promise((resolve) => {
+    setTimeout(resolve, t);
+});
 
 describe('Driver should connect to Hive via', function () {
     this.timeout(1000 * 60 * 5);
@@ -85,6 +111,24 @@ describe('Driver should connect to Hive via', function () {
 
         it('http', () => {
             return runConnectionTest(require('./connections/http.ldap'), 'http.ldap', logger);
+        });
+    });
+
+    describe('kerberos', () => {
+        it('tcp', () => {
+            return sleep(3000).runKerberosConnectionTest(require('./connections/tcp.kerberos'), 'tcp.kerberos', logger);
+        });
+
+        it('http', () => {
+            return sleep(3000).runKerberosConnectionTest(require('./connections/http.kerberos'), 'http.kerberos', logger);
+        });
+
+        it('tcp SSL', () => {
+            return sleep(3000).then(() => runKerberosConnectionTest(require('./connections/tcp.kerberos.ssl'), 'tcp.kerberos.ssl', logger));
+        });
+
+        it('http SSL', () => {
+            return sleep(3000).then(() => runKerberosConnectionTest(require('./connections/http.kerberos.ssl'), 'http.kerberos.ssl', logger));
         });
     });
 });

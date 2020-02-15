@@ -7,7 +7,7 @@ export enum StatusCode {
 };
 
 export class SaslPackageFactory {
-    static create(status: StatusCode, body: Buffer) {
+    static create(status: StatusCode, body: Buffer): Buffer {
         const bodyLength = new Buffer(4);
 
         bodyLength.writeUInt32BE(body.length, 0);

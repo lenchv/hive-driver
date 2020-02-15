@@ -63,11 +63,26 @@ const up = (type, logger = () => {}) => {
         });
 };
 
+
+const upKrb = (type, logger = () => {}) => {
+    logger('Start hive: ' + type);
+
+    return execute('make up-krb TYPE=' + type)
+        .then(result => {
+            logger(result);
+
+            return waitUntilHiveReady(30, logger);
+        }).then(() => {
+           return execute('make kinit'); 
+        });
+};
+
 const down = (logger = () => {}) => {
     return execute('make down').then(logger);
 };
 
 module.exports = {
     up,
+    upKrb,
     down
 };
