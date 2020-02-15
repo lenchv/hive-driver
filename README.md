@@ -80,6 +80,10 @@ e2e tests use dockerized Hive instances, for more details see: [.docker](.docker
 
 See [CONTRIBUTING.md](CONTRIBUTING.md)
 
+## Issues
+
+If find any troubles with driver feel free to create an issue.
+
 ## License
  
 [MIT License](LICENSE)
