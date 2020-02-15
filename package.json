@@ -46,5 +46,8 @@
   "dependencies": {
     "thrift": "0.12.0",
     "node-int64": "^0.4.0"
+  },
+  "czConfig": {
+    "path": "node_modules/cz-conventional-changelog"
   }
 }

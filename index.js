@@ -1,3 +1,5 @@
+const TCLIService = require('./thrift/gen-nodejs/TCLIService');
+const TCLIService_types = require('./thrift/gen-nodejs/TCLIService_types');
 const HiveClient = require('./dist/HiveClient').default;
 const HiveDriver = require('./dist/hive/HiveDriver').default;
 const NoSaslAuthentication = require('./dist/connection/auth/NoSaslAuthentication').default;
@@ -27,5 +29,9 @@ module.exports = {
     connections: {
         HttpConnection,
         TcpConnection
+    },
+    thrift: {
+        TCLIService,
+        TCLIService_types
     }
 };
