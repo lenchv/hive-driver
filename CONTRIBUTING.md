@@ -32,7 +32,7 @@ npm run test
 npm run e2e
 ```
 
-To run develop hive instance see: [.docker](../.docker/README.md)
+To run develop hive instance see: [.docker](.docker/)
 
 ## Commit messages
 
