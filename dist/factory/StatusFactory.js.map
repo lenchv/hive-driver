@@ -1,0 +1,1 @@
+{"version":3,"file":"StatusFactory.js","sourceRoot":"","sources":["../../lib/factory/StatusFactory.ts"],"names":[],"mappings":";;;;;AACA,yDAAmC;AAEnC;IAGI,uBAAY,gBAAkC;QAC1C,IAAI,CAAC,gBAAgB,GAAG,gBAAgB,CAAC;IAC7C,CAAC;IAED,8BAAM,GAAN,UAAO,MAAe;QAClB,OAAO,IAAI,gBAAM,CACb,MAAM,EACN,IAAI,CAAC,gBAAgB,CACxB,CAAC;IACN,CAAC;IACL,oBAAC;AAAD,CAAC,AAbD,IAaC"}

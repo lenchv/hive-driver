@@ -1,0 +1,46 @@
+version: "3"
+
+services:
+  hive-server:
+    image: lenchv/hive:kerberos
+    ports:
+      - "10000:10000"
+      - "10001:10001"
+      - "10002:10002"
+    command: bash -c "chown hive:hive /opt/hive.keytab && kinit hive/hive.driver@KERBEROS.SERVER -k -t /opt/hive.keytab && /opt/apache-hive-2.3.6-bin/bin/hiveserver2"
+    hostname: HOST_NAME
+    volumes:
+      - ./confs/hive-site.xml:/opt/apache-hive-2.3.6-bin/conf/hive-site.xml
+      - ./ssl/:/opt/ssl/
+      - ./krb/krb5.conf:/etc/krb5.conf
+      - ./krb/hive.keytab:/opt/hive.keytab
+      - ./krb/core-site.xml:/opt/hadoop-2.9.2/etc/hadoop/core-site.xml
+      - ./krb/hdfs-site.xml:/opt/hadoop-2.9.2/etc/hadoop/hdfs-site.xml
+      - ./krb/yarn-site.xml:/opt/hadoop-2.9.2/etc/hadoop/yarn-site.xml
+      - ./krb/mapred-site.xml:/opt/hadoop-2.9.2/etc/hadoop/mapred-site.xml
+  hive-metastore:
+    image: lenchv/hive:kerberos
+    hostname: HOST_NAME
+    ports:
+      - "9083:9083"
+    volumes:
+      - ./confs/hive-site.xml:/opt/apache-hive-2.3.6-bin/conf/hive-site.xml
+      - ./ssl/:/opt/ssl/
+      - ./krb/krb5.conf:/etc/krb5.conf
+      - ./krb/hive.keytab:/opt/hive.keytab
+      - ./krb/core-site.xml:/opt/hadoop-2.9.2/etc/hadoop/core-site.xml
+      - ./krb/hdfs-site.xml:/opt/hadoop-2.9.2/etc/hadoop/hdfs-site.xml
+      - ./krb/yarn-site.xml:/opt/hadoop-2.9.2/etc/hadoop/yarn-site.xml
+      - ./krb/mapred-site.xml:/opt/hadoop-2.9.2/etc/hadoop/mapred-site.xml
+    command: bash -c "chown hive:hive /opt/hive.keytab && kinit hive/hive.driver@KERBEROS.SERVER -k -t /opt/hive.keytab && /opt/apache-hive-2.3.6-bin/bin/hive --service metastore"
+  kerberos.server:
+    image: sequenceiq/kerberos:1.1
+    container_name: hive.driver_kerberos.server
+    hostname: kerberos.server
+    ports:
+      - "749:749"
+      - "88:88"
+    environment:
+      REALM: KERBEROS.SERVER
+      DOMAIN_REALM: kerberos.server
+

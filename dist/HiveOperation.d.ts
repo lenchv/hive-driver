@@ -1,0 +1,35 @@
+import IOperation from "./contracts/IOperation";
+import HiveDriver from "./hive/HiveDriver";
+import { OperationHandle, TCLIServiceTypes, TableSchema, RowSet } from "./hive/Types";
+import Status from "./dto/Status";
+import { GetOperationStatusResponse } from "./hive/Commands/GetOperationStatusCommand";
+export default class HiveOperation implements IOperation {
+    private driver;
+    private operationHandle;
+    private TCLIService_type;
+    private schema;
+    private data;
+    private statusFactory;
+    private maxRows;
+    private fetchType;
+    private _hasMoreRows;
+    private state;
+    private hasResultSet;
+    constructor(driver: HiveDriver, operationHandle: OperationHandle, TCLIService_type: TCLIServiceTypes);
+    fetch(): Promise<Status>;
+    status(progress?: boolean): Promise<GetOperationStatusResponse>;
+    cancel(): Promise<Status>;
+    close(): Promise<Status>;
+    finished(): boolean;
+    hasMoreRows(): boolean;
+    setMaxRows(maxRows: number): void;
+    setFetchType(fetchType: number): void;
+    getSchema(): TableSchema | null;
+    getData(): Array<RowSet>;
+    getQueryId(): Promise<string>;
+    private initializeSchema;
+    private firstFetch;
+    private nextFetch;
+    private processFetchResponse;
+    private checkIfOperationHasMoreRows;
+}
