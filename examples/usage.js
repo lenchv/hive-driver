@@ -1,39 +1,33 @@
-const TCLIService = require('../thrift/gen-nodejs/TCLIService');
-const TCLIService_types = require('../thrift/gen-nodejs/TCLIService_types');
-const HiveClient = require('../index').HiveClient;
-const mech = require('../index').mechanisms;
-
-const connection = new mech.NoSaslTcpConnection();
-
-const client = new HiveClient(
+const hive = require('../index');
+const { TCLIService, TCLIService_types } = hive.thrift;
+const client = new hive.HiveClient(
     TCLIService,
     TCLIService_types
 );
 
-return client.connect({
-    host: '192.168.99.100',
-    port: 10000,
-    options: {
-    }
-}, connection).then(client => {
+client.connect(
+    {
+        host: 'localhost',
+        port: 10000
+    },
+    new hive.connections.TcpConnection(),
+    new hive.auth.NoSaslAuthentication()
+).then(client => {
     return client.openSession({
-        client_protocol: TCLIService_types.TProtocolVersion.HIVE_CLI_SERVICE_PROTOCOL_V9
+        client_protocol: TCLIService_types.TProtocolVersion.HIVE_CLI_SERVICE_PROTOCOL_V10
     });
-}).then((session) => {
-    return session.getInfo(TCLIService_types.TGetInfoType.CLI_DBMS_VER)
-        .then(({ status, value }) => {
-            if (!status.success()) {
-                throw status.getError();
-            }
-    
-            console.log(value.getValue());
-        }).then(() => {
-            return session.close();
-        });
-}).then(status => {
-    if (!status.success()) {
-        throw status.getError();
-    }
+}).then(session => {
+    return session.getInfo(
+        TCLIService_types.TGetInfoType.CLI_DBMS_VER
+    ).then(response => {
+        if (!response.status.success()) {
+            throw response.status.getError();
+        }
+
+        console.log(response.value.getValue());
+    }).then(() => {
+        return session.close();
+    });
 }).catch(error => {
     console.log(error);
 });
