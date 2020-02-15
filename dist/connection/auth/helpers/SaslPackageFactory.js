@@ -13,7 +13,7 @@ var SaslPackageFactory = /** @class */ (function () {
     function SaslPackageFactory() {
     }
     SaslPackageFactory.create = function (status, body) {
-        var bodyLength = new Buffer(4);
+        var bodyLength = Buffer.alloc(4);
         bodyLength.writeUInt32BE(body.length, 0);
         return Buffer.concat([Buffer.from([status]), bodyLength, body]);
     };
