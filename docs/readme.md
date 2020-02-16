@@ -163,7 +163,7 @@ For more details see:
 - [tests/e2e/connection/connection.test.js](/tests/e2e/connection/connection.test.js)
 - [.docker/confs](/.docker/confs/)
 
-## 3 HiveSession
+## HiveSession
 
 After you connect to the server you should open session to start working with Hive server.
 
