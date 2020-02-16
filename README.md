@@ -4,7 +4,7 @@
 
 Hive Driver is JS driver for connection to [Apache Hive](https://hive.apache.org/) via [Thrift API](https://github.com/apache/hive/blob/master/service-rpc/if/TCLIService.thrift).
 
-This driver is able to connect with SASL authentication mechanisms (ldap, Plain, kerberos) using both http and tcp transport.
+This driver is able to connect with SASL authentication mechanisms (ldap, plain, kerberos) using both http and tcp transport.
 
 ## Installation
 
@@ -12,9 +12,7 @@ This driver is able to connect with SASL authentication mechanisms (ldap, Plain,
 npm i hive-driver
 ```
 
-*NOTICE*:
-
-If you'd like to use kerberos auth process, you have to install and build [kerberos](https://www.npmjs.com/package/kerberos) module seprately
+If you'd like to use kerberos, you have to install and build [kerberos](https://www.npmjs.com/package/kerberos) module seprately
 
 ```bash
 npm i kerberos
