@@ -3,16 +3,16 @@
 ## Table contents
 
 1. [Forewords](#forewords) 
-2. [HiveDriver](#hivedriver)
-3. [HiveClient](#hiveclient) \
+2. [Example](#example) 
+3. [HiveDriver](#hivedriver)
+4. [HiveClient](#hiveclient) \
    3.1 [TCLIService and TCLIService_types](#tcliservice-and-tcliservice_types)\
    3.2 [Connection](#connection)
-4. [HiveSession](#hivesession) 
-5. [HiveOperation](#hiveoperation) \
+5. [HiveSession](#hivesession) 
+6. [HiveOperation](#hiveoperation) \
    5.1 [HiveUtils](#hiveutils)
-6. [Status](#status) 
-7. [Finalize](#finalize)
-8. [Example](#example) 
+7. [Status](#status) 
+8. [Finalize](#finalize)
 
 ## Forewords
 
@@ -22,11 +22,70 @@ The main goal of this driver not only to implement the different auth methods bu
 
 If you find any mistakes, misleading or some confusion feel free to create an issue or send a pull request and we will discuss it.
 
+## Example
+
+[example.js](/examples/example.js)
+```javascript
+const hive = require('hive-driver');
+const { TCLIService, TCLIService_types } = hive.thrift;
+const client = new hive.HiveClient(
+    TCLIService,
+    TCLIService_types
+);
+const utils = new hive.HiveUtils(
+    TCLIService_types
+);
+
+client.connect(
+    {
+        host: 'localhost',
+        port: 10000
+    },
+    new hive.connections.TcpConnection(),
+    new hive.auth.NoSaslAuthentication()
+).then(async client => {
+    const session = await client.openSession({
+        client_protocol: TCLIService_types.TProtocolVersion.HIVE_CLI_SERVICE_PROTOCOL_V10
+    });
+    
+    const createTableOperation = await session.executeStatement(
+        'CREATE TABLE IF NOT EXISTS pokes (foo INT, bar STRING)'
+    );
+    await utils.waitUntilReady(createTableOperation, false, () => {});
+    await createTableOperation.close();
+    
+    const loadDataOperation = await session.executeStatement(
+        'LOAD DATA LOCAL INPATH \'/opt/apache-hive-2.3.6-bin/examples/files/kv1.txt\' OVERWRITE INTO TABLE pokes'
+    );
+    await utils.waitUntilReady(loadDataOperation, false, () => {});
+    await loadDataOperation.close();
+    
+    const selectDataOperation = await session.executeStatement(
+        'select * from pokes', { runAsync: true }
+    );
+    await utils.waitUntilReady(selectDataOperation, false, () => {});
+    await utils.fetchAll(selectDataOperation);
+    await selectDataOperation.close();
+    
+    const result = utils.getResult(selectDataOperation).getValue();
+    
+    console.log(JSON.stringify(result, null, '\t'));
+    
+    await session.close();
+    await client.close();
+})
+.catch(error => {
+    console.error(error);
+});
+```
+
+To run examples you can use docker images from this repository, how to setup it you will find at [.docker](/.docker/).
+
 ## HiveDriver
 
 The core of the library is [HiveDriver](/lib/hive/HiveDriver.ts). It is the facade for [TCLIService.thrift](https://github.com/apache/hive/blob/master/service-rpc/if/TCLIService.thrift) methods. You can use it directly following the [example](/examples/driver.js).
 
-But, the simpler way is to use [HiveClient](/lib/HiveClient.ts). The library splits the logic of HiveDriver semantically into three classes [HiveClient](/lib/HiveClient.ts), [HiveSession](/lib/HiveSession.ts), [HiveOperation](/lib/HiveOperaion.ts). The main process is the following: HiveClient produces HiveSession, and HiveSession produces HiveOperation.
+But, the simpler way is to use [HiveClient](/lib/HiveClient.ts). The library splits the logic of HiveDriver semantically into three classes [HiveClient](/lib/HiveClient.ts), [HiveSession](/lib/HiveSession.ts), [HiveOperation](/lib/HiveOperation.ts). The main process is the following: HiveClient produces HiveSession, and HiveSession produces HiveOperation.
 
 ## HiveClient
 
@@ -58,17 +117,17 @@ client.on('error', (error) => {
 
 TCLIService and TCLIService_types are generated from [TCLIService.thrift](https://github.com/apache/hive/blob/master/service-rpc/if/TCLIService.thrift).
 
-You can use the ones that provided by the driver or you can compile it on your own and provide via constructor to HiveClient ([details](https://thrift.apache.org/tutorial/)).
+You can use the ones are provided by the driver or you can compile it on your own and provide via constructor to HiveClient ([details](https://thrift.apache.org/tutorial/)).
 
 ```
 thrift -r --gen js TCLIService.thrift
 ```
 
-TCLIService_types contains an amount of constants that API uses, so to use some operation you should be familiar with structures of [TCLIService.thrift](/thrift/TCLIService.thrift). Also, you may notice that most of the internal structures repeat the structures from [TCLIService.thrift](/thrift/TCLIService.thrift).
+TCLIService_types contains a number of constants that API uses, you do not have to know all of them, but sometimes it is useful to refer to [TCLIService.thrift](/thrift/TCLIService.thrift). Also, you may notice that most of the internal structures repeat the structures from [TCLIService.thrift](/thrift/TCLIService.thrift).
 
 ### Connection
 
-Connection to the database includes choosing both transport and authentication. By default driver works in binary mode (tcp) with NoSASL authentication. To find out how your server works you should look to the *hive-site.xml* configuration.
+Connection to the database includes choosing both transport and authentication. By default driver works in binary mode (tcp) with NoSASL authentication. To find out how your server works you should look at the *hive-site.xml* configuration.
 
 *hive-site.xml*
 ```xml
@@ -116,7 +175,7 @@ For authentication the driver supports: nosasl, none, ldap and kerberos. For eac
 
 - to use kerberos you have to install and build npm [kerberos](https://www.npmjs.com/package/kerberos) module on your own, it is not included to the driver as dependency.
 
-- you may write your own implementation of kerberos auth process by implementing [IKerberosAuthProcess.ts](lib/connection/contracts/IKerberosAuthProcess.ts) and pass it to the constructor of KerberosHttpAuthentication or KerberosTcpAuthentication
+- you may write your own implementation of kerberos auth process by implementing [IKerberosAuthProcess](/lib/connection/contracts/IKerberosAuthProcess.ts) and pass it to the constructor of KerberosHttpAuthentication or KerberosTcpAuthentication
 
 ### Example
 
@@ -198,7 +257,7 @@ const operation = await session.executeStatement(
 
    - runAsync allows to execute operation asynchronously.
 
-   - confOverlay overides session configuration properties.
+   - confOverlay overrides session configuration properties.
 
    - timeout is maximum time to execute operation. It has Buffer type, because timestamp in Hive has capacity 64. So for such value you should use [node-int64](https://www.npmjs.com/package/node-int64) npm module.
 
@@ -304,62 +363,3 @@ You may notice, that most of the operations return [Status](/lib/dto/Status.ts) 
 ## Finalize
 
 After you finish working with operation, session or client it is better to close it, each of them has a respective method (`close()`).
-
-## Example
-
-[example.js](/examples/example.js)
-```javascript
-const hive = require('hive-driver');
-const { TCLIService, TCLIService_types } = hive.thrift;
-const client = new hive.HiveClient(
-    TCLIService,
-    TCLIService_types
-);
-const utils = new hive.HiveUtils(
-    TCLIService_types
-);
-
-client.connect(
-    {
-        host: 'localhost',
-        port: 10000
-    },
-    new hive.connections.TcpConnection(),
-    new hive.auth.NoSaslAuthentication()
-).then(async client => {
-    const session = await client.openSession({
-        client_protocol: TCLIService_types.TProtocolVersion.HIVE_CLI_SERVICE_PROTOCOL_V10
-    });
-    
-    const createTableOperation = await session.executeStatement(
-        'CREATE TABLE IF NOT EXISTS pokes (foo INT, bar STRING)'
-    );
-    await utils.waitUntilReady(createTableOperation, false, () => {});
-    await createTableOperation.close();
-    
-    const loadDataOperation = await session.executeStatement(
-        'LOAD DATA LOCAL INPATH \'/opt/apache-hive-2.3.6-bin/examples/files/kv1.txt\' OVERWRITE INTO TABLE pokes'
-    );
-    await utils.waitUntilReady(loadDataOperation, false, () => {});
-    await loadDataOperation.close();
-    
-    const selectDataOperation = await session.executeStatement(
-        'select * from pokes', { runAsync: true }
-    );
-    await utils.waitUntilReady(selectDataOperation, false, () => {});
-    await utils.fetchAll(selectDataOperation);
-    await selectDataOperation.close();
-    
-    const result = utils.getResult(selectDataOperation).getValue();
-    
-    console.log(JSON.stringify(result, null, '\t'));
-    
-    await session.close();
-    await client.close();
-})
-.catch(error => {
-    console.error(error);
-});
-```
-
-To run examples you can use docker images from this repository, how to setup it you will find at [.docker](/.docker/).
