@@ -261,7 +261,7 @@ const operation = await session.executeStatement(
 
    - timeout is maximum time to execute operation. It has Buffer type, because timestamp in Hive has capacity 64. So for such value you should use [node-int64](https://www.npmjs.com/package/node-int64) npm module.
 
-To know others methods see [hivesession.md](hivesession.md).
+To know others methods see [IHiveSession](/lib/contracts/IHiveSession.ts).
 
 ## HiveOperation
 
@@ -336,7 +336,7 @@ getResult(
 
 - to know how data is presented in JSON you may look at [JsonResult.test.js](/tests/unit/result/JsonResult.test.js)
 
-For more details see [hiveoperation.md](hiveoperation.md).
+For more details see [IOperation](/lib/contracts/IOperation.ts).
 
 ### Example
 

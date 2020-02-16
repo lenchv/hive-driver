@@ -21,11 +21,6 @@ export default class HiveSession implements IHiveSession {
         this.statusFactory = new StatusFactory(TCLIService_types);
     }
 
-    /**
-     * Returns general information about the data source
-     * 
-     * @param infoType one of the values TCLIService_types.TGetInfoType
-     */
     getInfo(infoType: number): Promise<InfoResult> {
         return this.driver.getInfo({
             sessionHandle: this.sessionHandle,
@@ -35,12 +30,6 @@ export default class HiveSession implements IHiveSession {
         });
     }
 
-    /**
-     * Executes DDL/DML statements
-     * 
-     * @param statement DDL/DML statement
-     * @param options
-     */
     executeStatement(statement: string, options: ExecuteStatementOptions = {}): Promise<IOperation> {
         options = {
             runAsync: false,
