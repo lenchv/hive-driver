@@ -2,19 +2,15 @@
 
 ## Table contents
 
-[1. Forewords](#1.-forewords)
-
-[2. HiveClient](#2.-hiveclient)
-
-[3. Workflow](#3.-workflow)
-
-[4. Example](#4.-example)
-
+[1. Forewords](#1.-forewords) \
+[2. HiveClient](#2.-hiveclient) \
+[3. Workflow](#3.-workflow) \
+[4. Example](#4.-example) \
 [5. HiveDriver](#5.-hivedriver)
 
 ## 1. Forewords
 
-The best way to get to know how the library works is to look through the code ([lib/](lib/)).
+The best way to get to know how the library works is to look through the code ([lib/](/lib/)).
 
 ## 2. HiveClient
 
