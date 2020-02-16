@@ -2,34 +2,33 @@
 
 ## Table contents
 
-1. [Forewords](#1-forewords) 
-2. [HiveClient](#2-hiveclient) \
-   2.1 [TCLIService and TCLIService_types](#2.1-tcliservice-and-tcliservice_types)\
-   2.2 [Connection](#2.2-connection)\
-   2.3 [Example](#2.3-example)
-3. [HiveSession](#3-hivesession) 
-4. [HiveOperation](#4-hiveoperation) \
-    4.1 [HiveUtils](#4.1-hiveutils) \
-    4.2 [Example](#4.2-example)
-5. [Status](#5-status) 
-6. [Finalize](#6-finalize)
-7. [Example](#7-example) 
+1. [Forewords](#forewords) 
+2. [HiveDriver](#hivedriver)
+3. [HiveClient](#hiveclient) \
+   3.1 [TCLIService and TCLIService_types](#tcliservice-and-tcliservice_types)\
+   3.2 [Connection](#connection)
+4. [HiveSession](#hivesession) 
+5. [HiveOperation](#hiveoperation) \
+   5.1 [HiveUtils](#hiveutils)
+6. [Status](#status) 
+7. [Finalize](#finalize)
+8. [Example](#example) 
 
-## 1. Forewords
+## Forewords
 
 The library is written using TypeScript, so the best way to get to know how it works is to look through the code ([lib/](/lib/)), [tests/e2e](/tests/e2e/) and [examples](/examples).
 
 The main goal of this driver not only to implement the different auth methods but also give you the flexibility for usage.
 
-If you find any mistakes, misleading or some confusions feel free to create an issue or send pull request and we will discuss it.
+If you find any mistakes, misleading or some confusion feel free to create an issue or send a pull request and we will discuss it.
 
-## 2. HiveDriver
+## HiveDriver
 
 The core of the library is [HiveDriver](/lib/hive/HiveDriver.ts). It is the facade for [TCLIService.thrift](https://github.com/apache/hive/blob/master/service-rpc/if/TCLIService.thrift) methods. You can use this facade directly following the [examples/driver.js](/examples/driver.js).
 
 But, the simplier way is to use [HiveClient](/lib/HiveClient.ts). Basically, the driver is used by [HiveClient](/lib/HiveClient.ts), [HiveSession](/lib/HiveSession.ts) and [HiveOperation](/lib/HiveOperaion.ts). The main process is the next: HiveClient produces HiveSession, and HiveSession produces HiveOperation. Let's discuss how it works.
 
-## 2. HiveClient
+## HiveClient
 
 The entry point is class [HiveClient](/lib/HiveClient.ts). Client initiates connection to the server.
 
@@ -55,7 +54,7 @@ client.on('error', (error) => {
 });
 ```
 
-### 2.1 TCLIService and TCLIService_types
+### TCLIService and TCLIService_types
 
 TCLIService and TCLIService_types are generated from [TCLIService.thrift](https://github.com/apache/hive/blob/master/service-rpc/if/TCLIService.thrift).
 
@@ -67,7 +66,7 @@ thrift -r --gen js TCLIService.thrift
 
 TCLIService_types contains an amount of constants that API uses, so to use some operation you should be familiar with structures of [TCLIService.thrift](/thrift/TCLIService.thrift). Also, you may notice that most of the internal structures repeat the structures from [TCLIService.thrift](/thrift/TCLIService.thrift).
 
-### 2.2 Connection
+### Connection
 
 Connection to the database includes choosing both transport and authentication. By default driver works in binary mode (tcp) with NoSASL authentication. To find out how your server works you should look to the *hive-site.xml* configuration.
 
@@ -119,7 +118,7 @@ For authentication the driver supports: nosasl, none, ldap and kerberos. For eac
 
 - you may write your own implementation of kerberos auth process by implementing [IKerberosAuthProcess.ts](lib/connection/contracts/IKerberosAuthProcess.ts) and pass it to the constructor of KerberosHttpAuthentication or KerberosTcpAuthentication
 
-### 2.3 Example
+### Example
 
 http/ldap
 ```javascript
@@ -164,7 +163,7 @@ For more details see:
 - [tests/e2e/connection/connection.test.js](/tests/e2e/connection/connection.test.js)
 - [.docker/confs](/.docker/confs/)
 
-### 3 HiveSession
+## 3 HiveSession
 
 After you connect to the server you should open session to start working with Hive server.
 
@@ -205,13 +204,13 @@ const operation = await session.executeStatement(
 
 To know others methods see [hivesession.md](hivesession.md).
 
-## 4. HiveOperation
+## HiveOperation
 
 In most cases HiveSession methods return [HiveOperation](/lib/HiveOperation.ts), that helps you to retrieve requested data.
 
 After you fetch the result, operation will have [TableSchema](/lib/hive/Types/index.ts#L143) and data (Array<[RowSet](/lib/hive/Types/index.ts#L218)>).
 
-### 4.1 HiveUtils
+### HiveUtils
 
 Operation is executed asynchrnously, so before retrieving the result, you have to wait until it has finished state.
 
@@ -280,7 +279,7 @@ getResult(
 
 For more details see [hiveoperation.md](hiveoperation.md).
 
-### 4.2 Example
+### Example
 
 ```javascript
 const hive = require('hive-driver');
@@ -298,15 +297,15 @@ await utils.fetchAll(operation);
 const result = utils.getResult(operation).getValue();
 ```
 
-## 5. Status
+## Status
 
 You may notice, that most of the operations return [Status](/lib/dto/Status.ts) that helps you to define the state of the operation. Also, status contains the error.
 
-## 6. Finalize
+## Finalize
 
 After you finish working with operation, session or client it is better to close it, each of them has a respective method (`close()`).
 
-## 7. Example
+## Example
 
 [example.js](/examples/example.js)
 ```javascript
