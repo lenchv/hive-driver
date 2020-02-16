@@ -2,7 +2,7 @@
 
 ## Table of Contents
 
-1. [Forewords](#forewords) 
+1. [Foreword](#foreword) 
 2. [Example](#example) 
 3. [HiveDriver](#hivedriver)
 4. [HiveClient](#hiveclient) \
@@ -14,7 +14,7 @@
 7. [Status](#status) 
 8. [Finalize](#finalize)
 
-## Forewords
+## Foreword
 
 The library is written using TypeScript, so the best way to get to know how it works is to look through the code [lib/](/lib/), [tests/e2e](/tests/e2e/) and [examples](/examples).
 
