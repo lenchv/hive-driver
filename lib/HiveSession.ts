@@ -38,7 +38,7 @@ export default class HiveSession implements IHiveSession {
     /**
      * Executes DDL/DML statements
      * 
-     * @param statement DDL/DDL statement
+     * @param statement DDL/DML statement
      * @param options
      */
     executeStatement(statement: string, options: ExecuteStatementOptions = {}): Promise<IOperation> {
