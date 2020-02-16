@@ -16,11 +16,9 @@
 
 ## Forewords
 
-The library is written using TypeScript, so the best way to get to know how it works is to look through the code ([lib/](/lib/)), [tests/e2e](/tests/e2e/) and [examples](/examples).
+The library is written using TypeScript, so the best way to get to know how it works is to look through the code [lib/](/lib/), [tests/e2e](/tests/e2e/) and [examples](/examples).
 
-The main goal of this driver not only to implement the different auth methods but also give you the flexibility for usage.
-
-If you find any mistakes, misleading or some confusion feel free to create an issue or send a pull request and we will discuss it.
+If you find any mistakes, misleading or some confusion feel free to create an issue or send a pull request.
 
 ## Example
 
@@ -79,7 +77,7 @@ client.connect(
 });
 ```
 
-To run examples you can use docker images from this repository, how to setup it you will find at [.docker](/.docker/).
+For testing you can use docker images from this repository. How to setup testing environment describe here: [.docker](/.docker/).
 
 ## HiveDriver
 
@@ -261,7 +259,7 @@ const operation = await session.executeStatement(
 
    - timeout is maximum time to execute operation. It has Buffer type, because timestamp in Hive has capacity 64. So for such value you should use [node-int64](https://www.npmjs.com/package/node-int64) npm module.
 
-To know others methods see [IHiveSession](/lib/contracts/IHiveSession.ts).
+To know others methods see [IHiveSession](/lib/contracts/IHiveSession.ts) and [examples/session.js](/examples/session.js).
 
 ## HiveOperation
 
