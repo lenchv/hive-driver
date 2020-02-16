@@ -1,6 +1,6 @@
 # Getting started
 
-## Table contents
+## Table of Contents
 
 1. [Forewords](#forewords) 
 2. [Example](#example) 
