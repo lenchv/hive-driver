@@ -24,9 +24,9 @@ If you find any mistakes, misleading or some confusion feel free to create an is
 
 ## HiveDriver
 
-The core of the library is [HiveDriver](/lib/hive/HiveDriver.ts). It is the facade for [TCLIService.thrift](https://github.com/apache/hive/blob/master/service-rpc/if/TCLIService.thrift) methods. You can use this facade directly following the [examples/driver.js](/examples/driver.js).
+The core of the library is [HiveDriver](/lib/hive/HiveDriver.ts). It is the facade for [TCLIService.thrift](https://github.com/apache/hive/blob/master/service-rpc/if/TCLIService.thrift) methods. You can use it directly following the [example](/examples/driver.js).
 
-But, the simplier way is to use [HiveClient](/lib/HiveClient.ts). Basically, the driver is used by [HiveClient](/lib/HiveClient.ts), [HiveSession](/lib/HiveSession.ts) and [HiveOperation](/lib/HiveOperaion.ts). The main process is the next: HiveClient produces HiveSession, and HiveSession produces HiveOperation. Let's discuss how it works.
+But, the simpler way is to use [HiveClient](/lib/HiveClient.ts). The library splits the logic of HiveDriver semantically into three classes [HiveClient](/lib/HiveClient.ts), [HiveSession](/lib/HiveSession.ts), [HiveOperation](/lib/HiveOperaion.ts). The main process is the following: HiveClient produces HiveSession, and HiveSession produces HiveOperation.
 
 ## HiveClient
 
