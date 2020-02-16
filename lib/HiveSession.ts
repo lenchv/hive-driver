@@ -1,5 +1,5 @@
 import HiveDriver from "./hive/HiveDriver";
-import IHiveSession, { ExecuteStatementOptions, SchemasRequest, TablesRequest, ColumnRequest, PrimaryKeysRequest, FunctionNameRequest } from './contracts/IHiveSession';
+import IHiveSession, { ExecuteStatementOptions, SchemasRequest, TablesRequest, ColumnRequest, PrimaryKeysRequest, FunctionNameRequest, CrossReferenceRequest } from './contracts/IHiveSession';
 import { SessionHandle, TCLIServiceTypes, Status as TStatus, OperationHandle } from "./hive/Types";
 import { ExecuteStatementResponse } from "./hive/Commands/ExecuteStatementCommand";
 import IOperation from "./contracts/IOperation";
@@ -21,11 +21,6 @@ export default class HiveSession implements IHiveSession {
         this.statusFactory = new StatusFactory(TCLIService_types);
     }
 
-    /**
-     * Returns general information about the data source
-     * 
-     * @param infoType one of the values TCLIService_types.TGetInfoType
-     */
     getInfo(infoType: number): Promise<InfoResult> {
         return this.driver.getInfo({
             sessionHandle: this.sessionHandle,
@@ -35,12 +30,6 @@ export default class HiveSession implements IHiveSession {
         });
     }
 
-    /**
-     * Executes DDL/DML statements
-     * 
-     * @param statement DDL/DDL statement
-     * @param options
-     */
     executeStatement(statement: string, options: ExecuteStatementOptions = {}): Promise<IOperation> {
         options = {
             runAsync: false,
@@ -151,6 +140,56 @@ export default class HiveSession implements IHiveSession {
             this.assertStatus(response.status);
 
             return this.createOperation(response.operationHandle);
+        });
+    }
+
+    getCrossReference(request: CrossReferenceRequest): Promise<IOperation> {
+        return this.driver.getCrossReference({
+            sessionHandle: this.sessionHandle,
+            parentCatalogName: request.parentCatalogName,
+            parentSchemaName: request.parentSchemaName,
+            parentTableName: request.parentTableName,
+            foreignCatalogName: request.foreignCatalogName,
+            foreignSchemaName: request.foreignSchemaName,
+            foreignTableName: request.foreignTableName,
+        }).then(response => {
+            this.assertStatus(response.status);
+
+            return this.createOperation(response.operationHandle);
+        });
+    }
+
+    getDelegationToken(owner: string, renewer: string): Promise<string> {
+        return this.driver.getDelegationToken({
+            sessionHandle: this.sessionHandle,
+            owner,
+            renewer
+        }).then(response => {
+            this.assertStatus(response.status);
+
+            return response.delegationToken || '';
+        });
+    }
+
+    renewDelegationToken(token: string): Promise<Status> {
+        return this.driver.renewDelegationToken({
+            sessionHandle: this.sessionHandle,
+            delegationToken: token
+        }).then(response => {
+            this.assertStatus(response.status);
+
+            return this.statusFactory.create(response.status);
+        });
+    }
+
+    cancelDelegationToken(token: string): Promise<Status> {
+        return this.driver.cancelDelegationToken({
+            sessionHandle: this.sessionHandle,
+            delegationToken: token
+        }).then(response => {
+            this.assertStatus(response.status);
+
+            return this.statusFactory.create(response.status);
         });
     }
 

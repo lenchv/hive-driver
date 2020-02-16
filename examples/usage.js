@@ -12,22 +12,21 @@ client.connect(
     },
     new hive.connections.TcpConnection(),
     new hive.auth.NoSaslAuthentication()
-).then(client => {
-    return client.openSession({
+).then( async client => {
+    const session = await client.openSession({
         client_protocol: TCLIService_types.TProtocolVersion.HIVE_CLI_SERVICE_PROTOCOL_V10
     });
-}).then(session => {
-    return session.getInfo(
+    const response = await session.getInfo(
         TCLIService_types.TGetInfoType.CLI_DBMS_VER
-    ).then(response => {
-        if (!response.status.success()) {
-            throw response.status.getError();
-        }
+    );
 
-        console.log(response.value.getValue());
-    }).then(() => {
-        return session.close();
-    });
+    if (!response.status.success()) {
+        throw response.status.getError();
+    }
+
+    console.log(response.value.getValue());
+
+    await session.close();
 }).catch(error => {
     console.log(error);
 });

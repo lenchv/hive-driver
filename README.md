@@ -4,6 +4,8 @@
 
 Hive Driver is JS driver for connection to [Apache Hive](https://hive.apache.org/) via [Thrift API](https://github.com/apache/hive/blob/master/service-rpc/if/TCLIService.thrift).
 
+This driver is able to connect with SASL authentication mechanisms (ldap, Plain, kerberos) using both http and tcp transport.
+
 ## Installation
 
 ```bash
@@ -20,6 +22,7 @@ npm i kerberos
 
 ## Usage
 
+[examples/usage.js](examples/usage.js)
 ```javascript
 const hive = require('hive-driver');
 const { TCLIService, TCLIService_types } = hive.thrift;
@@ -35,28 +38,27 @@ client.connect(
     },
     new hive.connections.TcpConnection(),
     new hive.auth.NoSaslAuthentication()
-).then(client => {
-    return client.openSession({
+).then(async client => {
+    const session = await client.openSession({
         client_protocol: TCLIService_types.TProtocolVersion.HIVE_CLI_SERVICE_PROTOCOL_V10
     });
-}).then(session => {
-    return session.getInfo(
+    const response = await session.getInfo(
         TCLIService_types.TGetInfoType.CLI_DBMS_VER
-    ).then(response => {
-        if (!response.status.success()) {
-            throw response.status.getError();
-        }
+    );
 
-        console.log(response.value.getValue());
-    }).then(() => {
-        return session.close();
-    });
+    if (!response.status.success()) {
+        throw response.status.getError();
+    }
+
+    console.log(response.value.getValue());
+
+    await session.close();
 }).catch(error => {
     console.log(error);
 });
 ```
 
-See [examples/usage.js](examples/usage.js)
+For more details see: [getting started](docs/readme.md) 
 
 ## Test
 
