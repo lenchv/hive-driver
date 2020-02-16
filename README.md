@@ -4,6 +4,8 @@
 
 Hive Driver is JS driver for connection to [Apache Hive](https://hive.apache.org/) via [Thrift API](https://github.com/apache/hive/blob/master/service-rpc/if/TCLIService.thrift).
 
+This driver is able to connect with SASL authentication mechanisms (ldap, Plain, kerberos) using both http and tcp transport.
+
 ## Installation
 
 ```bash

@@ -1,17 +1,17 @@
-const TCLIService = require('../thrift/gen-nodejs/TCLIService');
-const TCLIService_types = require('../thrift/gen-nodejs/TCLIService_types');
-const HiveDriver = require('../index').HiveDriver;
-const mech = require('../index').mechanisms;
+const hive = require('../index');
+const { TCLIService, TCLIService_types } = hive.thrift;
+const HiveDriver = hive.HiveDriver;
 const thrift = require('thrift');
 
 let driver = null;
 
-const connectionProvider = new mech.NoSaslTcpConnection();
+const authProvider = new hive.auth.NoSaslAuthentication();
+const connectionProvider = new hive.connections.TcpConnection();
 
 connectionProvider.connect({
-    host: '192.168.99.100',
+    host: 'localhost',
     port: 10000
-}).then((connection) => {
+}, authProvider).then((connection) => {
     driver = new HiveDriver(
         TCLIService_types,
         thrift.createClient(TCLIService, connection.getConnection())
