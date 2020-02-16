@@ -24,11 +24,6 @@ var HiveSession = /** @class */ (function () {
         this.TCLIService_types = TCLIService_types;
         this.statusFactory = new StatusFactory_1.default(TCLIService_types);
     }
-    /**
-     * Returns general information about the data source
-     *
-     * @param infoType one of the values TCLIService_types.TGetInfoType
-     */
     HiveSession.prototype.getInfo = function (infoType) {
         var _this = this;
         return this.driver.getInfo({
@@ -38,12 +33,6 @@ var HiveSession = /** @class */ (function () {
             return new InfoResult_1.default(response, _this.TCLIService_types);
         });
     };
-    /**
-     * Executes DDL/DML statements
-     *
-     * @param statement DDL/DDL statement
-     * @param options
-     */
     HiveSession.prototype.executeStatement = function (statement, options) {
         var _this = this;
         if (options === void 0) { options = {}; }
@@ -139,6 +128,52 @@ var HiveSession = /** @class */ (function () {
         }).then(function (response) {
             _this.assertStatus(response.status);
             return _this.createOperation(response.operationHandle);
+        });
+    };
+    HiveSession.prototype.getCrossReference = function (request) {
+        var _this = this;
+        return this.driver.getCrossReference({
+            sessionHandle: this.sessionHandle,
+            parentCatalogName: request.parentCatalogName,
+            parentSchemaName: request.parentSchemaName,
+            parentTableName: request.parentTableName,
+            foreignCatalogName: request.foreignCatalogName,
+            foreignSchemaName: request.foreignSchemaName,
+            foreignTableName: request.foreignTableName,
+        }).then(function (response) {
+            _this.assertStatus(response.status);
+            return _this.createOperation(response.operationHandle);
+        });
+    };
+    HiveSession.prototype.getDelegationToken = function (owner, renewer) {
+        var _this = this;
+        return this.driver.getDelegationToken({
+            sessionHandle: this.sessionHandle,
+            owner: owner,
+            renewer: renewer
+        }).then(function (response) {
+            _this.assertStatus(response.status);
+            return response.delegationToken || '';
+        });
+    };
+    HiveSession.prototype.renewDelegationToken = function (token) {
+        var _this = this;
+        return this.driver.renewDelegationToken({
+            sessionHandle: this.sessionHandle,
+            delegationToken: token
+        }).then(function (response) {
+            _this.assertStatus(response.status);
+            return _this.statusFactory.create(response.status);
+        });
+    };
+    HiveSession.prototype.cancelDelegationToken = function (token) {
+        var _this = this;
+        return this.driver.cancelDelegationToken({
+            sessionHandle: this.sessionHandle,
+            delegationToken: token
+        }).then(function (response) {
+            _this.assertStatus(response.status);
+            return _this.statusFactory.create(response.status);
         });
     };
     HiveSession.prototype.close = function () {

@@ -1,16 +1,19 @@
-const TCLIService_types = require('../thrift/gen-nodejs/TCLIService_types');
-const HiveUtils = require('../index').HiveUtils;
-const connection = require('./connections/plain');
+const hive = require('../index');
+const { TCLIService_types } = hive.thrift;
+const connection = require('./connections/kerberos');
 
-const utils = new HiveUtils(
+const utils = new hive.HiveUtils(
     TCLIService_types
 );
-connection().then(client => {
-    return client.openSession({
-        client_protocol: TCLIService_types.TProtocolVersion.HIVE_CLI_SERVICE_PROTOCOL_V9
+
+const kerberos = true;
+
+connection().then(async client => {
+    const session = await client.openSession({
+        client_protocol: TCLIService_types.TProtocolVersion.HIVE_CLI_SERVICE_PROTOCOL_V10
     });
-}).then((session) => {
-    return Promise.all([
+    await createTables(session);
+    const result = await Promise.all([
         session.getTypeInfo().then(handleOperation),
         session.getCatalogs().then(handleOperation),
         session.getSchemas({}).then(handleOperation),
@@ -18,11 +21,29 @@ connection().then(client => {
         session.getTableTypes({}).then(handleOperation),
         session.getColumns({}).then(handleOperation),
         session.getFunctions({ functionName: 'create_union' }).then(handleOperation),
-        session.getPrimaryKeys({ schemaName: 'default', tableName: 't1' }).then(handleOperation),
-    ]).then(result => {
-        return session.close().then(() => result);
-    });
-}).then(([ typeInfo, catalogs, schemas, tables, tableTypes, columns, functions, primaryKeys ]) => {
+        session.getPrimaryKeys({ schemaName: 'default', tableName: 'table1' }).then(handleOperation),
+        session.getCrossReference({
+            parentCatalogName: '',
+            parentSchemaName: 'default',
+            parentTableName: 'table1',
+            foreignCatalogName: '',
+            foreignSchemaName: 'default',
+            foreignTableName: 'table2'
+        }).then(handleOperation),
+    ]);
+
+    if (kerberos) {
+        const token = await session.getDelegationToken('hive', 'hive');
+        // const renewedTokenStatus = await session.renewDelegationToken(token);
+        const status = await session.cancelDelegationToken(token);
+
+        result.push(token, status);
+    }
+    
+    await session.close();
+
+    return result;
+}).then(([ typeInfo, catalogs, schemas, tables, tableTypes, columns, functions, primaryKeys, crossReference, token, canceledTokenStatus ]) => {
     console.log('done');
 }).catch(error => {
     console.log(error);
@@ -41,4 +62,9 @@ const handleOperation = (operation) => {
     .then(() => {
         return utils.getResult(operation).getValue();
     })
+};
+
+const createTables = async (session) => {
+    await session.executeStatement('create table if not exists table1 ( id string, value integer, primary key(id) disable novalidate )').then(handleOperation);
+    await session.executeStatement('create table if not exists table2 ( id string, table1_fk integer, primary key(id) disable novalidate, foreign key (table1_fk) references table1(id) disable novalidate)').then(handleOperation);
 };

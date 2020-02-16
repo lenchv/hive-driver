@@ -114,10 +114,31 @@ export default interface IHiveSession {
      */
     getPrimaryKeys(request: PrimaryKeysRequest): Promise<IOperation>,
 
-    // getCrossReference(request: CrossReferenceRequest): IOperation,
-    // getDelegationToken(owner: string, renewer: string): string;
-    // cancelDelegationToken(token: string): Status;
-    // renewDelegationToken(token: string): Status;
+    /**
+     * Request information about foreign keys between two tables
+     * @param request 
+     */
+    getCrossReference(request: CrossReferenceRequest): Promise<IOperation>,
+
+    /**
+     * Get delegation token. For kerberos auth only
+     * 
+     * @param owner 
+     * @param renewer 
+     */
+    getDelegationToken(owner: string, renewer: string): Promise<string>;
+    
+    /**
+     * Renew delegation token/ For kerberos auth only
+     * @param token 
+     */
+    renewDelegationToken(token: string): Promise<Status>;
+
+    /**
+     * Cancel delegation token. For kerberos auth only
+     * @param token 
+     */
+    cancelDelegationToken(token: string): Promise<Status>;
 
     /**
      * closes the session
