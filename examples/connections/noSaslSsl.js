@@ -13,7 +13,7 @@ const client = new HiveClient(
     TCLIService,
     TCLIService_types
 );
-// !connect jdbc:hive2://volodymyr.local:10000/default;ssl=true;sslTrustStore=/opt/ssl/truststore.jks;trustStorePassword=1a2b3c;auth=noSasl hive hive
+
 module.exports = () => config().then(({ hostname, ca, cert, key }) => {
     return client.connect({
         host: hostname,

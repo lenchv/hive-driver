@@ -1,5 +1,3 @@
-// !connect jdbc:hive2://localhost:10000/;principal=hive/hive.driver@KERBEROS.SERVER
-
 const config = require('./config');
 const TCLIService = require('../../thrift/gen-nodejs/TCLIService');
 const TCLIService_types = require('../../thrift/gen-nodejs/TCLIService_types');
