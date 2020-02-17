@@ -1,9 +1,11 @@
 import BaseCommand from "./BaseCommand";
 import { Status, GetInfoValue, SessionHandle } from "../Types";
 
+/**
+ * @param infoType TCLISErvice_types.TGetInfoType
+ */
 export type GetInfoRequest = {
     sessionHandle: SessionHandle,
-    // TCLISErvice_types.TGetInfoType
     infoType: number
 };
 
