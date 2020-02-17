@@ -1,7 +1,7 @@
 const { expect } = require('chai');
 const logger = require('../utils/logger')(process.env.HIVE_E2E_LOG);
 const instanceHelper = require('../utils/instanceHelper');
-const driver = require('../../../index');
+const driver = require('../../../');
 const HiveClient = driver.HiveClient;
 const TCLIService = require('../../../thrift/gen-nodejs/TCLIService');
 const TCLIService_types = require('../../../thrift/gen-nodejs/TCLIService_types');
