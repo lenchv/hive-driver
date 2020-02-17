@@ -356,7 +356,7 @@ const result = utils.getResult(operation).getValue();
 
 ## Status
 
-You may notice, that most of the operations return [Status](/lib/dto/Status.ts) that helps you to define the state of the operation. Also, status contains the error.
+You may notice, that most of the operations return [Status](/lib/dto/Status.ts) that helps you to determine the state of an operation. Also, status contains the error.
 
 ## Finalize
 
