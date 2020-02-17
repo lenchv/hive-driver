@@ -45,6 +45,9 @@ jobs:
         sudo cp krb/krb5.conf /etc/krb5.conf
         make up-krb TYPE=tcp.kerberos
         make kinit
+        klist
         sleep 5
         docker-compose logs
         make down
+        cd ..
+        npm run e2e
