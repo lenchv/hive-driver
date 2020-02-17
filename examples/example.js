@@ -1,4 +1,4 @@
-const hive = require('../index');
+const hive = require('../');
 const { TCLIService, TCLIService_types } = hive.thrift;
 const client = new hive.HiveClient(
     TCLIService,

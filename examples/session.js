@@ -1,4 +1,4 @@
-const hive = require('../index');
+const hive = require('../');
 const { TCLIService_types } = hive.thrift;
 const connection = require('./connections/kerberos');
 
