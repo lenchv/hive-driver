@@ -1,0 +1,17 @@
+name: hive-driver-ci
+
+on:
+  pull_request:
+    branches:
+    - master
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Run unit tests
+      run: |
+        npm install
+        npm run build
+        npm run test
