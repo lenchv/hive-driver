@@ -22,9 +22,9 @@ jobs:
         make build
         make generate_ssl
         make build-kerberos
-        cp krb/krb5.conf /etc/krb5.conf
-        echo "127.0.0.1 KERBEROS.SERVER" > /etc/hosts
-        echo "127.0.0.1 kerberos.server" > /etc/hosts
+        sudo cp krb/krb5.conf /etc/krb5.conf
+        sudo echo "127.0.0.1 KERBEROS.SERVER" > /etc/hosts
+        sudo echo "127.0.0.1 kerberos.server" > /etc/hosts
         make kinit
         cd ..
         npm run e2e
