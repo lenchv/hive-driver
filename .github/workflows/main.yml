@@ -10,6 +10,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+    - name: Cache node modules
+      uses: actions/cache@v1
+      env:
+        cache-name: cache-node-modules
+      with:
+        path: ~/.npm
+        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-build-${{ env.cache-name }}-
+          ${{ runner.os }}-build-
+          ${{ runner.os }}-
     - name: Run unit tests
       run: |
         npm install
@@ -25,6 +36,5 @@ jobs:
         make generate_ssl
         make build-kerberos
         sudo cp krb/krb5.conf /etc/krb5.conf
-        make kinit
         cd ..
         npm run e2e
