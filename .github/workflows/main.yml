@@ -15,3 +15,16 @@ jobs:
         npm install
         npm run build
         npm run test
+    - name: Run e2e tests
+      run: |
+        sudo apt-get install krb5-user
+        cd .docker
+        make build
+        make generate-ssl
+        make build-kerberos
+        cp krb/krb5.conf /etc/krb5.conf
+        echo "127.0.0.1 KERBEROS.SERVER" > /etc/hosts
+        echo "127.0.0.1 kerberos.server" > /etc/hosts
+        make kinit
+        cd ..
+        npm run e2e
