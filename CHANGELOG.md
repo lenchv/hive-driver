@@ -14,3 +14,5 @@
 - Implemented authentications: NoSASL, Plain, Kerberos
 
 - Added kerberos authentication process via mongodb kerberos module
+
+- Implemented SSL secured connection
