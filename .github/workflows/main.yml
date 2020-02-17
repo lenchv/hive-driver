@@ -17,14 +17,14 @@ jobs:
         npm run test
     - name: Run e2e tests
       run: |
+        sudo echo "127.0.0.1 KERBEROS.SERVER" | sudo tee -a /etc/hosts
+        sudo echo "127.0.0.1 kerberos.server" | sudo tee -a /etc/hosts
         sudo apt-get install krb5-user
         cd .docker
         make build
         make generate_ssl
         make build-kerberos
         sudo cp krb/krb5.conf /etc/krb5.conf
-        sudo echo "127.0.0.1 KERBEROS.SERVER" > /etc/hosts
-        sudo echo "127.0.0.1 kerberos.server" > /etc/hosts
         make kinit
         cd ..
         npm run e2e
