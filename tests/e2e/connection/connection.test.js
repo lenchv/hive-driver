@@ -128,9 +128,5 @@ describe('Driver should connect to Hive via', function () {
         it('http SSL', () => {
             return runKerberosConnectionTest(require('./connections/http.kerberos.ssl'), 'http.kerberos.ssl', logger);
         });
-
-        it('stub', () => {
-            expect(true).to.be.true;
-        });
     });
 });

@@ -19,7 +19,7 @@ services:
       - ./krb/yarn-site.xml:/opt/hadoop-2.9.2/etc/hadoop/yarn-site.xml
       - ./krb/mapred-site.xml:/opt/hadoop-2.9.2/etc/hadoop/mapred-site.xml
   hive-metastore:
-    image: lenchv/hive::2.3.6
+    image: lenchv/hive:2.3.6
     hostname: HOST_NAME
     ports:
       - "9083:9083"

@@ -12,6 +12,7 @@ up:
 up-krb:
 	sed "s/HOSTNAME_VALUE/`hostname -f`/g" docker-compose.kerberos.yml > docker-compose.yml \
 	&& docker-compose up -d kerberos.server \
+	&& sleep 1 \
 	&& echo "Add user" \
 	&& docker-compose exec -T kerberos.server kadmin -p admin/admin -w admin -q "addprinc -randkey hive/hive.driver@KERBEROS.SERVER" \
 	&& docker-compose exec -T kerberos.server kadmin -p admin/admin -w admin -q "xst -k /opt/hive.keytab hive/hive.driver" \
