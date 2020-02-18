@@ -121,9 +121,9 @@ describe('Driver should connect to Hive via', function () {
         //     return runKerberosConnectionTest(require('./connections/http.kerberos'), 'http.kerberos', logger);
         // });
 
-        // it('tcp SSL', () => {
-        //     return runKerberosConnectionTest(require('./connections/tcp.kerberos.ssl'), 'tcp.kerberos.ssl', logger);
-        // });
+        it('tcp SSL', () => {
+            return runKerberosConnectionTest(require('./connections/tcp.kerberos.ssl'), 'tcp.kerberos.ssl', logger);
+        });
 
         it('http SSL', () => {
             return runKerberosConnectionTest(require('./connections/http.kerberos.ssl'), 'http.kerberos.ssl', logger);
