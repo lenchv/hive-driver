@@ -30,14 +30,13 @@ jobs:
         key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/Dockerfile') }}
     - name: Run unit tests
       run: |
-        npm install
+        npm ci
         npm run build
         npm run test
     - name: Run e2e tests
       run: |
         hostname -f
-        id -u
-        id -g
+        hostname -I
         sudo echo "127.0.0.1 KERBEROS.SERVER" | sudo tee -a /etc/hosts
         sudo echo "127.0.0.1 kerberos.server" | sudo tee -a /etc/hosts
         sudo apt-get install krb5-user

@@ -45,7 +45,7 @@ var HttpConnection = /** @class */ (function () {
             nodeOptions.key = key;
         }
         if (https) {
-            nodeOptions.rejectUnauthorized = true;
+            nodeOptions.rejectUnauthorized = false;
         }
         return nodeOptions;
     };

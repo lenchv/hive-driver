@@ -44,22 +44,16 @@ const executeTest = (connect) => {
 const runConnectionTest = (connect, connectionType, logger) => {
     return runInstance('', connectionType, logger).then(() => {
         return executeTest(connect);
-    }).then(() => {
-        return instanceHelper.down(logger);
-    }).catch(err => {
-        return instanceHelper.down(logger).then(() => Promise.reject(err));
     });
 };
 
 const runKerberosConnectionTest = (connect, connectionType, logger) => {
     return runInstance('kerberos', connectionType, logger).then(() => {
         return executeTest(connect);
-    }).then(() => {
-        return instanceHelper.down(logger);
-    }).catch(err => {
-        return instanceHelper.down(logger).then(() => Promise.reject(err));
     });
 };
+
+const stopInstance = () => instanceHelper.down(logger);
 
 const sleep = (t) => new Promise((resolve) => {
     setTimeout(resolve, t);
@@ -69,6 +63,7 @@ describe.only('Driver should connect to Hive via', function () {
     this.timeout(1000 * 60 * 5);
 
     describe('nosasl', () => {
+        afterEach(stopInstance);
         // it('tcp', () => {
         //     return runConnectionTest(require('./connections/tcp.nosasl'), 'tcp.nosasl', logger);
         // });
@@ -87,6 +82,7 @@ describe.only('Driver should connect to Hive via', function () {
     });
     
     describe('plain', () => {
+        afterEach(stopInstance);
         it('tcp', () => {
             return runConnectionTest(require('./connections/tcp.plain'), 'tcp.plain', logger);
         });
@@ -105,6 +101,7 @@ describe.only('Driver should connect to Hive via', function () {
     });
 
     describe('ldap', () => {
+        afterEach(stopInstance);
         it('tcp', () => {
             return runConnectionTest(require('./connections/tcp.ldap'), 'tcp.ldap', logger);
         });
@@ -115,6 +112,7 @@ describe.only('Driver should connect to Hive via', function () {
     });
 
     describe('kerberos', () => {
+        afterEach(stopInstance);
         it('tcp', () => {
             return sleep(3000).then(() => runKerberosConnectionTest(require('./connections/tcp.kerberos'), 'tcp.kerberos', logger));
         });

@@ -60,7 +60,7 @@ export default class HttpConnection implements IConnectionProvider, IThriftConne
         }
 
         if (https) {
-            nodeOptions.rejectUnauthorized = true;
+            nodeOptions.rejectUnauthorized = false;
         }
 
         return nodeOptions;
