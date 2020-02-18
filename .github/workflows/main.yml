@@ -34,7 +34,6 @@ jobs:
         cd .docker
         make build
         make generate_ssl
-        make build-kerberos
         sudo cp krb/krb5.conf /etc/krb5.conf
         cd ..
         env HOSTNAME=$(hostname -f) npm run e2e

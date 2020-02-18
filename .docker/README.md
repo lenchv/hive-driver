@@ -22,8 +22,6 @@ Firstly, you should build images and configure certs:
 make build
 
 make generate_ssl
-
-make build-kerberos # in case you will use kerberized Hive
 ```
 
 ## Usage

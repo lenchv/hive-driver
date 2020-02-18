@@ -11,6 +11,8 @@ RUN apt-get update && \
     curl -L https://www-us.apache.org/dist/hive/hive-2.3.6/apache-hive-2.3.6-bin.tar.gz | tar zxf - && \
     curl -L https://www-us.apache.org/dist/hadoop/common/hadoop-2.9.2/hadoop-2.9.2.tar.gz | tar zxf -
 
+RUN env DEBIAN_FRONTEND=noninteractive apt-get install -y krb5-user
+
 COPY conf ${HIVE_HOME}/conf
 
 WORKDIR $HIVE_HOME
