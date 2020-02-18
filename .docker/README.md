@@ -1,6 +1,6 @@
 # Hive instances
 
-Here is you may find dockerized hive configurations.
+Here you may find dockerized hive configurations.
 
 ## Prerequisites
 

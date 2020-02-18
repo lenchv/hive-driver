@@ -1,11 +1,7 @@
-// !connect jdbc:hive2://localhost:10000/;principal=hive/hive.driver@KERBEROS.SERVER
-
 const config = require('./config');
-const TCLIService = require('../../thrift/gen-nodejs/TCLIService');
-const TCLIService_types = require('../../thrift/gen-nodejs/TCLIService_types');
-const HiveClient = require('../../index').HiveClient;
-const auth = require('../../index').auth;
-const connections = require('../../index').connections;
+const hive = require('../../');
+const { TCLIService, TCLIService_types } = hive.thrift;
+const { HiveClient, auth, connections } = hive;
 const kerberos = require('kerberos');
 
 const client = new HiveClient(

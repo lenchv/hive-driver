@@ -2,7 +2,8 @@
   "name": "hive-driver",
   "version": "0.0.1",
   "description": "Driver for connection to Apache Hive via Thrift API.",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "directories": {
     "example": "examples",
     "test": "tests"
@@ -16,12 +17,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/lenchv/hive-js/"
+    "url": "https://github.com/lenchv/hive-driver/"
   },
+  "bugs": {
+    "url": "https://github.com/lenchv/hive-driver/issues"
+  },
+  "homepage":"https://github.com/lenchv/hive-driver#readme",
   "keywords": [
     "hiveserver2",
     "apache",
-    "hive",
     "hive",
     "hs2",
     "kerberos",
@@ -29,9 +33,10 @@
     "ldap",
     "hadoop",
     "client",
-    "thrift"
+    "thrift",
+    "nodejs"
   ],
-  "author": "Liench Volodymyr",
+  "author": "Liench Volodymyr <lenchvov@gmail.com>",
   "license": "MIT",
   "devDependencies": {
     "@types/node": "^13.1.4",

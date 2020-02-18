@@ -1,5 +1,9 @@
 import BaseCommand from "./BaseCommand";
 import { OperationHandle, Status, RowSet } from "../Types";
+/**
+ * @param orientation - TCLIService_types.TFetchOrientation
+ * @param fetchType - 0 represents Query output. 1 represents Log
+ */
 export declare type FetchResultsRequest = {
     operationHandle: OperationHandle;
     orientation: number;

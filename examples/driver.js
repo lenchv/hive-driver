@@ -1,4 +1,4 @@
-const hive = require('../index');
+const hive = require('../');
 const { TCLIService, TCLIService_types } = hive.thrift;
 const HiveDriver = hive.HiveDriver;
 const thrift = require('thrift');
@@ -41,12 +41,6 @@ connectionProvider.connect({
         getPrimaryKeys(driver, sessionResponse, 'default', 'table1'),
         getCrossReference(driver, sessionResponse),
         _executeStatement(driver, sessionResponse, 'select * from table1').then(cancelOperation.bind(null, driver)),
-        // _executeStatement(driver, sessionResponse, 'select * from table1').then(getQueryId.bind(null, driver)),
-        // getDelegationToken(driver, sessionResponse, 'hive', 'hive'),
-        // cancelDelegationToken(driver, sessionResponse, 'asd'),
-        // renewDelegationToken(driver, sessionResponse, 'asd'),
-        // setClientInfo(driver, sessionResponse, { param: 'value' }),
-
         executeStatement(driver, sessionResponse, 'drop table table1'),
         executeStatement(driver, sessionResponse, 'drop table table2'),
     ]).then(() => {

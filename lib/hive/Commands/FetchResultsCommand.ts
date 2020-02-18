@@ -1,12 +1,14 @@
 import BaseCommand from "./BaseCommand";
 import { OperationHandle, Status, RowSet } from "../Types";
 
+/**
+ * @param orientation - TCLIService_types.TFetchOrientation
+ * @param fetchType - 0 represents Query output. 1 represents Log
+ */
 export type FetchResultsRequest = {
     operationHandle: OperationHandle,
-    // TCLIService_types.TFetchOrientation
     orientation: number,
     maxRows: number,
-    // 0 represents Query output. 1 represents Log
     fetchType?: number
 };
 

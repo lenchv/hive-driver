@@ -1,4 +1,4 @@
-const hive = require('../index');
+const hive = require('../');
 const { TCLIService_types } = hive.thrift;
 const connection = require('./connections/kerberos');
 
@@ -34,7 +34,6 @@ connection().then(async client => {
 
     if (kerberos) {
         const token = await session.getDelegationToken('hive', 'hive');
-        // const renewedTokenStatus = await session.renewDelegationToken(token);
         const status = await session.cancelDelegationToken(token);
 
         result.push(token, status);
