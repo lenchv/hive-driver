@@ -36,11 +36,12 @@ jobs:
         cd .docker
         cd hive
         docker buildx build \
-            --output "type=image,push=false" \
+            --output "type=image,push=false,name=lenchv/hive:2.3.6" \
             --build-arg USER_UID=$(id -u) \
             --build-arg USER_GID=$(id -g) \
             --tag lenchv/hive:2.3.6 \
             --file Dockerfile .
+        docker images
         cd ..
         make generate_ssl
         make build-kerberos
