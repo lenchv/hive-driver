@@ -1,5 +1,5 @@
 build:
-	cd hive && docker build --build-arg USER_UID=$(id -u) --build-arg USER_GID=$(id -g) -t lenchv/hive:2.3.6 .
+	cd hive && docker build --build-arg USER_UID=$$(id -u) --build-arg USER_GID=$$(id -g) -t lenchv/hive:2.3.6 .
 build-kerberos:
 	cd hive-kerberos && docker build -t lenchv/hive:kerberos .
 generate_ssl:
