@@ -30,7 +30,7 @@ jobs:
         key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/Dockerfile') }}
     - name: Run unit tests
       run: |
-        npm ci
+        npm install
         npm run build
         npm run test
     - name: Run e2e tests
