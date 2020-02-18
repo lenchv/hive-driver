@@ -11,6 +11,7 @@ type NodeOptions = {
     ca?: Buffer | string,
     cert?: Buffer | string,
     key?: Buffer | string,
+    rejectUnauthorized?: boolean
 };
 
 export default class HttpConnection implements IConnectionProvider, IThriftConnection {
@@ -45,7 +46,7 @@ export default class HttpConnection implements IConnectionProvider, IThriftConne
     }
 
     private getNodeOptions(options: Options): object {
-        const { ca, cert, key } = options;
+        const { ca, cert, key, https } = options;
         const nodeOptions: NodeOptions = {};
 
         if (ca) {
@@ -56,6 +57,10 @@ export default class HttpConnection implements IConnectionProvider, IThriftConne
         }
         if (key) {
             nodeOptions.key = key;
+        }
+
+        if (https) {
+            nodeOptions.rejectUnauthorized = true;
         }
 
         return nodeOptions;

@@ -33,7 +33,7 @@ var HttpConnection = /** @class */ (function () {
         return this.connection;
     };
     HttpConnection.prototype.getNodeOptions = function (options) {
-        var ca = options.ca, cert = options.cert, key = options.key;
+        var ca = options.ca, cert = options.cert, key = options.key, https = options.https;
         var nodeOptions = {};
         if (ca) {
             nodeOptions.ca = ca;
@@ -43,6 +43,9 @@ var HttpConnection = /** @class */ (function () {
         }
         if (key) {
             nodeOptions.key = key;
+        }
+        if (https) {
+            nodeOptions.rejectUnauthorized = true;
         }
         return nodeOptions;
     };
