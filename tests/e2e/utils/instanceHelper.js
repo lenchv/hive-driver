@@ -73,7 +73,7 @@ const upKrb = (type, logger = () => {}) => {
 
             return waitUntilHiveReady(30, logger);
         }).then(() => {
-           return execute('make kinit'); 
+           return execute('make kinit').then(logger); 
         });
 };
 

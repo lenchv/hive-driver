@@ -243,6 +243,7 @@ describe('Data types', () => {
             .then(() => execute(session, `insert into dummy (id) values (1)`))
             .then(() => execute(session, `
                     CREATE TABLE complexTypes (
+                        id int,
                         arr_type array<string>,
                         map_type map<string, int>,
                         struct_type struct<city:string,State:string>,
@@ -253,6 +254,11 @@ describe('Data types', () => {
             .then(() => execute(session, 'describe complexTypes'))
             .then(result => {
                 expect(result).to.be.deep.eq([
+                    {
+                        "col_name": "id",
+                        "data_type": "int",
+                        "comment": ""
+                    },
                     {
                         "col_name": "arr_type",
                         "data_type": "array<string>",
@@ -278,6 +284,7 @@ describe('Data types', () => {
                 return Promise.all([
                     execute(session, `
                         INSERT INTO table complexTypes SELECT
+                            POSITIVE(1) as id,
                             array('a', 'b') as arr_type,
                             map('key', 12) as map_type,
                             named_struct('city','Tampa','State','FL') as struct_type,
@@ -286,6 +293,7 @@ describe('Data types', () => {
                     `),
                     execute(session, `
                         INSERT INTO table complexTypes SELECT
+                            POSITIVE(2) as id,
                             array('c', 'd') as arr_type,
                             map('key2', 12) as map_type,
                             named_struct('city','Albany','State','NY') as struct_type,
@@ -294,6 +302,7 @@ describe('Data types', () => {
                     `),
                     execute(session, `
                         INSERT INTO table complexTypes SELECT
+                            POSITIVE(3) as id,
                             array('e', 'd') as arr_type,
                             map('key2', 13) as map_type,
                             named_struct('city','Los Angeles','State','CA') as struct_type,
@@ -302,10 +311,26 @@ describe('Data types', () => {
                     `)
                 ]);
             }).then(result => {
-                return execute(session, 'select * from complexTypes');
+                return execute(session, 'select * from complexTypes order by id asc');
             }).then(result => {
                 expect(result).to.be.deep.eq([
                     {
+                        "id": 1,
+                        "arr_type": [
+                            "a",
+                            "b"
+                        ],
+                        "map_type": {
+                            "key": 12
+                        },
+                        "struct_type": {
+                            "city": "Tampa",
+                            "state": "FL"
+                        },
+                        "union_type": "{0:\"value\"}"
+                    },
+                    {
+                        "id": 2,
                         "arr_type": [
                             "c",
                             "d"
@@ -320,6 +345,7 @@ describe('Data types', () => {
                         "union_type": "{1:0.1}"
                     },
                     {
+                        "id": 3,
                         "arr_type": [
                             "e",
                             "d"
@@ -332,20 +358,6 @@ describe('Data types', () => {
                             "state": "CA"
                         },
                         "union_type": "{2:12}"
-                    },
-                    {
-                        "arr_type": [
-                            "a",
-                            "b"
-                        ],
-                        "map_type": {
-                            "key": 12
-                        },
-                        "struct_type": {
-                            "city": "Tampa",
-                            "state": "FL"
-                        },
-                        "union_type": "{0:\"value\"}"
                     }
                 ]);
 

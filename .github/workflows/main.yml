@@ -10,8 +10,30 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+    - name: Cache node modules
+      uses: actions/cache@v1
+      env:
+        cache-name: cache-node-modules
+      with:
+        path: ~/.npm
+        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-build-${{ env.cache-name }}-
+          ${{ runner.os }}-build-
+          ${{ runner.os }}-
     - name: Run unit tests
       run: |
         npm install
         npm run build
         npm run test
+    - name: Run e2e tests
+      run: |
+        sudo echo "127.0.0.1 KERBEROS.SERVER" | sudo tee -a /etc/hosts
+        sudo echo "127.0.0.1 kerberos.server" | sudo tee -a /etc/hosts
+        sudo apt-get install krb5-user
+        cd .docker
+        make build
+        make generate_ssl
+        sudo cp krb/krb5.conf /etc/krb5.conf
+        cd ..
+        env HOSTNAME=$(hostname -f) npm run e2e

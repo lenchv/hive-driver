@@ -21,9 +21,7 @@ Firstly, you should build images and configure certs:
 ```bash
 make build
 
-make generate-ssl
-
-make build-kerberos # in case you will use kerberized Hive
+make generate_ssl
 ```
 
 ## Usage
@@ -93,5 +91,5 @@ And add to `/etc/krb5.conf` next configuration:
 Aftewards you may obtain ticket from dockerized kerberos server:
 
 ```bash
-kinit hive@KERBEROS.SERVER
+make kinit
 ```
