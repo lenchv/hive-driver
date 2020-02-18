@@ -53,4 +53,4 @@ jobs:
         docker-compose logs
         make down
         cd ..
-        npm run e2e
+        env HOSTNAME=$(hostname -f) npm run e2e

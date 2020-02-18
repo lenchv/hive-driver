@@ -78,7 +78,7 @@ const upKrb = (type, logger = () => {}) => {
 };
 
 const down = (logger = () => {}) => {
-    return execute('docker-compose log').then(logger).then(() => execute('make down')).then(logger);
+    return execute('docker-compose logs').then(logger).then(() => execute('make down')).then(logger);
 };
 
 module.exports = {
