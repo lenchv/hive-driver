@@ -21,27 +21,27 @@ jobs:
           ${{ runner.os }}-build-${{ env.cache-name }}-
           ${{ runner.os }}-build-
           ${{ runner.os }}-
-    - name: Cache docker
-      uses: actions/cache@v1
-      env:
-        cache-name: cache-docker
-      with:
-        path: /var/lib/docker
-        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/Dockerfile') }}
     - name: Run unit tests
       run: |
         npm install
         npm run build
         npm run test
+    - name: Build images
+      uses: crazy-max/ghaction-docker-buildx@master
+      run: |
+        cd .docker/hive
+        docker buildx build \
+            --output "type=image,push=false" \
+            --build-arg USER_UID=$(id -u) \
+            --build-arg USER_GID=$(id -g) \
+            --tag lenchv/hive:2.3.6 \
+            --file Dockerfile .
     - name: Run e2e tests
       run: |
-        hostname -f
-        hostname -I
         sudo echo "127.0.0.1 KERBEROS.SERVER" | sudo tee -a /etc/hosts
         sudo echo "127.0.0.1 kerberos.server" | sudo tee -a /etc/hosts
         sudo apt-get install krb5-user
         cd .docker
-        make build
         make generate_ssl
         make build-kerberos
         sudo cp krb/krb5.conf /etc/krb5.conf
