@@ -26,8 +26,9 @@ jobs:
         npm install
         npm run build
         npm run test
-    - name: Build images
+    - name: Setup Buildx
       uses: crazy-max/ghaction-docker-buildx@master
+    - name: Build images
       run: |
         cd .docker/hive
         docker buildx build \
