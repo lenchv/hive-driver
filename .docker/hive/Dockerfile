@@ -2,6 +2,9 @@ FROM openjdk:8u212-jre
 
 WORKDIR /opt
 
+ARG USER_UID=1000
+ARG USER_GID=1000
+
 ENV HADOOP_HOME=/opt/hadoop-2.9.2
 ENV HIVE_HOME=/opt/apache-hive-2.3.6-bin
 # Include additional jars
@@ -13,8 +16,8 @@ RUN apt-get update && \
 
 COPY conf ${HIVE_HOME}/conf
 
-RUN groupadd -r hive --gid=1000 && \
-    useradd -r -g hive --uid=1000 -d ${HIVE_HOME} hive && \
+RUN groupadd -r hive --gid=$USER_GID && \
+    useradd -r -g hive --uid=$USER_UID -d ${HIVE_HOME} hive && \
     chown hive:hive -R ${HIVE_HOME}
 
 USER hive

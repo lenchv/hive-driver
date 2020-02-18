@@ -65,21 +65,21 @@ const sleep = (t) => new Promise((resolve) => {
     setTimeout(resolve, t);
 });
 
-describe('Driver should connect to Hive via', function () {
+describe.only('Driver should connect to Hive via', function () {
     this.timeout(1000 * 60 * 5);
 
     describe('nosasl', () => {
-        it('tcp', () => {
-            return runConnectionTest(require('./connections/tcp.nosasl'), 'tcp.nosasl', logger);
-        });
+        // it('tcp', () => {
+        //     return runConnectionTest(require('./connections/tcp.nosasl'), 'tcp.nosasl', logger);
+        // });
     
-        it('tcp SSL', () => {
-            return runConnectionTest(require('./connections/tcp.nosasl.ssl'), 'tcp.nosasl.ssl', logger);
-        });
+        // it('tcp SSL', () => {
+        //     return runConnectionTest(require('./connections/tcp.nosasl.ssl'), 'tcp.nosasl.ssl', logger);
+        // });
     
-        it('http', () => {
-            return runConnectionTest(require('./connections/http.nosasl'), 'http.nosasl', logger);
-        });
+        // it('http', () => {
+        //     return runConnectionTest(require('./connections/http.nosasl'), 'http.nosasl', logger);
+        // });
     
         it('http SSL', () => {
             return runConnectionTest(require('./connections/http.nosasl.ssl'), 'http.nosasl.ssl', logger);
@@ -91,13 +91,13 @@ describe('Driver should connect to Hive via', function () {
             return runConnectionTest(require('./connections/tcp.plain'), 'tcp.plain', logger);
         });
 
-        it('tcp SSL', () => {
-            return runConnectionTest(require('./connections/tcp.plain.ssl'), 'tcp.plain.ssl', logger);
-        });
+        // it('tcp SSL', () => {
+        //     return runConnectionTest(require('./connections/tcp.plain.ssl'), 'tcp.plain.ssl', logger);
+        // });
 
-        it('http', () => {
-            return runConnectionTest(require('./connections/http.plain'), 'http.plain', logger);
-        });
+        // it('http', () => {
+        //     return runConnectionTest(require('./connections/http.plain'), 'http.plain', logger);
+        // });
 
         it('http SSL', () => {
             return runConnectionTest(require('./connections/http.plain.ssl'), 'http.plain.ssl', logger);
@@ -109,9 +109,9 @@ describe('Driver should connect to Hive via', function () {
             return runConnectionTest(require('./connections/tcp.ldap'), 'tcp.ldap', logger);
         });
 
-        it('http', () => {
-            return runConnectionTest(require('./connections/http.ldap'), 'http.ldap', logger);
-        });
+        // it('http', () => {
+        //     return runConnectionTest(require('./connections/http.ldap'), 'http.ldap', logger);
+        // });
     });
 
     describe('kerberos', () => {
