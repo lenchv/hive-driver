@@ -1,3 +1,5 @@
+deploy-base:
+	cd hive && docker build -t lenchv/base-hive:2.3.6 -f Dockerfile.base . && docker push lenchv/base-hive:2.3.6
 build:
 	cd hive && docker build --build-arg USER_UID=$$(id -u) --build-arg USER_GID=$$(id -g) -t lenchv/hive:2.3.6 .
 build-kerberos:
