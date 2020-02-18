@@ -5,7 +5,6 @@ module.exports = () => {
     return Promise.resolve()
     .then(() => {
         if (process.env.HOSTNAME) {
-            console.log(process.env.HOSTNAME);
             return process.env.HOSTNAME;
         } else {
             return fqdn();
