@@ -1,5 +1,9 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
+var KerberosError_1 = __importDefault(require("../../../errors/KerberosError"));
 var TransitionState;
 (function (TransitionState) {
     TransitionState[TransitionState["STEP_1"] = 0] = "STEP_1";
@@ -25,7 +29,7 @@ var KerberosStep = /** @class */ (function () {
             case TransitionState.STEP_4:
                 return this.fourth(payload, cb);
             default:
-                throw new Error('Kerberos transition does not exist: ' + this.step);
+                throw new KerberosError_1.default('Kerberos transition does not exist: ' + this.step);
         }
     };
     KerberosStep.prototype.first = function (payload, cb) {
@@ -73,7 +77,7 @@ var KerberosStep = /** @class */ (function () {
         });
     };
     KerberosStep.prototype.fourth = function (payload, cb) {
-        return cb(new Error('Process finished'));
+        return cb(new KerberosError_1.default('Process finished'));
     };
     return KerberosStep;
 }());

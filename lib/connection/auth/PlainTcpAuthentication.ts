@@ -2,6 +2,7 @@ import IAuthentication from "../contracts/IAuthentication";
 import ITransport from "../contracts/ITransport";
 import { AuthOptions } from '../types/AuthOptions';
 import { SaslPackageFactory, StatusCode } from "./helpers/SaslPackageFactory";
+import AuthenticationError from "../../errors/AuthenticationError";
 
 export default class PlainTcpAuthentication implements IAuthentication {
     static AUTH_MECH = 'PLAIN';
@@ -41,7 +42,7 @@ export default class PlainTcpAuthentication implements IAuthentication {
                 } else {
                     const message = data.slice(5).toString();
     
-                    onError(new Error('Authentication error: ' + message));
+                    onError(new AuthenticationError('Authentication error: ' + message));
                 }
             };
             const onSuccess = () => {

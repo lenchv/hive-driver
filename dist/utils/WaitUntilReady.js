@@ -35,7 +35,11 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
+var OperationStateError_1 = __importDefault(require("../errors/OperationStateError"));
 var WaitUntilReady = /** @class */ (function () {
     function WaitUntilReady(operation, TCLIService_types) {
         this.operation = operation;
@@ -82,18 +86,18 @@ var WaitUntilReady = /** @class */ (function () {
             case this.TCLIService_types.TOperationState.FINISHED_STATE:
                 return true;
             case this.TCLIService_types.TOperationState.CANCELED_STATE:
-                throw new Error('The operation was canceled by a client');
+                throw new OperationStateError_1.default('The operation was canceled by a client');
             case this.TCLIService_types.TOperationState.CLOSED_STATE:
-                throw new Error('The operation was closed by a client');
+                throw new OperationStateError_1.default('The operation was closed by a client');
             case this.TCLIService_types.TOperationState.ERROR_STATE:
-                throw new Error('The operation failed due to an error');
+                throw new OperationStateError_1.default('The operation failed due to an error');
             case this.TCLIService_types.TOperationState.PENDING_STATE:
-                throw new Error('The operation is in a pending state');
+                throw new OperationStateError_1.default('The operation is in a pending state');
             case this.TCLIService_types.TOperationState.TIMEDOUT_STATE:
-                throw new Error('The operation is in a timedout state');
+                throw new OperationStateError_1.default('The operation is in a timedout state');
             case this.TCLIService_types.TOperationState.UKNOWN_STATE:
             default:
-                throw new Error('The operation is in an unrecognized state');
+                throw new OperationStateError_1.default('The operation is in an unrecognized state');
         }
     };
     WaitUntilReady.prototype.executeCallback = function (callback) {

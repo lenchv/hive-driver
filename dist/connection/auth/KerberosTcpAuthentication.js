@@ -1,6 +1,10 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var SaslPackageFactory_1 = require("./helpers/SaslPackageFactory");
+var AuthenticationError_1 = __importDefault(require("../../errors/AuthenticationError"));
 var KerberosTcpAuthentication = /** @class */ (function () {
     function KerberosTcpAuthentication(options, authProcess) {
         var _a, _b, _c;
@@ -40,7 +44,7 @@ var KerberosTcpAuthentication = /** @class */ (function () {
                     }
                     else {
                         var message = data.slice(5).toString();
-                        onError(new Error('Authentication error: ' + message));
+                        onError(new AuthenticationError_1.default('Authentication error: ' + message));
                     }
                 };
                 transport.connect();
