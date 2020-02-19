@@ -1,5 +1,5 @@
 # Hive Driver
-
+[![GitHub release](https://img.shields.io/github/release/lenchv/hive-driver.svg?style=flat-square)](https://github.com/lenchv/hive-driver/releases/latest)
 [![test](https://github.com/lenchv/hive-driver/workflows/test/badge.svg?branch=master)](https://github.com/lenchv/hive-driver/actions?query=workflow%3Atest+branch%3Amaster)
 
 ## Description
