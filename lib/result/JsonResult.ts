@@ -42,7 +42,7 @@ export default class JsonResult implements IOperationResult {
         }
 
         return [...(this.schema.columns)]
-            .sort((c1, c2) => c1.position > c2.position ? 1 : c1.position < c2.position ? -1 : 0);
+            .sort((c1, c2) => c1.position - c2.position);
     }
 
     private getRows(columns: Array<Column>, descriptors: Array<ColumnDesc>): Array<any> {

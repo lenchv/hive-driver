@@ -34,7 +34,7 @@ var JsonResult = /** @class */ (function () {
         if (!this.schema) {
             return [];
         }
-        return __spreadArrays((this.schema.columns)).sort(function (c1, c2) { return c1.position > c2.position ? 1 : c1.position < c2.position ? -1 : 0; });
+        return __spreadArrays((this.schema.columns)).sort(function (c1, c2) { return c1.position - c2.position; });
     };
     JsonResult.prototype.getRows = function (columns, descriptors) {
         var _this = this;
