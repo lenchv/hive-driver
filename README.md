@@ -1,6 +1,6 @@
 # Hive Driver
 
-![hive-driver](https://github.com/lenchv/hive-driver/workflows/hive-driver/badge.svg?branch=master)
+[![test](https://github.com/lenchv/hive-driver/workflows/test/badge.svg?branch=master)](https://github.com/lenchv/hive-driver/actions?query=workflow%3Atest+branch%3Amaster)
 
 ## Description
 
