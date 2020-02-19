@@ -101,14 +101,17 @@ var HiveClient = /** @class */ (function (_super) {
             });
         });
     };
+    /**
+     * Starts new session
+     *
+     * @param request
+     * @throws {StatusError}
+     */
     HiveClient.prototype.openSession = function (request) {
         var _this = this;
         var driver = new HiveDriver_1.default(this.TCLIService_types, this.getClient());
         return driver.openSession(request).then(function (response) {
-            var status = _this.statusFactory.create(response.status);
-            if (status.error()) {
-                throw status.getError();
-            }
+            _this.statusFactory.create(response.status);
             var session = new HiveSession_1.default(driver, response.sessionHandle, _this.TCLIService_types);
             return session;
         });

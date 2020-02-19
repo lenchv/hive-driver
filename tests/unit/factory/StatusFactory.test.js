@@ -11,7 +11,6 @@ describe('StatusFactory', () => {
         });
 
         expect(status.success()).to.be.true;
-        expect(status.error()).to.be.false;
         expect(status.executing()).to.be.false;
     });
     
@@ -22,7 +21,6 @@ describe('StatusFactory', () => {
         });
 
         expect(status.success()).to.be.true;
-        expect(status.error()).to.be.false;
         expect(status.executing()).to.be.false;
         expect(status.getInfo()).to.be.deep.eq([ 'message1', 'message2' ]);
     });
@@ -33,37 +31,32 @@ describe('StatusFactory', () => {
         });
 
         expect(status.success()).to.be.false;
-        expect(status.error()).to.be.false;
         expect(status.executing()).to.be.true;
     });
 
     it('should have an error', () => {
-        const status = statusFactory.create({
-            statusCode: TCLIService_type.TStatusCode.ERROR_STATUS,
-            errorMessage: 'error',
-            errorCode: 1,
-            infoMessages: ['line1', 'line2']
-        });
-
-        expect(status.success()).to.be.false;
-        expect(status.error()).to.be.true;
-        expect(status.executing()).to.be.false;
-
-        expect(status.getError()).to.be.deep.eq({
-            name: 'Status Error',
-            message: 'error',
-            code: 1,
-            stack: 'line1\nline2'
-        });
+        const error = expect(() => {
+            statusFactory.create({
+                statusCode: TCLIService_type.TStatusCode.ERROR_STATUS,
+                errorMessage: 'error',
+                errorCode: 1,
+                infoMessages: ['line1', 'line2']
+            });
+        }).to.throw('error');
+        error.with.property('stack', 'line1\nline2')
+        error.with.property('code', 1);
+        error.with.property('name', 'Status Error');
     });
 
     it('should be set as error if handling invalid', () => {
-        const status = statusFactory.create({
-            statusCode: TCLIService_type.TStatusCode.INVALID_HANDLE_STATUS
-        });
-
-        expect(status.success()).to.be.false;
-        expect(status.error()).to.be.true;
-        expect(status.executing()).to.be.false;
+        const error = expect(() => {
+            statusFactory.create({
+                statusCode: TCLIService_type.TStatusCode.INVALID_HANDLE_STATUS,
+                errorMessage: 'error',
+            });
+        }).to.throw('error');
+        error.with.property('name', 'Status Error');
+        error.with.property('message', 'error');
+        error.with.property('code', -1);;
     });
 });

@@ -20,6 +20,12 @@ export default class HiveClient extends EventEmitter implements IHiveClient {
      */
     constructor(TCLIService: object, TCLIService_types: TCLIServiceTypes);
     connect(options: IConnectionOptions, connectionProvider?: IConnectionProvider, authProvider?: IAuthentication): Promise<HiveClient>;
+    /**
+     * Starts new session
+     *
+     * @param request
+     * @throws {StatusError}
+     */
     openSession(request: OpenSessionRequest): Promise<IHiveSession>;
     getClient(): ThriftClient;
     close(): void;

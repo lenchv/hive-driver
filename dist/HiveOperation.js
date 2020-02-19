@@ -19,6 +19,10 @@ var HiveOperation = /** @class */ (function () {
         this.schema = null;
         this.data = [];
     }
+    /**
+     * Fetches result and schema from operation
+     * @throws {StatusError}
+     */
     HiveOperation.prototype.fetch = function () {
         var _this = this;
         if (!this.hasResultSet) {
@@ -41,6 +45,11 @@ var HiveOperation = /** @class */ (function () {
             return this.nextFetch().then(function (response) { return _this.processFetchResponse(response); });
         }
     };
+    /**
+     * Requests operation status
+     * @param progress
+     * @throws {StatusError}
+     */
     HiveOperation.prototype.status = function (progress) {
         var _this = this;
         if (progress === void 0) { progress = false; }
@@ -49,15 +58,16 @@ var HiveOperation = /** @class */ (function () {
             getProgressUpdate: progress
         }).then(function (response) {
             var _a;
-            var status = _this.statusFactory.create(response.status);
-            if (status.error()) {
-                return Promise.reject(status.getError());
-            }
+            _this.statusFactory.create(response.status);
             _this.state = (_a = response.operationState, (_a !== null && _a !== void 0 ? _a : _this.state));
             _this.hasResultSet = !!response.hasResultSet;
             return response;
         });
     };
+    /**
+     * Cancels operation
+     * @throws {StatusError}
+     */
     HiveOperation.prototype.cancel = function () {
         var _this = this;
         return this.driver.cancelOperation({
@@ -66,6 +76,10 @@ var HiveOperation = /** @class */ (function () {
             return _this.statusFactory.create(response.status);
         });
     };
+    /**
+     * Closes operation
+     * @throws {StatusError}
+     */
     HiveOperation.prototype.close = function () {
         var _this = this;
         return this.driver.closeOperation({
@@ -99,15 +113,16 @@ var HiveOperation = /** @class */ (function () {
             return response.queryId;
         });
     };
+    /**
+     * Retrieves schema
+     * @throws {StatusError}
+     */
     HiveOperation.prototype.initializeSchema = function () {
         var _this = this;
         return this.driver.getResultSetMetadata({
             operationHandle: this.operationHandle
         }).then(function (schema) {
-            var status = _this.statusFactory.create(schema.status);
-            if (status.error()) {
-                return Promise.reject(status.getError());
-            }
+            _this.statusFactory.create(schema.status);
             return schema.schema;
         });
     };
@@ -127,11 +142,12 @@ var HiveOperation = /** @class */ (function () {
             fetchType: this.fetchType,
         });
     };
+    /**
+     * @param response
+     * @throws {StatusError}
+     */
     HiveOperation.prototype.processFetchResponse = function (response) {
         var status = this.statusFactory.create(response.status);
-        if (status.error()) {
-            throw status.getError();
-        }
         this._hasMoreRows = this.checkIfOperationHasMoreRows(response);
         if (response.results) {
             this.data.push(response.results);

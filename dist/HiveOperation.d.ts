@@ -16,9 +16,26 @@ export default class HiveOperation implements IOperation {
     private state;
     private hasResultSet;
     constructor(driver: HiveDriver, operationHandle: OperationHandle, TCLIService_type: TCLIServiceTypes);
+    /**
+     * Fetches result and schema from operation
+     * @throws {StatusError}
+     */
     fetch(): Promise<Status>;
+    /**
+     * Requests operation status
+     * @param progress
+     * @throws {StatusError}
+     */
     status(progress?: boolean): Promise<GetOperationStatusResponse>;
+    /**
+     * Cancels operation
+     * @throws {StatusError}
+     */
     cancel(): Promise<Status>;
+    /**
+     * Closes operation
+     * @throws {StatusError}
+     */
     close(): Promise<Status>;
     finished(): boolean;
     hasMoreRows(): boolean;
@@ -27,9 +44,17 @@ export default class HiveOperation implements IOperation {
     getSchema(): TableSchema | null;
     getData(): Array<RowSet>;
     getQueryId(): Promise<string>;
+    /**
+     * Retrieves schema
+     * @throws {StatusError}
+     */
     private initializeSchema;
     private firstFetch;
     private nextFetch;
+    /**
+     * @param response
+     * @throws {StatusError}
+     */
     private processFetchResponse;
     private checkIfOperationHasMoreRows;
 }

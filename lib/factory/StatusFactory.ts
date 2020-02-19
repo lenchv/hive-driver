@@ -9,12 +9,18 @@ export default class StatusFactory {
         this.TCLIService_types = TCLIService_types;
     }
 
+    /**
+     * @param status thrift status object from API responses
+     * @throws {StatusError}
+     */
     create(status: TStatus): Status {
+        if (this.isError(status)) {
+            throw new StatusError(status);
+        }
+        
         return new Status({
             success: this.isSuccess(status),
-            error: this.isError(status),
             executing: this.isExecuting(status),
-            statusError: new StatusError(status),
             infoMessages: status.infoMessages || [],
         });
     }

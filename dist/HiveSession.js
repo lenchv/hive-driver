@@ -189,10 +189,7 @@ var HiveSession = /** @class */ (function () {
         return new HiveOperation_1.default(this.driver, handle, this.TCLIService_types);
     };
     HiveSession.prototype.assertStatus = function (responseStatus) {
-        var status = this.statusFactory.create(responseStatus);
-        if (status.error()) {
-            throw status.getError();
-        }
+        this.statusFactory.create(responseStatus);
     };
     return HiveSession;
 }());

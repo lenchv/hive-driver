@@ -212,10 +212,6 @@ export default class HiveSession implements IHiveSession {
     }
 
     private assertStatus(responseStatus: TStatus): void {
-        const status = this.statusFactory.create(responseStatus);
-
-        if (status.error()) {
-            throw status.getError();
-        }
+        this.statusFactory.create(responseStatus);
     }
 }

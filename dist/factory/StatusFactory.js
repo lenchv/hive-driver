@@ -9,12 +9,17 @@ var StatusFactory = /** @class */ (function () {
     function StatusFactory(TCLIService_types) {
         this.TCLIService_types = TCLIService_types;
     }
+    /**
+     * @param status thrift status object from API responses
+     * @throws {StatusError}
+     */
     StatusFactory.prototype.create = function (status) {
+        if (this.isError(status)) {
+            throw new StatusError_1.default(status);
+        }
         return new Status_1.default({
             success: this.isSuccess(status),
-            error: this.isError(status),
             executing: this.isExecuting(status),
-            statusError: new StatusError_1.default(status),
             infoMessages: status.infoMessages || [],
         });
     };

@@ -63,6 +63,12 @@ export default class HiveClient extends EventEmitter implements IHiveClient {
         return this;
     }
 
+    /**
+     * Starts new session
+     * 
+     * @param request
+     * @throws {StatusError} 
+     */
     openSession(request: OpenSessionRequest): Promise<IHiveSession> {
         const driver = new HiveDriver(
             this.TCLIService_types,
@@ -70,11 +76,7 @@ export default class HiveClient extends EventEmitter implements IHiveClient {
         );
 
         return driver.openSession(request).then((response: OpenSessionResponse) => {
-            const status = this.statusFactory.create(response.status);
-
-            if (status.error()) {
-                throw status.getError();
-            }
+            this.statusFactory.create(response.status);
 
             const session = new HiveSession(
                 driver,
