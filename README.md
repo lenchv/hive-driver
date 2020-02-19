@@ -4,9 +4,9 @@
 
 ## Description
 
-Hive Driver is JS driver for connection to [Apache Hive](https://hive.apache.org/) via [Thrift API](https://github.com/apache/hive/blob/master/service-rpc/if/TCLIService.thrift).
+Hive Driver is a Java Script driver for connection to [Apache Hive](https://hive.apache.org/) via [Thrift API](https://github.com/apache/hive/blob/master/service-rpc/if/TCLIService.thrift).
 
-This driver is able to connect with SASL authentication mechanisms (ldap, plain, kerberos) using both http and tcp transport.
+This driver can connect with SASL authentication mechanisms (such as LDAP, PLAIN, Kerberos) using both HTTP and TCP transport.
 
 ## Installation
 
@@ -14,7 +14,7 @@ This driver is able to connect with SASL authentication mechanisms (ldap, plain,
 npm i hive-driver
 ```
 
-If you'd like to use kerberos, you have to install and build [kerberos](https://www.npmjs.com/package/kerberos) module seprately
+If you'd like to use Kerberos, you have to install and build the [kerberos](https://www.npmjs.com/package/kerberos) module on your own
 
 ```bash
 npm i kerberos
@@ -54,7 +54,7 @@ client.connect(
 });
 ```
 
-For more details see: [getting started](docs/readme.md) 
+For more details see: [Getting Started](docs/readme.md) 
 
 ## Test
 
@@ -72,7 +72,7 @@ npm run e2e
 
 *NOTICE*
 
-e2e tests use dockerized Hive instances, for more details see: [.docker](.docker/)
+e2e tests use dockerized Hive instance, for more details see: [.docker](.docker/)
 
 ## Contributing
 
@@ -80,7 +80,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md)
 
 ## Issues
 
-If find any troubles with driver feel free to create an issue.
+If you find some issues, feel free to create an issue or send a pull request.
 
 ## License
  

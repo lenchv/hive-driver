@@ -77,7 +77,7 @@ client.connect(
 });
 ```
 
-For testing you can use docker images from this repository. How to setup testing environment describe here: [.docker](/.docker/).
+For testing, you can use docker images from this repository. How to set up a testing environment described here: [.docker](/.docker/).
 
 ## HiveDriver
 
@@ -125,7 +125,7 @@ TCLIService_types contains a number of constants that API uses, you do not have 
 
 ### Connection
 
-Connection to the database includes choosing both transport and authentication. By default driver works in binary mode (tcp) with NoSASL authentication. To find out how your server works you should look at the *hive-site.xml* configuration.
+Connection to the database includes choosing both transport and authentication. By default, the driver works in binary mode (TCP) with NoSASL authentication. To find out how your server works you should look at the *hive-site.xml* configuration.
 
 *hive-site.xml*
 ```xml
@@ -142,9 +142,9 @@ Connection to the database includes choosing both transport and authentication. 
 
 To connect via binary mode you should use [TcpConnection](/lib/connection/connections/TcpConnection.ts) and via http [HttpConnection](/lib/connection/connections/HttpConnection.ts).
 
-*NOTICE*: http transport mode also requires "path" parameter which is passed by options.
+*NOTICE*: HTTP transport mode also requires a "path" parameter which is passed by options.
 
-For authentication the driver supports: nosasl, none, ldap and kerberos. For each of type you can choose appropriate handler:
+For authentication, the driver supports NoSasl, None, LDAP and Kerberos. For each of type you can choose appropriate handler:
 
 - [NoSaslAuthentication.ts](/lib/connection/auth/NoSaslAuthentication.ts)
 
@@ -158,9 +158,9 @@ For authentication the driver supports: nosasl, none, ldap and kerberos. For eac
 
 *NOTICE*
 
-- for none and ldap you should use PlainHttpAuthentication or PlainTcpAuthentication.
+- for None and LDAP you should use PlainHttpAuthentication or PlainTcpAuthentication.
 
-- current kerberos process uses mongodb [kerberos](https://www.npmjs.com/package/kerberos) module, which does not support different kinds of QOP, so make sure you use "auth":
+- the current Kerberos process uses the MongoDB [kerberos](https://www.npmjs.com/package/kerberos) module, which does not support different kinds of QOP, so make sure you use "auth":
 
 *hive-site.xml*
 ```xml
@@ -233,9 +233,9 @@ const session = await client.openSeesion({
 
 To open session you must provide [OpenSessionRequest](/lib/hive/Commands/OpenSessionCommand.ts#L20) - the only required parameter is "client_protocol", which synchronizes the version of HiveServer2 API.
 
-Into "configuration" you may set any of configurations that required for session of your Hive instance.
+Into "configuration" you may set any of the configurations that required for the session of your Hive instance.
 
-After the session is openned you will have the [HiveSession](/lib/HiveSession.ts) instance.
+After the session is opened you will have the [HiveSession](/lib/HiveSession.ts) instance.
 
 Class [HiveSession](/lib/HiveSession.ts) is a facade for API that works with [SessionHandle](/lib/hive/Types/index.ts#L77).
 
@@ -249,23 +249,23 @@ const operation = await session.executeStatement(
 );
 ```
 
-- statement is DDL/DML statement (CREATE TABLE, INSERT, UPDATE, SELECT, LOAD etc.)
+- "statement" is DDL/DML statement (CREATE TABLE, INSERT, UPDATE, SELECT, LOAD, etc.)
 
 - [options](/lib/contracts/IHiveSession.ts#L14)
 
-   - runAsync allows to execute operation asynchronously.
+   - runAsync allows executing operation asynchronously.
 
    - confOverlay overrides session configuration properties.
 
-   - timeout is maximum time to execute operation. It has Buffer type, because timestamp in Hive has capacity 64. So for such value you should use [node-int64](https://www.npmjs.com/package/node-int64) npm module.
+   - timeout is the maximum time to execute an operation. It has Buffer type because timestamp in Hive has capacity 64. So for such value, you should use [node-int64](https://www.npmjs.com/package/node-int64) npm module.
 
-To know others methods see [IHiveSession](/lib/contracts/IHiveSession.ts) and [examples/session.js](/examples/session.js).
+To know other methods see [IHiveSession](/lib/contracts/IHiveSession.ts) and [examples/session.js](/examples/session.js).
 
 ## HiveOperation
 
-In most cases HiveSession methods return [HiveOperation](/lib/HiveOperation.ts), that helps you to retrieve requested data.
+In most cases, HiveSession methods return [HiveOperation](/lib/HiveOperation.ts), which helps you to retrieve requested data.
 
-After you fetch the result, operation will have [TableSchema](/lib/hive/Types/index.ts#L143) and data (Array<[RowSet](/lib/hive/Types/index.ts#L218)>).
+After you fetch the result, the operation will have [TableSchema](/lib/hive/Types/index.ts#L143) and data (Array<[RowSet](/lib/hive/Types/index.ts#L218)>).
 
 ### HiveUtils
 
@@ -360,4 +360,4 @@ You may notice, that most of the operations return [Status](/lib/dto/Status.ts) 
 
 ## Finalize
 
-After you finish working with operation, session or client it is better to close it, each of them has a respective method (`close()`).
+After you finish working with the operation, session or client it is better to close it, each of them has a respective method (`close()`).
