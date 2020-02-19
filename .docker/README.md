@@ -4,7 +4,7 @@ Here you may find dockerized hive configurations.
 
 ## Prerequisites
 
-You should use *nix system with pre-installed:
+You should use a *nix system with pre-installed:
 
 - docker
 
@@ -88,7 +88,7 @@ And add to `/etc/krb5.conf` next configuration:
     kerberos.server = KERBEROS.SERVER
 ```
 
-Aftewards you may obtain ticket from dockerized kerberos server:
+Afteward you may obtain a ticket from dockerized Kerberos server:
 
 ```bash
 make kinit
