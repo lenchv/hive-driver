@@ -1,5 +1,7 @@
 # Hive Driver
 
+![hive-driver](https://github.com/lenchv/hive-driver/workflows/hive-driver/badge.svg?branch=master)
+
 ## Description
 
 Hive Driver is JS driver for connection to [Apache Hive](https://hive.apache.org/) via [Thrift API](https://github.com/apache/hive/blob/master/service-rpc/if/TCLIService.thrift).
