@@ -1,7 +1,11 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var IKerberosAuthProcess_1 = require("../../contracts/IKerberosAuthProcess");
 var KerberosStep_1 = require("./KerberosStep");
+var KerberosError_1 = __importDefault(require("../../../errors/KerberosError"));
 /**
  * This class implements Kerberos process with mongodb/kerberos npm library
  *
@@ -32,7 +36,7 @@ var MongoKerberosAuthProcess = /** @class */ (function () {
     MongoKerberosAuthProcess.prototype.transition = function (payload, cb) {
         var _this = this;
         if (!this.kerberosStep) {
-            throw new Error('Kerberos client is not initialized');
+            throw new KerberosError_1.default('Kerberos client is not initialized');
         }
         this.kerberosStep.execute(payload, function (error, challenge, qop) {
             if (error) {

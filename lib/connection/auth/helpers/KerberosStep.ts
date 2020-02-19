@@ -1,5 +1,6 @@
 import { IKerberosClient } from "../../contracts/IKerberosClient";
 import { KerberosInitializeOptions } from "../../types/KerberosInitializeOptions";
+import KerberosError from "../../../errors/KerberosError";
 
 enum TransitionState {
     STEP_1,
@@ -32,7 +33,7 @@ export class KerberosStep {
             case TransitionState.STEP_4:
                 return this.fourth(payload, cb);
             default:
-                throw new Error('Kerberos transition does not exist: ' + this.step);
+                throw new KerberosError('Kerberos transition does not exist: ' + this.step);
         }
     }
 
@@ -89,6 +90,6 @@ export class KerberosStep {
     }
 
     fourth(payload: string, cb: Function): void {
-        return cb(new Error('Process finished'));
+        return cb(new KerberosError('Process finished'));
     }
 } 

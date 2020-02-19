@@ -4,6 +4,7 @@ import { AuthOptions } from '../types/AuthOptions';
 import { SaslPackageFactory, StatusCode } from "./helpers/SaslPackageFactory";
 import { IKerberosAuthProcess } from "../contracts/IKerberosAuthProcess";
 import { IKerberosClient } from "../contracts/IKerberosClient";
+import AuthenticationError from "../../errors/AuthenticationError";
 
 export default class KerberosTcpAuthentication implements IAuthentication {
     static AUTH_MECH = 'GSSAPI';
@@ -55,7 +56,7 @@ export default class KerberosTcpAuthentication implements IAuthentication {
                         } else {
                             const message = data.slice(5).toString();
             
-                            onError(new Error('Authentication error: ' + message));
+                            onError(new AuthenticationError('Authentication error: ' + message));
                         }
                     };
 

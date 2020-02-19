@@ -1,6 +1,6 @@
 # Hive Driver
-
-![hive-driver](https://github.com/lenchv/hive-driver/workflows/hive-driver/badge.svg?branch=master)
+[![GitHub release](https://img.shields.io/github/release/lenchv/hive-driver.svg?style=flat-square)](https://github.com/lenchv/hive-driver/releases/latest)
+[![test](https://github.com/lenchv/hive-driver/workflows/test/badge.svg?branch=master)](https://github.com/lenchv/hive-driver/actions?query=workflow%3Atest+branch%3Amaster)
 
 ## Description
 
@@ -46,11 +46,7 @@ client.connect(
         TCLIService_types.TGetInfoType.CLI_DBMS_VER
     );
 
-    if (!response.status.success()) {
-        throw response.status.getError();
-    }
-
-    console.log(response.value.getValue());
+    console.log(response.getValue());
 
     await session.close();
 }).catch(error => {

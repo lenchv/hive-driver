@@ -31,8 +31,7 @@ const executeTest = (connect) => {
         });
     }).then(session => {
         return session.getInfo(TCLIService_types.TGetInfoType.CLI_DBMS_VER).then(infoResponse => {
-            expect(infoResponse.status.success()).to.be.true;
-            expect(infoResponse.value.getValue()).to.eq('2.3.6');
+            expect(infoResponse.getValue()).to.eq('2.3.6');
         }).then(() => {
             return session.close();
         }, err => {

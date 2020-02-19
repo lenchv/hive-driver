@@ -20,11 +20,7 @@ client.connect(
         TCLIService_types.TGetInfoType.CLI_DBMS_VER
     );
 
-    if (!response.status.success()) {
-        throw response.status.getError();
-    }
-
-    console.log(response.value.getValue());
+    console.log(response.getValue());
 
     await session.close();
 }).catch(error => {

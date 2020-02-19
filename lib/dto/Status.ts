@@ -1,47 +1,29 @@
-import { TCLIServiceTypes, Status as TStatus } from "../hive/Types";
-
-type StatusError = {
-    message: string,
-    code: number,
-    stack: Array<string>,
+type StatusData = {
+    success: boolean,
+    executing: boolean,
+    infoMessages: Array<string>,
 };
 
 export default class Status {
-    private status: TStatus;
-    private TCLIService_types: TCLIServiceTypes;
+    private isSuccess: boolean;
+    private isExecuting: boolean;
+    private infoMessages: Array<string>;
 
-    constructor(status: TStatus, TCLIService_types: TCLIServiceTypes) {
-        this.status = status;
-        this.TCLIService_types = TCLIService_types;
+    constructor(data: StatusData) {
+        this.isSuccess = data.success;
+        this.isExecuting = data.executing;
+        this.infoMessages = data.infoMessages;
     }
 
     success(): boolean {
-        return (
-            this.status.statusCode === this.TCLIService_types.TStatusCode.SUCCESS_STATUS
-            || this.status.statusCode === this.TCLIService_types.TStatusCode.SUCCESS_WITH_INFO_STATUS
-        );
-    }
-
-    error(): boolean {
-        return (
-            this.status.statusCode === this.TCLIService_types.TStatusCode.ERROR_STATUS
-            || this.status.statusCode === this.TCLIService_types.TStatusCode.INVALID_HANDLE_STATUS
-        );
+        return this.isSuccess;
     }
 
     executing(): boolean {
-        return this.status.statusCode === this.TCLIService_types.TStatusCode.STILL_EXECUTING_STATUS;
-    }
-
-    getError(): StatusError {
-        return {
-            message: this.status.errorMessage || '',
-            stack: this.status.infoMessages || [],
-            code: this.status.errorCode || -1,
-        };
+        return this.isExecuting;
     }
 
     getInfo(): Array<string> {
-        return this.status.infoMessages || [];
+        return this.infoMessages;
     }
 }

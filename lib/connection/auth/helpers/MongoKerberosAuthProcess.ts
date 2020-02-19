@@ -2,6 +2,7 @@ import { IKerberosClient } from "../../contracts/IKerberosClient";
 import { IKerberosAuthProcess, QOP } from "../../contracts/IKerberosAuthProcess";
 import { KerberosInitializeOptions } from "../../types/KerberosInitializeOptions";
 import { KerberosStep } from "./KerberosStep";
+import KerberosError from "../../../errors/KerberosError";
 
 interface IMongoDbKerberos {
     GSS_MECH_OID_SPNEGO: number;
@@ -56,7 +57,7 @@ export default class MongoKerberosAuthProcess implements IKerberosAuthProcess {
 
     transition(payload: string, cb: Function): void {
         if (!this.kerberosStep) {
-            throw new Error('Kerberos client is not initialized');
+            throw new KerberosError('Kerberos client is not initialized');
         }
 
         this.kerberosStep.execute(payload, (error: Error, challenge: string, qop?: QOP) => {

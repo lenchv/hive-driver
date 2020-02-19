@@ -21,9 +21,6 @@ connection().then(client => {
                 return session.close();
             });
     }).then(status => {
-        if (!status.success()) {
-            throw status.getError();
-        }
         console.log(status.success());
 
         return client.close();

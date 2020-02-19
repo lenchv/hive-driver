@@ -1,6 +1,7 @@
 import IOperation from "../contracts/IOperation";
 import { TCLIServiceTypes } from "../hive/Types";
 import { GetOperationStatusResponse } from "../hive/Commands/GetOperationStatusCommand";
+import OperationStateError from "../errors/OperationStateError";
 
 export default class WaitUntilReady {
     private operation: IOperation;
@@ -42,18 +43,18 @@ export default class WaitUntilReady {
             case this.TCLIService_types.TOperationState.FINISHED_STATE:
                 return true;
             case this.TCLIService_types.TOperationState.CANCELED_STATE:
-                throw new Error('The operation was canceled by a client');
+                throw new OperationStateError('The operation was canceled by a client');
             case this.TCLIService_types.TOperationState.CLOSED_STATE:
-                throw new Error('The operation was closed by a client');
+                throw new OperationStateError('The operation was closed by a client');
             case this.TCLIService_types.TOperationState.ERROR_STATE:
-                throw new Error('The operation failed due to an error');
+                throw new OperationStateError('The operation failed due to an error');
             case this.TCLIService_types.TOperationState.PENDING_STATE:
-                throw new Error('The operation is in a pending state');
+                throw new OperationStateError('The operation is in a pending state');
             case this.TCLIService_types.TOperationState.TIMEDOUT_STATE:
-                throw new Error('The operation is in a timedout state');
+                throw new OperationStateError('The operation is in a timedout state');
             case this.TCLIService_types.TOperationState.UKNOWN_STATE:
             default:
-                throw new Error('The operation is in an unrecognized state');
+                throw new OperationStateError('The operation is in an unrecognized state');
         }  
     }
 

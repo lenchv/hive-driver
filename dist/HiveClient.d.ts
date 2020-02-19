@@ -12,6 +12,7 @@ export default class HiveClient extends EventEmitter implements IHiveClient {
     private TCLIService_types;
     private client;
     private connection;
+    private statusFactory;
     /**
      *
      * @param TCLIService generated from TCLIService.thrift (https://github.com/apache/hive/blob/master/service-rpc/if/TCLIService.thrift)
@@ -19,6 +20,12 @@ export default class HiveClient extends EventEmitter implements IHiveClient {
      */
     constructor(TCLIService: object, TCLIService_types: TCLIServiceTypes);
     connect(options: IConnectionOptions, connectionProvider?: IConnectionProvider, authProvider?: IAuthentication): Promise<HiveClient>;
+    /**
+     * Starts new session
+     *
+     * @param request
+     * @throws {StatusError}
+     */
     openSession(request: OpenSessionRequest): Promise<IHiveSession>;
     getClient(): ThriftClient;
     close(): void;

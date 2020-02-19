@@ -38,6 +38,10 @@ export default class HiveOperation implements IOperation {
         this.data = [];
     }
 
+    /**
+     * Fetches result and schema from operation
+     * @throws {StatusError}
+     */
     fetch(): Promise<Status> {
         if (!this.hasResultSet) {
             return Promise.resolve(
@@ -70,16 +74,17 @@ export default class HiveOperation implements IOperation {
         }
     }
 
+    /**
+     * Requests operation status
+     * @param progress
+     * @throws {StatusError}
+     */
     status(progress: boolean = false): Promise<GetOperationStatusResponse> {
         return this.driver.getOperationStatus({
             operationHandle: this.operationHandle,
             getProgressUpdate: progress
         }).then((response: GetOperationStatusResponse) => {
-            const status = this.statusFactory.create(response.status);
-
-            if (status.error()) {
-                return Promise.reject(status.getError());
-            }
+            this.statusFactory.create(response.status);
 
             this.state = response.operationState ?? this.state;
             this.hasResultSet = !!response.hasResultSet;
@@ -88,6 +93,10 @@ export default class HiveOperation implements IOperation {
         });
     }
 
+    /**
+     * Cancels operation
+     * @throws {StatusError}
+     */
     cancel(): Promise<Status> {
         return this.driver.cancelOperation({
             operationHandle: this.operationHandle
@@ -96,6 +105,10 @@ export default class HiveOperation implements IOperation {
         });
     }
 
+    /**
+     * Closes operation
+     * @throws {StatusError}
+     */
     close(): Promise<Status> {
         return this.driver.closeOperation({
             operationHandle: this.operationHandle
@@ -136,15 +149,15 @@ export default class HiveOperation implements IOperation {
         });
     }
 
+    /**
+     * Retrieves schema
+     * @throws {StatusError}
+     */
     private initializeSchema(): Promise<TableSchema> {
         return this.driver.getResultSetMetadata({
             operationHandle: this.operationHandle
         }).then((schema:GetResultSetMetadataResponse) => {
-            const status = this.statusFactory.create(schema.status);
-
-            if (status.error()) {
-                return Promise.reject(status.getError());
-            }
+            this.statusFactory.create(schema.status);
 
             return schema.schema;
         });
@@ -168,12 +181,12 @@ export default class HiveOperation implements IOperation {
         });
     }
 
+    /**
+     * @param response
+     * @throws {StatusError} 
+     */
     private processFetchResponse(response: FetchResultsResponse): Status {
         const status = this.statusFactory.create(response.status);
-
-        if (status.error()) {
-            throw status.getError();
-        }
 
         this._hasMoreRows = this.checkIfOperationHasMoreRows(response);
 

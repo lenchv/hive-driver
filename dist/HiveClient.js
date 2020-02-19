@@ -58,6 +58,7 @@ var HiveSession_1 = __importDefault(require("./HiveSession"));
 var NoSaslAuthentication_1 = __importDefault(require("./connection/auth/NoSaslAuthentication"));
 var TcpConnection_1 = __importDefault(require("./connection/connections/TcpConnection"));
 var events_1 = require("events");
+var StatusFactory_1 = __importDefault(require("./factory/StatusFactory"));
 var HiveClient = /** @class */ (function (_super) {
     __extends(HiveClient, _super);
     /**
@@ -69,6 +70,7 @@ var HiveClient = /** @class */ (function (_super) {
         var _this = _super.call(this) || this;
         _this.TCLIService = TCLIService;
         _this.TCLIService_types = TCLIService_types;
+        _this.statusFactory = new StatusFactory_1.default(TCLIService_types);
         _this.client = null;
         _this.connection = null;
         return _this;
@@ -99,13 +101,17 @@ var HiveClient = /** @class */ (function (_super) {
             });
         });
     };
+    /**
+     * Starts new session
+     *
+     * @param request
+     * @throws {StatusError}
+     */
     HiveClient.prototype.openSession = function (request) {
         var _this = this;
         var driver = new HiveDriver_1.default(this.TCLIService_types, this.getClient());
         return driver.openSession(request).then(function (response) {
-            if (response.status.statusCode === _this.TCLIService_types.TStatusCode.ERROR_STATUS) {
-                throw new Error(response.status.errorMessage);
-            }
+            _this.statusFactory.create(response.status);
             var session = new HiveSession_1.default(driver, response.sessionHandle, _this.TCLIService_types);
             return session;
         });

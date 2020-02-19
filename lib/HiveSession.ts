@@ -6,7 +6,7 @@ import IOperation from "./contracts/IOperation";
 import HiveOperation from "./HiveOperation";
 import Status from "./dto/Status";
 import StatusFactory from "./factory/StatusFactory";
-import InfoResult from "./result/InfoResult";
+import InfoValue from "./dto/InfoValue";
 
 export default class HiveSession implements IHiveSession {
     private driver: HiveDriver;
@@ -21,12 +21,14 @@ export default class HiveSession implements IHiveSession {
         this.statusFactory = new StatusFactory(TCLIService_types);
     }
 
-    getInfo(infoType: number): Promise<InfoResult> {
+    getInfo(infoType: number): Promise<InfoValue> {
         return this.driver.getInfo({
             sessionHandle: this.sessionHandle,
             infoType
         }).then(response => {
-            return new InfoResult(response, this.TCLIService_types);
+            this.assertStatus(response.status);
+
+            return new InfoValue(response.infoValue);
         });
     }
 
@@ -210,10 +212,6 @@ export default class HiveSession implements IHiveSession {
     }
 
     private assertStatus(responseStatus: TStatus): void {
-        const status = this.statusFactory.create(responseStatus);
-
-        if (status.error()) {
-            throw status.getError();
-        }
+        this.statusFactory.create(responseStatus);
     }
 }
