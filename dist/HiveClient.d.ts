@@ -12,6 +12,7 @@ export default class HiveClient extends EventEmitter implements IHiveClient {
     private TCLIService_types;
     private client;
     private connection;
+    private statusFactory;
     /**
      *
      * @param TCLIService generated from TCLIService.thrift (https://github.com/apache/hive/blob/master/service-rpc/if/TCLIService.thrift)

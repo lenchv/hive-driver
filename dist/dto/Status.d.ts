@@ -1,13 +1,18 @@
-import { TCLIServiceTypes, Status as TStatus } from "../hive/Types";
-declare type StatusError = {
-    message: string;
-    code: number;
-    stack: Array<string>;
+import StatusError from "../errors/StatusError";
+declare type StatusData = {
+    success: boolean;
+    error: boolean;
+    executing: boolean;
+    infoMessages: Array<string>;
+    statusError: StatusError;
 };
 export default class Status {
-    private status;
-    private TCLIService_types;
-    constructor(status: TStatus, TCLIService_types: TCLIServiceTypes);
+    private isSuccess;
+    private isError;
+    private isExecuting;
+    private infoMessages;
+    private statusError;
+    constructor(data: StatusData);
     success(): boolean;
     error(): boolean;
     executing(): boolean;

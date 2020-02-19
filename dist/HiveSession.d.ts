@@ -3,14 +3,14 @@ import IHiveSession, { ExecuteStatementOptions, SchemasRequest, TablesRequest, C
 import { SessionHandle, TCLIServiceTypes } from "./hive/Types";
 import IOperation from "./contracts/IOperation";
 import Status from "./dto/Status";
-import InfoResult from "./result/InfoResult";
+import InfoValue from "./dto/InfoValue";
 export default class HiveSession implements IHiveSession {
     private driver;
     private sessionHandle;
     private TCLIService_types;
     private statusFactory;
     constructor(driver: HiveDriver, sessionHandle: SessionHandle, TCLIService_types: TCLIServiceTypes);
-    getInfo(infoType: number): Promise<InfoResult>;
+    getInfo(infoType: number): Promise<InfoValue>;
     executeStatement(statement: string, options?: ExecuteStatementOptions): Promise<IOperation>;
     getTypeInfo(): Promise<IOperation>;
     getCatalogs(): Promise<IOperation>;

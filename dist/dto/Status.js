@@ -1,30 +1,27 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var Status = /** @class */ (function () {
-    function Status(status, TCLIService_types) {
-        this.status = status;
-        this.TCLIService_types = TCLIService_types;
+    function Status(data) {
+        this.isSuccess = data.success;
+        this.isError = data.error;
+        this.isExecuting = data.executing;
+        this.infoMessages = data.infoMessages;
+        this.statusError = data.statusError;
     }
     Status.prototype.success = function () {
-        return (this.status.statusCode === this.TCLIService_types.TStatusCode.SUCCESS_STATUS
-            || this.status.statusCode === this.TCLIService_types.TStatusCode.SUCCESS_WITH_INFO_STATUS);
+        return this.isSuccess;
     };
     Status.prototype.error = function () {
-        return (this.status.statusCode === this.TCLIService_types.TStatusCode.ERROR_STATUS
-            || this.status.statusCode === this.TCLIService_types.TStatusCode.INVALID_HANDLE_STATUS);
+        return this.isError;
     };
     Status.prototype.executing = function () {
-        return this.status.statusCode === this.TCLIService_types.TStatusCode.STILL_EXECUTING_STATUS;
+        return this.isExecuting;
     };
     Status.prototype.getError = function () {
-        return {
-            message: this.status.errorMessage || '',
-            stack: this.status.infoMessages || [],
-            code: this.status.errorCode || -1,
-        };
+        return this.statusError;
     };
     Status.prototype.getInfo = function () {
-        return this.status.infoMessages || [];
+        return this.infoMessages;
     };
     return Status;
 }());

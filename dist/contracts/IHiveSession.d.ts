@@ -1,7 +1,7 @@
 /// <reference types="node" />
 import IOperation from "./IOperation";
-import InfoResult from "../result/InfoResult";
 import Status from "../dto/Status";
+import InfoValue from "../dto/InfoValue";
 export declare type CrossReferenceRequest = {
     parentCatalogName: string;
     parentSchemaName: string;
@@ -47,7 +47,7 @@ export default interface IHiveSession {
      *
      * @param infoType one of the values TCLIService_types.TGetInfoType
      */
-    getInfo(infoType: number): Promise<InfoResult>;
+    getInfo(infoType: number): Promise<InfoValue>;
     /**
      * Executes DDL/DML statements
      *

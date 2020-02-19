@@ -16,7 +16,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var HiveOperation_1 = __importDefault(require("./HiveOperation"));
 var StatusFactory_1 = __importDefault(require("./factory/StatusFactory"));
-var InfoResult_1 = __importDefault(require("./result/InfoResult"));
+var InfoValue_1 = __importDefault(require("./dto/InfoValue"));
 var HiveSession = /** @class */ (function () {
     function HiveSession(driver, sessionHandle, TCLIService_types) {
         this.driver = driver;
@@ -30,7 +30,8 @@ var HiveSession = /** @class */ (function () {
             sessionHandle: this.sessionHandle,
             infoType: infoType
         }).then(function (response) {
-            return new InfoResult_1.default(response, _this.TCLIService_types);
+            _this.assertStatus(response.status);
+            return new InfoValue_1.default(response.infoValue);
         });
     };
     HiveSession.prototype.executeStatement = function (statement, options) {

@@ -1,47 +1,45 @@
-import { TCLIServiceTypes, Status as TStatus } from "../hive/Types";
+import StatusError from "../errors/StatusError";
 
-type StatusError = {
-    message: string,
-    code: number,
-    stack: Array<string>,
+type StatusData = {
+    success: boolean,
+    error: boolean,
+    executing: boolean,
+    infoMessages: Array<string>,
+    statusError: StatusError,
 };
 
 export default class Status {
-    private status: TStatus;
-    private TCLIService_types: TCLIServiceTypes;
+    private isSuccess: boolean;
+    private isError: boolean;
+    private isExecuting: boolean;
+    private infoMessages: Array<string>;
+    private statusError: StatusError;
 
-    constructor(status: TStatus, TCLIService_types: TCLIServiceTypes) {
-        this.status = status;
-        this.TCLIService_types = TCLIService_types;
+    constructor(data: StatusData) {
+        this.isSuccess = data.success;
+        this.isError = data.error;
+        this.isExecuting = data.executing;
+        this.infoMessages = data.infoMessages;
+        this.statusError = data.statusError;
     }
 
     success(): boolean {
-        return (
-            this.status.statusCode === this.TCLIService_types.TStatusCode.SUCCESS_STATUS
-            || this.status.statusCode === this.TCLIService_types.TStatusCode.SUCCESS_WITH_INFO_STATUS
-        );
+        return this.isSuccess;
     }
 
     error(): boolean {
-        return (
-            this.status.statusCode === this.TCLIService_types.TStatusCode.ERROR_STATUS
-            || this.status.statusCode === this.TCLIService_types.TStatusCode.INVALID_HANDLE_STATUS
-        );
+        return this.isError;
     }
 
     executing(): boolean {
-        return this.status.statusCode === this.TCLIService_types.TStatusCode.STILL_EXECUTING_STATUS;
+        return this.isExecuting;
     }
 
     getError(): StatusError {
-        return {
-            message: this.status.errorMessage || '',
-            stack: this.status.infoMessages || [],
-            code: this.status.errorCode || -1,
-        };
+        return this.statusError;
     }
 
     getInfo(): Array<string> {
-        return this.status.infoMessages || [];
+        return this.infoMessages;
     }
 }
