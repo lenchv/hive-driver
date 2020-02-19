@@ -1,5 +1,7 @@
 import { GetInfoValue } from "../hive/Types";
 
+type InfoResultType = string | number | Buffer | null;
+
 export default class InfoValue {
     private value: GetInfoValue;
 
@@ -7,7 +9,7 @@ export default class InfoValue {
         this.value = value;
     }
 
-    getValue(): string | number | Buffer | null {
+    getValue(): InfoResultType {
         const infoValue = this.value;
 
         if (infoValue.stringValue) {
