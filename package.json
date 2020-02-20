@@ -10,7 +10,7 @@
   },
   "scripts": {
     "e2e": "env HIVE_E2E_LOG=FILE mocha 'tests/e2e/**/*.test.js' --timeout=300000",
-    "test": "mocha 'tests/unit/**/*.test.js'",
+    "test": "nyc --reporter=lcov mocha 'tests/unit/**/*.test.js'",
     "build": "tsc",
     "watch": "tsc -w",
     "commit": "git-cz"
@@ -22,7 +22,7 @@
   "bugs": {
     "url": "https://github.com/lenchv/hive-driver/issues"
   },
-  "homepage":"https://github.com/lenchv/hive-driver#readme",
+  "homepage": "https://github.com/lenchv/hive-driver#readme",
   "keywords": [
     "hiveserver2",
     "apache",
@@ -41,16 +41,18 @@
   "devDependencies": {
     "@types/node": "^13.1.4",
     "chai": "^4.2.0",
+    "codecov": "^3.6.5",
     "commitizen": "^4.0.3",
     "cz-conventional-changelog": "^3.1.0",
     "get-fqdn": "0.0.4",
     "kerberos": "^1.1.3",
     "mocha": "^5.2.0",
+    "nyc": "^15.0.0",
     "typescript": "^3.7.4"
   },
   "dependencies": {
-    "thrift": "0.12.0",
-    "node-int64": "^0.4.0"
+    "node-int64": "^0.4.0",
+    "thrift": "0.12.0"
   },
   "czConfig": {
     "path": "node_modules/cz-conventional-changelog"

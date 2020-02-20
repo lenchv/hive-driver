@@ -1,5 +1,5 @@
 const { expect } = require('chai');
-const TCLIService_types = require('../../../thrift/gen-nodejs/TCLIService_types');
+const { TCLIService_types } = require('../../../').thrift;
 const WaitUntilReady = require('../../../dist/utils/WaitUntilReady').default;
 
 const operation = (state) => ({
@@ -41,16 +41,57 @@ describe('WaitUntilReady', () => {
     });
 
     it('should throw error if state is invalid', () => {
-        const execute = (state) => () => {
+        const execute = (state) => {
             const waitUntilReady = new WaitUntilReady(operation(state), TCLIService_types);
             return waitUntilReady.execute();
         };
 
-        expect(execute(TCLIService_types.TOperationState.CANCELED_STATE)).throws;
-        expect(execute(TCLIService_types.TOperationState.CLOSED_STATE)).throws;
-        expect(execute(TCLIService_types.TOperationState.ERROR_STATE)).throws;
-        expect(execute(TCLIService_types.TOperationState.PENDING_STATE)).throws;
-        expect(execute(TCLIService_types.TOperationState.TIMEDOUT_STATE)).throws;
-        expect(execute(TCLIService_types.TOperationState.UKNOWN_STATE)).throws;
+
+        execute(TCLIService_types.TOperationState.CANCELED_STATE).catch(error => {
+            expect(error.message).to.be.eq('The operation was canceled by a client');
+        });
+        execute(TCLIService_types.TOperationState.CLOSED_STATE).catch(error => {
+            expect(error.message).to.be.eq('The operation was closed by a client');
+        });
+        execute(TCLIService_types.TOperationState.ERROR_STATE).catch(error => {
+            expect(error.message).to.be.eq('The operation failed due to an error');
+        });
+        execute(TCLIService_types.TOperationState.PENDING_STATE).catch(error => {
+            expect(error.message).to.be.eq('The operation is in a pending state');
+        });
+        execute(TCLIService_types.TOperationState.TIMEDOUT_STATE).catch(error => {
+            expect(error.message).to.be.eq('The operation is in a timedout state');
+        });
+        execute(TCLIService_types.TOperationState.UKNOWN_STATE).catch(error => {
+            expect(error.message).to.be.eq('The operation is in an unrecognized state');
+        });
+    });
+
+    it('should wait untill callback will be finished', () => {
+        const op = operation(TCLIService_types.TOperationState.INITIALIZED_STATE);
+        const waitUntilReady = new WaitUntilReady(op, TCLIService_types);
+        let i = 0;
+
+        return waitUntilReady.execute(false, (response) => {
+            op.state = TCLIService_types.TOperationState.FINISHED_STATE;
+
+            return Promise.resolve()
+                .then(() => new Promise((resolve) => {
+                    setTimeout(() => {
+                        expect(i == 0 || i === 2).to.be.true;
+                        i++;
+                        resolve();
+                    }, 10);
+                }))
+                .then(() => new Promise((resolve) => {
+                    setTimeout(() => {
+                        expect(i == 1 || i === 3).to.be.true;
+                        i++;
+                        resolve();
+                    }, 30);
+                }));
+        }).then(() => {
+            expect(i).to.be.eq(4);
+        });
     });
 });

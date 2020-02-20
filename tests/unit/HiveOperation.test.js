@@ -1,6 +1,6 @@
 const { expect } = require('chai');
 const HiveOperation = require('../../dist/HiveOperation').default;
-const TCLIService_types = require('../../thrift/gen-nodejs/TCLIService_types');
+const { TCLIService_types } = require('../../').thrift;
 
 const getMock = (parent, prototype) => {
     const mock = function(...args) {
