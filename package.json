@@ -9,8 +9,9 @@
     "test": "tests"
   },
   "scripts": {
-    "e2e": "env HIVE_E2E_LOG=FILE mocha 'tests/e2e/**/*.test.js' --timeout=300000",
+    "e2e": "env HIVE_E2E_LOG=FILE nyc --reporter=lcov mocha 'tests/e2e/**/*.test.js' --timeout=300000",
     "test": "nyc --reporter=lcov mocha 'tests/unit/**/*.test.js'",
+    "coverage": "codecov",
     "build": "tsc",
     "watch": "tsc -w",
     "commit": "git-cz"
