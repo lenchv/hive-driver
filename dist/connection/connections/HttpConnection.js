@@ -18,13 +18,14 @@ var thrift = require('thrift');
 var HttpTransport_1 = __importDefault(require("../transports/HttpTransport"));
 var HttpConnection = /** @class */ (function () {
     function HttpConnection() {
+        this.thrift = thrift;
     }
     HttpConnection.prototype.connect = function (options, authProvider) {
         var _this = this;
-        var _a, _b;
-        var httpTransport = new HttpTransport_1.default(__assign(__assign({ transport: thrift.TBufferedTransport, protocol: thrift.TBinaryProtocol }, options.options), { nodeOptions: __assign(__assign({}, (((_a = options.options) === null || _a === void 0 ? void 0 : _a.nodeOptions) || {})), this.getNodeOptions(((_b = options) === null || _b === void 0 ? void 0 : _b.options) || {})) }));
+        var _a;
+        var httpTransport = new HttpTransport_1.default(__assign(__assign({ transport: thrift.TBufferedTransport, protocol: thrift.TBinaryProtocol }, options.options), { nodeOptions: __assign(__assign({}, this.getNodeOptions(options.options || {})), (((_a = options.options) === null || _a === void 0 ? void 0 : _a.nodeOptions) || {})) }));
         return authProvider.authenticate(httpTransport).then(function () {
-            _this.connection = thrift.createHttpConnection(options.host, options.port, httpTransport.getOptions());
+            _this.connection = _this.thrift.createHttpConnection(options.host, options.port, httpTransport.getOptions());
             _this.addCookieHandler();
             return _this;
         });
@@ -55,7 +56,9 @@ var HttpConnection = /** @class */ (function () {
         this.connection.responseCallback = function (response) {
             if (Array.isArray(response.headers['set-cookie'])) {
                 var cookie = [_this.connection.nodeOptions.headers['cookie']];
-                _this.connection.nodeOptions.headers['cookie'] = cookie.concat(response.headers['set-cookie']).join(';');
+                _this.connection.nodeOptions.headers['cookie'] = cookie.concat(response.headers['set-cookie'])
+                    .filter(Boolean)
+                    .join(';');
             }
             responseCallback.call(_this.connection, response);
         };

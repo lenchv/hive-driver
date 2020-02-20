@@ -1,6 +1,6 @@
 const { expect } = require('chai');
 const JsonResult = require('../../../dist/result/JsonResult').default;
-const TCLIService_types = require('../../../thrift/gen-nodejs/TCLIService_types');
+const { TCLIService_types } = require('../../../').thrift;
 const Int64 = require('node-int64');
 
 const getColumnSchema = (name, type, position) => {

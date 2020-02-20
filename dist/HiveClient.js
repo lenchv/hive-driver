@@ -59,6 +59,7 @@ var NoSaslAuthentication_1 = __importDefault(require("./connection/auth/NoSaslAu
 var TcpConnection_1 = __importDefault(require("./connection/connections/TcpConnection"));
 var events_1 = require("events");
 var StatusFactory_1 = __importDefault(require("./factory/StatusFactory"));
+var HiveDriverError_1 = __importDefault(require("./errors/HiveDriverError"));
 var HiveClient = /** @class */ (function (_super) {
     __extends(HiveClient, _super);
     /**
@@ -68,8 +69,11 @@ var HiveClient = /** @class */ (function (_super) {
      */
     function HiveClient(TCLIService, TCLIService_types) {
         var _this = _super.call(this) || this;
+        _this.thrift = thrift;
         _this.TCLIService = TCLIService;
         _this.TCLIService_types = TCLIService_types;
+        _this.connectionProvider = new TcpConnection_1.default();
+        _this.authProvider = new NoSaslAuthentication_1.default();
         _this.statusFactory = new StatusFactory_1.default(TCLIService_types);
         _this.client = null;
         _this.connection = null;
@@ -82,17 +86,17 @@ var HiveClient = /** @class */ (function (_super) {
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
-                        if (!authProvider) {
-                            authProvider = new NoSaslAuthentication_1.default();
+                        if (connectionProvider) {
+                            this.connectionProvider = connectionProvider;
                         }
-                        if (!connectionProvider) {
-                            connectionProvider = new TcpConnection_1.default();
+                        if (authProvider) {
+                            this.authProvider = authProvider;
                         }
                         _a = this;
-                        return [4 /*yield*/, connectionProvider.connect(options, authProvider)];
+                        return [4 /*yield*/, this.connectionProvider.connect(options, this.authProvider)];
                     case 1:
                         _a.connection = _b.sent();
-                        this.client = thrift.createClient(this.TCLIService, this.connection.getConnection());
+                        this.client = this.thrift.createClient(this.TCLIService, this.connection.getConnection());
                         this.connection.getConnection().on('error', function (error) {
                             _this.emit('error', error);
                         });
@@ -118,7 +122,7 @@ var HiveClient = /** @class */ (function (_super) {
     };
     HiveClient.prototype.getClient = function () {
         if (!this.client) {
-            throw new Error('HiveClient: client is not initialized');
+            throw new HiveDriverError_1.default('HiveClient: client is not initialized');
         }
         return this.client;
     };

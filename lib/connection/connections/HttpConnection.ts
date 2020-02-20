@@ -15,6 +15,7 @@ type NodeOptions = {
 };
 
 export default class HttpConnection implements IConnectionProvider, IThriftConnection {
+    private thrift: any = thrift;
     private connection: any;
 
     connect(options: IConnectionOptions, authProvider: IAuthentication): Promise<IThriftConnection> {
@@ -23,13 +24,13 @@ export default class HttpConnection implements IConnectionProvider, IThriftConne
             protocol: thrift.TBinaryProtocol,
             ...options.options,
             nodeOptions: {
+                ...this.getNodeOptions(options.options || {}),
                 ...(options.options?.nodeOptions || {}),
-                ...this.getNodeOptions(options?.options || {})
             }
         })
 
         return authProvider.authenticate(httpTransport).then(() => {
-            this.connection = thrift.createHttpConnection(
+            this.connection = this.thrift.createHttpConnection(
                 options.host,
                 options.port,
                 httpTransport.getOptions(),
@@ -73,7 +74,9 @@ export default class HttpConnection implements IConnectionProvider, IThriftConne
             if (Array.isArray(response.headers['set-cookie'])) {
                 let cookie = [this.connection.nodeOptions.headers['cookie']];
 
-                this.connection.nodeOptions.headers['cookie'] = cookie.concat(response.headers['set-cookie']).join(';');
+                this.connection.nodeOptions.headers['cookie'] = cookie.concat(response.headers['set-cookie'])
+                    .filter(Boolean)
+                    .join(';');
             }
 
             responseCallback.call(this.connection, response);
