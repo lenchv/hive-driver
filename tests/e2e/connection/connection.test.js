@@ -51,6 +51,12 @@ const runKerberosConnectionTest = (connect, connectionType, logger) => {
     });
 };
 
+const reloadConnectionTest = (connect, connectionType, logger) => {
+    return instanceHelper.reload(connectionType, logger).then(() => {
+        return executeTest(connect);
+    });
+};
+
 const stopInstance = () => instanceHelper.down(logger);
 
 const sleep = (t) => new Promise((resolve) => {
@@ -61,66 +67,68 @@ describe('Driver should connect to Hive via', function () {
     this.timeout(1000 * 60 * 5);
 
     describe('nosasl', () => {
-        afterEach(stopInstance);
         it('tcp', () => {
             return runConnectionTest(require('./connections/tcp.nosasl'), 'tcp.nosasl', logger);
         });
     
         it('tcp SSL', () => {
-            return runConnectionTest(require('./connections/tcp.nosasl.ssl'), 'tcp.nosasl.ssl', logger);
+            return reloadConnectionTest(require('./connections/tcp.nosasl.ssl'), 'tcp.nosasl.ssl', logger);
         });
     
         it('http', () => {
-            return runConnectionTest(require('./connections/http.nosasl'), 'http.nosasl', logger);
+            return reloadConnectionTest(require('./connections/http.nosasl'), 'http.nosasl', logger);
         });
     
         it('http SSL', () => {
-            return runConnectionTest(require('./connections/http.nosasl.ssl'), 'http.nosasl.ssl', logger);
+            return reloadConnectionTest(require('./connections/http.nosasl.ssl'), 'http.nosasl.ssl', logger);
         });
     });
     
     describe('plain', () => {
-        afterEach(stopInstance);
         it('tcp', () => {
-            return runConnectionTest(require('./connections/tcp.plain'), 'tcp.plain', logger);
+            return reloadConnectionTest(require('./connections/tcp.plain'), 'tcp.plain', logger);
         });
 
         it('tcp SSL', () => {
-            return runConnectionTest(require('./connections/tcp.plain.ssl'), 'tcp.plain.ssl', logger);
+            return reloadConnectionTest(require('./connections/tcp.plain.ssl'), 'tcp.plain.ssl', logger);
         });
 
         it('http', () => {
-            return runConnectionTest(require('./connections/http.plain'), 'http.plain', logger);
+            return reloadConnectionTest(require('./connections/http.plain'), 'http.plain', logger);
         });
 
         it('http SSL', () => {
-            return runConnectionTest(require('./connections/http.plain.ssl'), 'http.plain.ssl', logger);
+            return reloadConnectionTest(require('./connections/http.plain.ssl'), 'http.plain.ssl', logger);
         });
     });
 
     describe('ldap', () => {
-        afterEach(stopInstance);
+        after(stopInstance);
         it('tcp', () => {
-            return runConnectionTest(require('./connections/tcp.ldap'), 'tcp.ldap', logger);
+            return reloadConnectionTest(require('./connections/tcp.ldap'), 'tcp.ldap', logger);
         });
 
         it('http', () => {
-            return runConnectionTest(require('./connections/http.ldap'), 'http.ldap', logger);
+            return reloadConnectionTest(require('./connections/http.ldap'), 'http.ldap', logger);
         });
     });
 
     describe('kerberos', () => {
-        afterEach(stopInstance);
+        after(stopInstance);
         it('tcp', () => {
             return runKerberosConnectionTest(require('./connections/tcp.kerberos'), 'tcp.kerberos', logger);
         });
 
         it('http', () => {
-            return runKerberosConnectionTest(require('./connections/http.kerberos'), 'http.kerberos', logger);
+            return reloadConnectionTest(require('./connections/http.kerberos'), 'http.kerberos', logger);
         });
 
         it('tcp SSL', () => {
-            return runKerberosConnectionTest(require('./connections/tcp.kerberos.ssl'), 'tcp.kerberos.ssl', logger);
+            return reloadConnectionTest(require('./connections/tcp.kerberos.ssl'), 'tcp.kerberos.ssl', logger);
+        });
+
+        it('http SSL', () => {
+            return reloadConnectionTest(require('./connections/http.kerberos.ssl'), 'http.kerberos.ssl', logger);
         });
     });
 });

@@ -27,3 +27,7 @@ log:
 	docker-compose logs -f hive-server
 kinit:
 	echo hive | kinit hive@KERBEROS.SERVER
+reload:
+	rm -f ./confs/hive-site.xml \
+	&& cp ./confs/hive-site.xml.$(TYPE) ./confs/hive-site.xml \
+	&& docker-compose restart hive-server hive-metastore

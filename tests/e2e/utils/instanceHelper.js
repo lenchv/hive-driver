@@ -63,6 +63,16 @@ const up = (type, logger = () => {}) => {
         });
 };
 
+const reload = (type, logger = () => {}) => {
+    logger('Reload hive: ' + type);
+
+    return execute('make reload TYPE=' + type)
+        .then(result => {
+            logger(result);
+
+            return waitUntilHiveReady(30, logger);
+        });
+};
 
 const upKrb = (type, logger = () => {}) => {
     logger('Start hive: ' + type);
@@ -84,5 +94,6 @@ const down = (logger = () => {}) => {
 module.exports = {
     up,
     upKrb,
-    down
+    down,
+    reload
 };
