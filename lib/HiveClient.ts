@@ -14,6 +14,7 @@ import TcpConnection from './connection/connections/TcpConnection';
 import IConnectionOptions from './connection/contracts/IConnectionOptions';
 import { EventEmitter } from 'events';
 import StatusFactory from './factory/StatusFactory';
+import HiveDriverError from './errors/HiveDriverError';
 
 export default class HiveClient extends EventEmitter implements IHiveClient {
     private TCLIService: object;
@@ -21,6 +22,9 @@ export default class HiveClient extends EventEmitter implements IHiveClient {
     private client: ThriftClient | null;
     private connection: IThriftConnection | null;
     private statusFactory: StatusFactory;
+    private connectionProvider: IConnectionProvider;
+    private authProvider: IAuthentication;
+    private thrift: any;
 
     /**
      * 
@@ -29,8 +33,11 @@ export default class HiveClient extends EventEmitter implements IHiveClient {
      */
     constructor(TCLIService: object, TCLIService_types: TCLIServiceTypes) {
         super();
+        this.thrift = thrift;
         this.TCLIService = TCLIService;
         this.TCLIService_types = TCLIService_types;
+        this.connectionProvider = new TcpConnection();
+        this.authProvider = new NoSaslAuthentication();
         this.statusFactory = new StatusFactory(TCLIService_types);
         this.client = null;
         this.connection = null;
@@ -41,17 +48,17 @@ export default class HiveClient extends EventEmitter implements IHiveClient {
         connectionProvider?: IConnectionProvider,
         authProvider?: IAuthentication
     ): Promise<HiveClient> {
-        if (!authProvider) {
-            authProvider = new NoSaslAuthentication();
+        if (connectionProvider) {
+            this.connectionProvider = connectionProvider;
         }
 
-        if (!connectionProvider) {
-            connectionProvider = new TcpConnection();
+        if (authProvider) {
+            this.authProvider = authProvider;
         }
-        
-        this.connection = await connectionProvider.connect(options, authProvider);
 
-        this.client = thrift.createClient(
+        this.connection = await this.connectionProvider.connect(options, this.authProvider);
+
+        this.client = this.thrift.createClient(
             this.TCLIService,
             this.connection.getConnection()
         );
@@ -90,7 +97,7 @@ export default class HiveClient extends EventEmitter implements IHiveClient {
 
     getClient(): ThriftClient {
         if (!this.client) {
-            throw new Error('HiveClient: client is not initialized');
+            throw new HiveDriverError('HiveClient: client is not initialized');
         }
 
         return this.client;
