@@ -17,6 +17,7 @@ var MongoKerberosAuthProcess = /** @class */ (function () {
         this.options = options;
         this.kerberosStep = null;
         this.qop = IKerberosAuthProcess_1.QOP.AUTH;
+        this.platform = process.platform;
     }
     MongoKerberosAuthProcess.prototype.init = function (options, cb) {
         var _this = this;
@@ -52,7 +53,7 @@ var MongoKerberosAuthProcess = /** @class */ (function () {
         return this.qop;
     };
     MongoKerberosAuthProcess.prototype.getSpn = function () {
-        return process.platform === 'win32'
+        return this.platform === 'win32'
             ? this.options.service + "/" + this.options.fqdn
             : this.options.service + "@" + this.options.fqdn;
     };

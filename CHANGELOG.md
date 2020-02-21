@@ -1,5 +1,9 @@
 # Changelog
 
+[0.1.1](https://github.com/lenchv/hive-driver/releases/tag/v0.1.1) 2020-02-21
+
+- Changed version in package.json
+
 
 [0.1.0](https://github.com/lenchv/hive-driver/releases/tag/v0.1.0) 2020-02-17
 
