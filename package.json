@@ -35,7 +35,10 @@
     "hadoop",
     "client",
     "thrift",
-    "nodejs"
+    "nodejs",
+    "js",
+    "hive",
+    "hive js"
   ],
   "author": "Liench Volodymyr <lenchvov@gmail.com>",
   "license": "MIT",
