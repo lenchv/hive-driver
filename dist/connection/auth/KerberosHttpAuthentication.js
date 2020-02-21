@@ -13,10 +13,10 @@ var __assign = (this && this.__assign) || function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var KerberosHttpAuthentication = /** @class */ (function () {
     function KerberosHttpAuthentication(options, authProcess) {
-        var _a, _b, _c, _d;
+        var _a, _b, _c;
         this.username = ((_a = options) === null || _a === void 0 ? void 0 : _a.username) || 'anonymous';
-        this.password = ((_b = options) === null || _b === void 0 ? void 0 : _b.password) !== undefined ? (_c = options) === null || _c === void 0 ? void 0 : _c.password : 'anonymous';
-        this.headers = ((_d = options) === null || _d === void 0 ? void 0 : _d.headers) || {};
+        this.password = ((_b = options) === null || _b === void 0 ? void 0 : _b.password) !== undefined ? options.password : 'anonymous';
+        this.headers = ((_c = options) === null || _c === void 0 ? void 0 : _c.headers) || {};
         this.authProcess = authProcess;
     }
     KerberosHttpAuthentication.prototype.authenticate = function (transport) {
