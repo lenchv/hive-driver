@@ -88,6 +88,13 @@ describe('KerberosTcpAuthentication', () => {
         expect(auth.password).to.be.eq('');
     });
 
+    it('should set default parameters', () => {
+        const auth = new KerberosTcpAuthentication();
+
+        expect(auth.username).to.be.eq('anonymous');
+        expect(auth.password).to.be.eq('anonymous');
+    });
+
     it('sasl process must be passed', () => {
         const authProcess = getAuthProcessMock();
         const transportMock = getTransportMock();
@@ -142,5 +149,67 @@ describe('KerberosTcpAuthentication', () => {
         }).catch((error) => {
             expect(error.message).to.be.eq('Authentication error: auth error');
         });
+    });
+
+    it('should throw error if initiation is failed', () => {
+        const auth = new KerberosTcpAuthentication({}, {
+            init(data, cb) {
+                cb(new Error('error'));
+            }
+        });
+        return auth.authenticate({}).catch(error => {
+            expect(error.message).to.be.eq('error');
+        }); 
+    });
+
+    it('should throw error on onConnect', () => {
+        const auth = new KerberosTcpAuthentication();
+        auth.authProcess = {
+            transition(payload, cb) {
+                cb(new Error('error'));
+            }
+        };
+        return auth.onConnect({
+            write() {}
+        }).catch(error => {
+            expect(error.message).to.be.eq('error');
+        })
+    });
+
+    it('should throw error on nextTransition', () => {
+        const auth = new KerberosTcpAuthentication();
+        auth.authProcess = {
+            transition(payload, cb) {
+                cb(new Error('error'));
+            }
+        };
+        return auth.nextTransition({
+            write() {}
+        }, Buffer.from([1,2,3,4,5,6])).catch(error => {
+            expect(error.message).to.be.eq('error');
+        })
+    });
+
+    it('should correctly handle empty response', () => {
+        const auth = new KerberosTcpAuthentication();
+        auth.authProcess = {
+            transition(payload, cb) {
+                cb(null);
+            }
+        };
+        let i = 0;
+        const result = [
+            Buffer.from([ 1, 0, 0, 0, 6, 0x47, 0x53, 0x53, 0x41, 0x50, 0x49 ]),
+            Buffer.from([ 2, 0, 0, 0, 0 ]),
+            Buffer.from([ 2, 0, 0, 0, 0 ]),
+        ];
+        const transport = { write(data) {
+            expect(data).to.be.deep.eq(result[i++]);
+        } };
+        
+        return Promise.all([
+            auth.onConnect(transport),
+            auth.nextTransition(transport, Buffer.from([1,2,3,4,5,6])),
+        ]);
     });
 });

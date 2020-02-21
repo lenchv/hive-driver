@@ -7,9 +7,9 @@ var SaslPackageFactory_1 = require("./helpers/SaslPackageFactory");
 var AuthenticationError_1 = __importDefault(require("../../errors/AuthenticationError"));
 var KerberosTcpAuthentication = /** @class */ (function () {
     function KerberosTcpAuthentication(options, authProcess) {
-        var _a, _b, _c;
+        var _a, _b;
         this.username = ((_a = options) === null || _a === void 0 ? void 0 : _a.username) || 'anonymous';
-        this.password = ((_b = options) === null || _b === void 0 ? void 0 : _b.password) !== undefined ? (_c = options) === null || _c === void 0 ? void 0 : _c.password : 'anonymous';
+        this.password = ((_b = options) === null || _b === void 0 ? void 0 : _b.password) !== undefined ? options.password : 'anonymous';
         this.authProcess = authProcess;
     }
     KerberosTcpAuthentication.prototype.authenticate = function (transport) {

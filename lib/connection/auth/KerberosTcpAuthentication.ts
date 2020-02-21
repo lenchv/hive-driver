@@ -14,7 +14,7 @@ export default class KerberosTcpAuthentication implements IAuthentication {
 
     constructor(options: AuthOptions, authProcess: IKerberosAuthProcess) {
         this.username = options?.username || 'anonymous';
-        this.password = options?.password !== undefined ? options?.password : 'anonymous';
+        this.password = options?.password !== undefined ? options.password : 'anonymous';
         this.authProcess = authProcess;
     }
 
