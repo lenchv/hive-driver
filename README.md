@@ -1,5 +1,5 @@
 # Hive Driver
-[![GitHub release](https://img.shields.io/github/release/lenchv/hive-driver.svg?style=flat-square)](https://github.com/lenchv/hive-driver/releases/latest)
+[![npm](https://img.shields.io/npm/v/hive-driver?color=blue&style=flat-square)](https://www.npmjs.com/package/hive-driver)
 [![test](https://github.com/lenchv/hive-driver/workflows/test/badge.svg?branch=master)](https://github.com/lenchv/hive-driver/actions?query=workflow%3Atest+branch%3Amaster)
 [![coverage](https://codecov.io/gh/lenchv/hive-driver/branch/master/graph/badge.svg)](https://codecov.io/gh/lenchv/hive-driver)
 
