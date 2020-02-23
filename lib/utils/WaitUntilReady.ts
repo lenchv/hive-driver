@@ -25,12 +25,17 @@ export default class WaitUntilReady {
             await this.executeCallback(callback.bind(null, response));    
         }
 
-        const isReady = this.isReady(response.operationState);
-        
-        if (isReady) {
-            return this.operation;
-        } else {
-            return this.execute(progress, callback);
+        try {
+            const isReady = this.isReady(response.operationState);
+
+            if (isReady) {
+                return this.operation;
+            } else {
+                return this.execute(progress, callback);
+            }
+        } catch (error) {
+            error.setResponse(response);
+            throw error;
         }
     }
 

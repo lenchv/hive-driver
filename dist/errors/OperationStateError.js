@@ -22,6 +22,9 @@ var OperationStateError = /** @class */ (function (_super) {
     function OperationStateError() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
+    OperationStateError.prototype.setResponse = function (response) {
+        this.response = response;
+    };
     return OperationStateError;
 }(HiveDriverError_1.default));
 exports.default = OperationStateError;

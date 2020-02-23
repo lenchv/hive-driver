@@ -65,12 +65,18 @@ var WaitUntilReady = /** @class */ (function () {
                         _a.sent();
                         _a.label = 3;
                     case 3:
-                        isReady = this.isReady(response.operationState);
-                        if (isReady) {
-                            return [2 /*return*/, this.operation];
+                        try {
+                            isReady = this.isReady(response.operationState);
+                            if (isReady) {
+                                return [2 /*return*/, this.operation];
+                            }
+                            else {
+                                return [2 /*return*/, this.execute(progress, callback)];
+                            }
                         }
-                        else {
-                            return [2 /*return*/, this.execute(progress, callback)];
+                        catch (error) {
+                            error.setResponse(response);
+                            throw error;
                         }
                         return [2 /*return*/];
                 }

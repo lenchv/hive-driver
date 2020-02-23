@@ -13,6 +13,7 @@ var HiveOperation = /** @class */ (function () {
         this.hasResultSet = false;
         this.driver = driver;
         this.operationHandle = operationHandle;
+        this.hasResultSet = operationHandle.hasResultSet;
         this.TCLIService_type = TCLIService_type;
         this.statusFactory = new StatusFactory_1.default(TCLIService_type);
         this.state = TCLIService_type.TOperationState.INITIALIZED_STATE;
@@ -60,7 +61,9 @@ var HiveOperation = /** @class */ (function () {
             var _a;
             _this.statusFactory.create(response.status);
             _this.state = (_a = response.operationState, (_a !== null && _a !== void 0 ? _a : _this.state));
-            _this.hasResultSet = !!response.hasResultSet;
+            if (typeof response.hasResultSet === 'boolean') {
+                _this.hasResultSet = response.hasResultSet;
+            }
             return response;
         });
     };
