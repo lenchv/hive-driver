@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var WaitUntilReady_1 = __importDefault(require("./WaitUntilReady"));
 var GetResult_1 = __importDefault(require("./GetResult"));
+var ProgressUpdateTransformer_1 = __importDefault(require("./ProgressUpdateTransformer"));
 var HiveUtils = /** @class */ (function () {
     function HiveUtils(TCLIService_types) {
         this.TCLIService_types = TCLIService_types;
@@ -28,6 +29,9 @@ var HiveUtils = /** @class */ (function () {
                 return operation;
             }
         });
+    };
+    HiveUtils.prototype.formatProgress = function (progressUpdate) {
+        return String(new ProgressUpdateTransformer_1.default(progressUpdate));
     };
     return HiveUtils;
 }());

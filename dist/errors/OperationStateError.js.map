@@ -1,1 +1,1 @@
-{"version":3,"file":"OperationStateError.js","sourceRoot":"","sources":["../../lib/errors/OperationStateError.ts"],"names":[],"mappings":";;;;;;;;;;;;;;;;;;AAAA,sEAAgD;AAEhD;IAAiD,uCAAe;IAAhE;;IAAkE,CAAC;IAAD,0BAAC;AAAD,CAAC,AAAnE,CAAiD,yBAAe,GAAG"}
+{"version":3,"file":"OperationStateError.js","sourceRoot":"","sources":["../../lib/errors/OperationStateError.ts"],"names":[],"mappings":";;;;;;;;;;;;;;;;;;AAAA,sEAAgD;AAGhD;IAAiD,uCAAe;IAAhE;;IAMA,CAAC;IAHG,yCAAW,GAAX,UAAY,QAAoC;QAC5C,IAAI,CAAC,QAAQ,GAAG,QAAQ,CAAC;IAC7B,CAAC;IACL,0BAAC;AAAD,CAAC,AAND,CAAiD,yBAAe,GAM/D"}

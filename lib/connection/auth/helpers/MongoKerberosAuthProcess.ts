@@ -26,12 +26,14 @@ export default class MongoKerberosAuthProcess implements IKerberosAuthProcess {
     kerberos: IMongoDbKerberos;
     kerberosStep: KerberosStep | null;
     options: KerberosOptions;
+    platform: string;
 
     constructor(options: KerberosOptions, kerberos: IMongoDbKerberos) {
         this.kerberos = kerberos;
         this.options = options;
         this.kerberosStep = null;
         this.qop = QOP.AUTH;
+        this.platform = process.platform;
     }
 
     init(options: KerberosInitializeOptions, cb: Function): void {
@@ -78,7 +80,7 @@ export default class MongoKerberosAuthProcess implements IKerberosAuthProcess {
     }
 
     private getSpn(): string {
-        return process.platform === 'win32'
+        return this.platform === 'win32'
             ? `${this.options.service}/${this.options.fqdn}`
             : `${this.options.service}@${this.options.fqdn}`;
     }

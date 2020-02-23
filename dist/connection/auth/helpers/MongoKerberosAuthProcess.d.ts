@@ -21,6 +21,7 @@ export default class MongoKerberosAuthProcess implements IKerberosAuthProcess {
     kerberos: IMongoDbKerberos;
     kerberosStep: KerberosStep | null;
     options: KerberosOptions;
+    platform: string;
     constructor(options: KerberosOptions, kerberos: IMongoDbKerberos);
     init(options: KerberosInitializeOptions, cb: Function): void;
     transition(payload: string, cb: Function): void;

@@ -1,8 +1,9 @@
-import { TCLIServiceTypes } from "../hive/Types";
+import { TCLIServiceTypes, ProgressUpdateResponse } from "../hive/Types";
 import IOperation from "../contracts/IOperation";
 import WaitUntilReady from "./WaitUntilReady";
 import IOperationResult from "../result/IOperationResult";
 import GetResult from "./GetResult";
+import ProgressUpdateTransformer from "./ProgressUpdateTransformer";
 
 export default class HiveUtils {
     private TCLIService_types: TCLIServiceTypes;
@@ -38,5 +39,9 @@ export default class HiveUtils {
                     return operation;
                 }
             });
+    }
+
+    formatProgress(progressUpdate: ProgressUpdateResponse): string {
+        return String(new ProgressUpdateTransformer(progressUpdate));
     }
 }

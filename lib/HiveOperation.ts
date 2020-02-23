@@ -30,6 +30,7 @@ export default class HiveOperation implements IOperation {
     ) {
         this.driver = driver;
         this.operationHandle = operationHandle;
+        this.hasResultSet = operationHandle.hasResultSet;
         this.TCLIService_type = TCLIService_type;
         this.statusFactory = new StatusFactory(TCLIService_type);
         this.state = TCLIService_type.TOperationState.INITIALIZED_STATE;
@@ -87,7 +88,10 @@ export default class HiveOperation implements IOperation {
             this.statusFactory.create(response.status);
 
             this.state = response.operationState ?? this.state;
-            this.hasResultSet = !!response.hasResultSet;
+
+            if (typeof response.hasResultSet === 'boolean') {
+                this.hasResultSet = response.hasResultSet;
+            }
 
             return response;
         });
