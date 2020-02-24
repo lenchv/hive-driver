@@ -19,12 +19,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var HiveDriverError_1 = __importDefault(require("./HiveDriverError"));
 var OperationStateError = /** @class */ (function (_super) {
     __extends(OperationStateError, _super);
-    function OperationStateError() {
-        return _super !== null && _super.apply(this, arguments) || this;
+    function OperationStateError(message, response) {
+        var _this = _super.call(this, message) || this;
+        _this.response = response;
+        return _this;
     }
-    OperationStateError.prototype.setResponse = function (response) {
-        this.response = response;
-    };
     return OperationStateError;
 }(HiveDriverError_1.default));
 exports.default = OperationStateError;

@@ -26,7 +26,7 @@ export default class WaitUntilReady {
         }
 
         try {
-            const isReady = this.isReady(response.operationState);
+            const isReady = this.isReady(response);
 
             if (isReady) {
                 return this.operation;
@@ -34,13 +34,12 @@ export default class WaitUntilReady {
                 return this.execute(progress, callback);
             }
         } catch (error) {
-            error.setResponse(response);
             throw error;
         }
     }
 
-    private isReady(operationState?: number): boolean {
-        switch(operationState) {
+    private isReady(response: GetOperationStatusResponse): boolean {
+        switch(response.operationState) {
             case this.TCLIService_types.TOperationState.INITIALIZED_STATE:
                 return false;
             case this.TCLIService_types.TOperationState.RUNNING_STATE:
@@ -48,18 +47,18 @@ export default class WaitUntilReady {
             case this.TCLIService_types.TOperationState.FINISHED_STATE:
                 return true;
             case this.TCLIService_types.TOperationState.CANCELED_STATE:
-                throw new OperationStateError('The operation was canceled by a client');
+                throw new OperationStateError('The operation was canceled by a client', response);
             case this.TCLIService_types.TOperationState.CLOSED_STATE:
-                throw new OperationStateError('The operation was closed by a client');
+                throw new OperationStateError('The operation was closed by a client', response);
             case this.TCLIService_types.TOperationState.ERROR_STATE:
-                throw new OperationStateError('The operation failed due to an error');
+                throw new OperationStateError('The operation failed due to an error', response);
             case this.TCLIService_types.TOperationState.PENDING_STATE:
-                throw new OperationStateError('The operation is in a pending state');
+                throw new OperationStateError('The operation is in a pending state', response);
             case this.TCLIService_types.TOperationState.TIMEDOUT_STATE:
-                throw new OperationStateError('The operation is in a timedout state');
+                throw new OperationStateError('The operation is in a timedout state', response);
             case this.TCLIService_types.TOperationState.UKNOWN_STATE:
             default:
-                throw new OperationStateError('The operation is in an unrecognized state');
+                throw new OperationStateError('The operation is in an unrecognized state', response);
         }  
     }
 
