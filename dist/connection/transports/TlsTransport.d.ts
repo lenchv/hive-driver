@@ -7,6 +7,7 @@ export default class TlsTransport implements ITransport {
     private connection;
     private tlsOptions;
     private options;
+    private tls;
     constructor(host: string, port: number, options?: TlsOptions);
     setOptions(option: string, value: any): void;
     getOptions(): object;

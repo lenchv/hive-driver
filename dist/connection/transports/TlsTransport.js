@@ -17,6 +17,7 @@ var TlsTransport = /** @class */ (function () {
     function TlsTransport(host, port, options) {
         if (options === void 0) { options = {}; }
         var _a, _b, _c;
+        this.tls = tls;
         this.host = host;
         this.port = port;
         this.tlsOptions = __assign({ secureProtocol: 'SSLv23_method', secureOptions: constants.SSL_OP_NO_SSLv2 | constants.SSL_OP_NO_SSLv3, rejectUnauthorized: false, ca: (_a = options) === null || _a === void 0 ? void 0 : _a.ca, cert: (_b = options) === null || _b === void 0 ? void 0 : _b.cert, key: (_c = options) === null || _c === void 0 ? void 0 : _c.key }, options);
@@ -33,7 +34,7 @@ var TlsTransport = /** @class */ (function () {
         return this.connection;
     };
     TlsTransport.prototype.connect = function () {
-        this.connection = tls.connect(this.port, this.host, this.tlsOptions);
+        this.connection = this.tls.connect(this.port, this.host, this.tlsOptions);
         this.connection.setMaxSendFragment(65536);
         this.connection.setNoDelay(true);
     };

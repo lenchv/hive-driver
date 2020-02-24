@@ -9,8 +9,10 @@ export default class TlsTransport implements ITransport {
     private connection: any;
     private tlsOptions: TlsOptions;
     private options: object;
+    private tls: any;
 
     constructor(host: string, port: number, options: TlsOptions = {}) {
+        this.tls = tls;
         this.host = host;
         this.port = port;
         this.tlsOptions = {
@@ -41,7 +43,7 @@ export default class TlsTransport implements ITransport {
     }
 
     connect(): any {
-        this.connection = tls.connect(this.port, this.host, this.tlsOptions);
+        this.connection = this.tls.connect(this.port, this.host, this.tlsOptions);
         this.connection.setMaxSendFragment(65536);
         this.connection.setNoDelay(true);
     };
