@@ -6,6 +6,7 @@ const operation = (state) => ({
     state,
     status() {
         return Promise.resolve({
+            type: 'GetOperationStatusResponse',
             operationState: this.state
         });
     }
@@ -46,25 +47,32 @@ describe('WaitUntilReady', () => {
             return waitUntilReady.execute();
         };
 
-
-        execute(TCLIService_types.TOperationState.CANCELED_STATE).catch(error => {
-            expect(error.message).to.be.eq('The operation was canceled by a client');
-        });
-        execute(TCLIService_types.TOperationState.CLOSED_STATE).catch(error => {
-            expect(error.message).to.be.eq('The operation was closed by a client');
-        });
-        execute(TCLIService_types.TOperationState.ERROR_STATE).catch(error => {
-            expect(error.message).to.be.eq('The operation failed due to an error');
-        });
-        execute(TCLIService_types.TOperationState.PENDING_STATE).catch(error => {
-            expect(error.message).to.be.eq('The operation is in a pending state');
-        });
-        execute(TCLIService_types.TOperationState.TIMEDOUT_STATE).catch(error => {
-            expect(error.message).to.be.eq('The operation is in a timedout state');
-        });
-        execute(TCLIService_types.TOperationState.UKNOWN_STATE).catch(error => {
-            expect(error.message).to.be.eq('The operation is in an unrecognized state');
-        });
+        return Promise.all([
+            execute(TCLIService_types.TOperationState.CANCELED_STATE).catch(error => {
+                expect(error.message).to.be.eq('The operation was canceled by a client');
+                expect(error.response.type).to.be.eq('GetOperationStatusResponse');
+            }),
+            execute(TCLIService_types.TOperationState.CLOSED_STATE).catch(error => {
+                expect(error.message).to.be.eq('The operation was closed by a client');
+                expect(error.response.type).to.be.eq('GetOperationStatusResponse');
+            }),
+            execute(TCLIService_types.TOperationState.ERROR_STATE).catch(error => {
+                expect(error.message).to.be.eq('The operation failed due to an error');
+                expect(error.response.type).to.be.eq('GetOperationStatusResponse');
+            }),
+            execute(TCLIService_types.TOperationState.PENDING_STATE).catch(error => {
+                expect(error.message).to.be.eq('The operation is in a pending state');
+                expect(error.response.type).to.be.eq('GetOperationStatusResponse');
+            }),
+            execute(TCLIService_types.TOperationState.TIMEDOUT_STATE).catch(error => {
+                expect(error.message).to.be.eq('The operation is in a timedout state');
+                expect(error.response.type).to.be.eq('GetOperationStatusResponse');
+            }),
+            execute(TCLIService_types.TOperationState.UKNOWN_STATE).catch(error => {
+                expect(error.message).to.be.eq('The operation is in an unrecognized state');
+                expect(error.response.type).to.be.eq('GetOperationStatusResponse');
+            }),
+        ]);
     });
 
     it('should wait untill callback will be finished', () => {

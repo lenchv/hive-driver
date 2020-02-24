@@ -66,7 +66,7 @@ var WaitUntilReady = /** @class */ (function () {
                         _a.label = 3;
                     case 3:
                         try {
-                            isReady = this.isReady(response.operationState);
+                            isReady = this.isReady(response);
                             if (isReady) {
                                 return [2 /*return*/, this.operation];
                             }
@@ -75,7 +75,6 @@ var WaitUntilReady = /** @class */ (function () {
                             }
                         }
                         catch (error) {
-                            error.setResponse(response);
                             throw error;
                         }
                         return [2 /*return*/];
@@ -83,8 +82,8 @@ var WaitUntilReady = /** @class */ (function () {
             });
         });
     };
-    WaitUntilReady.prototype.isReady = function (operationState) {
-        switch (operationState) {
+    WaitUntilReady.prototype.isReady = function (response) {
+        switch (response.operationState) {
             case this.TCLIService_types.TOperationState.INITIALIZED_STATE:
                 return false;
             case this.TCLIService_types.TOperationState.RUNNING_STATE:
@@ -92,18 +91,18 @@ var WaitUntilReady = /** @class */ (function () {
             case this.TCLIService_types.TOperationState.FINISHED_STATE:
                 return true;
             case this.TCLIService_types.TOperationState.CANCELED_STATE:
-                throw new OperationStateError_1.default('The operation was canceled by a client');
+                throw new OperationStateError_1.default('The operation was canceled by a client', response);
             case this.TCLIService_types.TOperationState.CLOSED_STATE:
-                throw new OperationStateError_1.default('The operation was closed by a client');
+                throw new OperationStateError_1.default('The operation was closed by a client', response);
             case this.TCLIService_types.TOperationState.ERROR_STATE:
-                throw new OperationStateError_1.default('The operation failed due to an error');
+                throw new OperationStateError_1.default('The operation failed due to an error', response);
             case this.TCLIService_types.TOperationState.PENDING_STATE:
-                throw new OperationStateError_1.default('The operation is in a pending state');
+                throw new OperationStateError_1.default('The operation is in a pending state', response);
             case this.TCLIService_types.TOperationState.TIMEDOUT_STATE:
-                throw new OperationStateError_1.default('The operation is in a timedout state');
+                throw new OperationStateError_1.default('The operation is in a timedout state', response);
             case this.TCLIService_types.TOperationState.UKNOWN_STATE:
             default:
-                throw new OperationStateError_1.default('The operation is in an unrecognized state');
+                throw new OperationStateError_1.default('The operation is in an unrecognized state', response);
         }
     };
     WaitUntilReady.prototype.executeCallback = function (callback) {
