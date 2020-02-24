@@ -1,6 +1,10 @@
 # Changelog
 
-[0.1.1](https://github.com/lenchv/hive-driver/releases/tag/v0.1.1) 2020-02-21
+[0.1.2](https://github.com/lenchv/hive-driver/releases/tag/v0.1.2) 2020-02-24
+
+- Fixed setting response in OperationStateError
+
+[0.1.1](https://github.com/lenchv/hive-driver/releases/tag/v0.1.1) 2020-02-23
 
 - Changed version in package.json
 - Fixed retrieving data when Hive does not return hasResultSet
