@@ -216,6 +216,7 @@ await client.connect(
 
 For more details see:
 
+- [connections.md](/docs/connections.md)
 - [examples/connections/](/examples/connections/)
 - [tests/e2e/connection/connection.test.js](/tests/e2e/connection/connection.test.js)
 - [.docker/confs](/.docker/confs/)
