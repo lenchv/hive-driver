@@ -1,4 +1,5 @@
 const hive = require('../../');
+const config = require('./config');
 const { TCLIService, TCLIService_types } = hive.thrift;
 const { HiveClient, auth, connections } = hive;
 
@@ -10,8 +11,8 @@ const client = new HiveClient(
     TCLIService_types
 );
 
-module.exports = () => client.connect({
-    host: 'volodymyr.local',
+module.exports = () => config().then(({hostname}) => client.connect({
+    host: hostname,
     port: 10000,
     options: {}
-}, connection, authProvider);
+}, connection, authProvider));
