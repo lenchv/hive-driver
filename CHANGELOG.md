@@ -6,6 +6,8 @@
 
 - Added throwing exception when connection is closed but session is tried to be opened
 
+- Added method isConnected to the IThriftConnection interface
+
 - Described in the troubleshooting.md how to reconnect when the connection is lost
 
 [0.1.2](https://github.com/lenchv/hive-driver/releases/tag/v0.1.2) 2020-02-24
