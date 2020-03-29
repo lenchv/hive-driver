@@ -100,6 +100,15 @@ var HiveClient = /** @class */ (function (_super) {
                         this.connection.getConnection().on('error', function (error) {
                             _this.emit('error', error);
                         });
+                        this.connection.getConnection().on('reconnecting', function (params) {
+                            _this.emit('reconnecting', params);
+                        });
+                        this.connection.getConnection().on('close', function () {
+                            _this.emit('close');
+                        });
+                        this.connection.getConnection().on('timeout', function () {
+                            _this.emit('timeout');
+                        });
                         return [2 /*return*/, this];
                 }
             });
@@ -113,6 +122,10 @@ var HiveClient = /** @class */ (function (_super) {
      */
     HiveClient.prototype.openSession = function (request) {
         var _this = this;
+        var _a;
+        if (!((_a = this.connection) === null || _a === void 0 ? void 0 : _a.isConnected())) {
+            return Promise.reject(new HiveDriverError_1.default('HiveClient: connection is lost'));
+        }
         var driver = new HiveDriver_1.default(this.TCLIService_types, this.getClient());
         return driver.openSession(request).then(function (response) {
             _this.statusFactory.create(response.status);

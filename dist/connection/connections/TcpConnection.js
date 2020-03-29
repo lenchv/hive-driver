@@ -34,6 +34,14 @@ var TcpConnection = /** @class */ (function () {
     TcpConnection.prototype.getConnection = function () {
         return this.connection;
     };
+    TcpConnection.prototype.isConnected = function () {
+        if (!this.connection) {
+            return false;
+        }
+        else {
+            return this.connection.connected;
+        }
+    };
     TcpConnection.prototype.createConnection = function (transport, options) {
         var _a;
         var stream = transport.getTransport();

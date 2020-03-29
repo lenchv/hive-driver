@@ -65,7 +65,22 @@ export default class HiveClient extends EventEmitter implements IHiveClient {
 
         this.connection.getConnection().on('error', (error: Error) => {
             this.emit('error', error);
-        });
+		});
+
+        this.connection.getConnection().on('reconnecting', (params: {
+			delay: number,
+    		attempt: number
+		}) => {
+            this.emit('reconnecting', params);
+		});
+
+		this.connection.getConnection().on('close', () => {
+			this.emit('close');
+		});
+
+        this.connection.getConnection().on('timeout', () => {
+			this.emit('timeout');
+		});
 
         return this;
     }
@@ -77,6 +92,10 @@ export default class HiveClient extends EventEmitter implements IHiveClient {
      * @throws {StatusError} 
      */
     openSession(request: OpenSessionRequest): Promise<IHiveSession> {
+		if (!this.connection?.isConnected()) {
+            return Promise.reject(new HiveDriverError('HiveClient: connection is lost'));
+		}
+
         const driver = new HiveDriver(
             this.TCLIService_types,
             this.getClient()

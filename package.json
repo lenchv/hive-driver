@@ -1,6 +1,6 @@
 {
   "name": "hive-driver",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Driver for connection to Apache Hive via Thrift API.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

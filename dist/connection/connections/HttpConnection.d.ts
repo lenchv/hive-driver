@@ -7,6 +7,7 @@ export default class HttpConnection implements IConnectionProvider, IThriftConne
     private connection;
     connect(options: IConnectionOptions, authProvider: IAuthentication): Promise<IThriftConnection>;
     getConnection(): any;
+    isConnected(): boolean;
     private getNodeOptions;
     private addCookieHandler;
 }
