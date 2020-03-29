@@ -1,5 +1,13 @@
 # Changelog
 
+[0.1.3](https://github.com/lenchv/hive-driver/releases/tag/v0.1.3) 2020-03-30
+
+- Added events to HiveClient: close, reconnecting, timeout
+
+- Added throwing exception when connection is closed but session is tried to be opened
+
+- Described in the troubleshooting.md how to reconnect when the connection is lost
+
 [0.1.2](https://github.com/lenchv/hive-driver/releases/tag/v0.1.2) 2020-02-24
 
 - Fixed setting response in OperationStateError
