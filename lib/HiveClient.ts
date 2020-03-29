@@ -93,7 +93,7 @@ export default class HiveClient extends EventEmitter implements IHiveClient {
      */
     openSession(request: OpenSessionRequest): Promise<IHiveSession> {
 		if (!this.connection?.getConnection().connected) {
-            throw new HiveDriverError('HiveClient: connection is lost');
+            return Promise.reject(new HiveDriverError('HiveClient: connection is lost'));
 		}
 
         const driver = new HiveDriver(
