@@ -123,7 +123,7 @@ var HiveClient = /** @class */ (function (_super) {
     HiveClient.prototype.openSession = function (request) {
         var _this = this;
         var _a;
-        if (!((_a = this.connection) === null || _a === void 0 ? void 0 : _a.getConnection().connected)) {
+        if (!((_a = this.connection) === null || _a === void 0 ? void 0 : _a.isConnected())) {
             return Promise.reject(new HiveDriverError_1.default('HiveClient: connection is lost'));
         }
         var driver = new HiveDriver_1.default(this.TCLIService_types, this.getClient());

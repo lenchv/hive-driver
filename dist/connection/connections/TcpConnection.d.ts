@@ -6,5 +6,6 @@ export default class TcpConnection implements IConnectionProvider, IThriftConnec
     private connection;
     connect(options: IConnectionOptions, authProvider: IAuthentication): Promise<IThriftConnection>;
     getConnection(): any;
+    isConnected(): boolean;
     private createConnection;
 }

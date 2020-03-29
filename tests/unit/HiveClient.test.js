@@ -88,8 +88,8 @@ describe('HiveClient.openSession', () => {
             }
 		};
 		client.connection = {
-            getConnection() {
-				return { connected: true };
+            isConnected() {
+				return true;
 			}
         };
         return client.openSession({
@@ -102,8 +102,8 @@ describe('HiveClient.openSession', () => {
 	it('should throw an exception when connection is lost', (done) => {
 		const client = new HiveClient(TCLIService, TCLIService_types);
 		client.connection = {
-            getConnection() {
-				return { connected: false };
+            isConnected() {
+				return false;
 			}
 		};
 

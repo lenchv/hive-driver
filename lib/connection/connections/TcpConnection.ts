@@ -26,7 +26,15 @@ export default class TcpConnection implements IConnectionProvider, IThriftConnec
 
     getConnection() {
         return this.connection;
-    }
+	}
+
+	isConnected(): boolean {
+		if (!this.connection) {
+			return false;
+		} else {
+			return this.connection.connected;
+		}
+	}
 
     private createConnection(transport: ITransport, options: IConnectionOptions): any {
         const stream = transport.getTransport();
