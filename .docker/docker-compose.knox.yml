@@ -1,0 +1,35 @@
+version: "3"
+
+services:
+  hive-server:
+    image: lenchv/hive:2.3.6
+    ports:
+      - "10000:10000"
+      - "10001:10001"
+      - "10002:10002"
+    command: /opt/apache-hive-2.3.6-bin/bin/hiveserver2
+    hostname: volodymyr.local
+    volumes:
+      - ./confs/hive-site.xml.http.nosasl:/opt/apache-hive-2.3.6-bin/conf/hive-site.xml
+      - ./ssl/:/opt/ssl/
+  hive-metastore:
+    image: lenchv/hive:2.3.6
+    hostname: volodymyr.local
+    ports:
+      - "9083:9083"
+    volumes:
+      - ./confs/hive-site.xml.http.nosasl:/opt/apache-hive-2.3.6-bin/conf/hive-site.xml
+      - ./ssl/:/opt/ssl/
+    command: /opt/apache-hive-2.3.6-bin/bin/hive --service metastore
+  knox:
+    build:
+      dockerfile: Dockerfile
+      context: ./knox/
+    hostname: volodymyr.local
+    command: bash -c "/generateSsl.sh && /run-knox.sh"
+    ports:
+      - "8443:8443"
+    volumes:
+      - ./knox/confs/gateway-site.xml:/opt/knox-0.13.0/conf/gateway-site.xml
+      - ./knox/confs/topologies:/opt/knox-0.13.0/conf/topologies
+      - ./ssl/:/opt/ssl/
