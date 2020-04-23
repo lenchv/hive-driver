@@ -36,7 +36,7 @@ jobs:
         sudo echo "127.0.0.1 kerberos.server" | sudo tee -a /etc/hosts
         sudo apt-get install krb5-user
         cd .docker
-        make build
+        make build VERSION=2.3.6
         make generate_ssl
         sudo cp krb/krb5.conf /etc/krb5.conf
         cd ..
