@@ -1,7 +1,7 @@
 deploy-base:
-	cd hive && docker build -t lenchv/base-hive:2.3.6 -f Dockerfile.base . && docker push lenchv/base-hive:2.3.6
+	cd hive/$(VERSION) && docker build -t lenchv/base-hive:$(VERSION) -f Dockerfile.base . && docker push lenchv/base-hive:$(VERSION)
 build:
-	cd hive && docker build --build-arg USER_UID=$$(id -u) --build-arg USER_GID=$$(id -g) -t lenchv/hive:2.3.6 .
+	cd hive/$(VERSION) && docker build --build-arg USER_UID=$$(id -u) --build-arg USER_GID=$$(id -g) -t lenchv/hive:$(VERSION) .
 knox:
 	cd knox && docker build -t lenchv/knox:0.13.0 -f Dockerfile.knox .
 generate_ssl:
