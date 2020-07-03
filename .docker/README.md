@@ -19,7 +19,7 @@ You should use a *nix system with pre-installed:
 Firstly, you should build images and configure certs:
 
 ```bash
-make build
+make build VERSION=2.3.6
 
 make generate_ssl
 ```

@@ -86,13 +86,34 @@ describe('HiveClient.openSession', () => {
             OpenSession(req, cb) {
                 cb(null, { status: {}, sessionHandle: {} });
             }
+		};
+		client.connection = {
+            isConnected() {
+				return true;
+			}
         };
         return client.openSession({
             client_protocol: TCLIService_types.TProtocolVersion.HIVE_CLI_SERVICE_PROTOCOL_V10
         }).then((session) => {
             expect(session).instanceOf(HiveSession);
         });
-    });
+	});
+	
+	it('should throw an exception when connection is lost', (done) => {
+		const client = new HiveClient(TCLIService, TCLIService_types);
+		client.connection = {
+            isConnected() {
+				return false;
+			}
+		};
+
+		client.openSession({
+			client_protocol: TCLIService_types.TProtocolVersion.HIVE_CLI_SERVICE_PROTOCOL_V10
+		}).catch((error) => {
+			expect(error.message).to.be.eq('HiveClient: connection is lost');
+			done();
+		});
+	});
 });
 
 describe('HiveClient.getClient', () => {

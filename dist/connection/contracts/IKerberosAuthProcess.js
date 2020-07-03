@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.QOP = void 0;
 var QOP;
 (function (QOP) {
     QOP[QOP["AUTH"] = 1] = "AUTH";

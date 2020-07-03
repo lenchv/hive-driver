@@ -13,6 +13,7 @@ export default class JsonResult implements IOperationResult {
     private getSchemaValues;
     private getColumnName;
     private convertData;
+    private isNull;
     private toJSON;
     private convertBigInt;
     private getColumnValue;

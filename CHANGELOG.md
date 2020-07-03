@@ -1,4 +1,17 @@
 # Changelog
+[0.1.4](https://github.com/lenchv/hive-driver/releases/tag/v0.1.4) 2020-07-03
+
+- Fixed retrieving null values from the API
+
+[0.1.3](https://github.com/lenchv/hive-driver/releases/tag/v0.1.3) 2020-03-30
+
+- Added events to HiveClient: close, reconnecting, timeout
+
+- Added throwing exception when connection is closed but session is tried to be opened
+
+- Added method isConnected to the IThriftConnection interface
+
+- Described in the troubleshooting.md how to reconnect when the connection is lost
 
 [0.1.2](https://github.com/lenchv/hive-driver/releases/tag/v0.1.2) 2020-02-24
 

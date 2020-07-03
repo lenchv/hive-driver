@@ -33,6 +33,14 @@ var HttpConnection = /** @class */ (function () {
     HttpConnection.prototype.getConnection = function () {
         return this.connection;
     };
+    HttpConnection.prototype.isConnected = function () {
+        if (this.connection) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    };
     HttpConnection.prototype.getNodeOptions = function (options) {
         var ca = options.ca, cert = options.cert, key = options.key, https = options.https;
         var nodeOptions = {};

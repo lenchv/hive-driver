@@ -60,7 +60,7 @@ var HiveOperation = /** @class */ (function () {
         }).then(function (response) {
             var _a;
             _this.statusFactory.create(response.status);
-            _this.state = (_a = response.operationState, (_a !== null && _a !== void 0 ? _a : _this.state));
+            _this.state = (_a = response.operationState) !== null && _a !== void 0 ? _a : _this.state;
             if (typeof response.hasResultSet === 'boolean') {
                 _this.hasResultSet = response.hasResultSet;
             }
@@ -158,7 +158,7 @@ var HiveOperation = /** @class */ (function () {
         return status;
     };
     HiveOperation.prototype.checkIfOperationHasMoreRows = function (response) {
-        var _a, _b, _c;
+        var _a, _b;
         if (response.hasMoreRows) {
             return true;
         }
@@ -175,7 +175,7 @@ var HiveOperation = /** @class */ (function () {
             || column[Types_1.ColumnCode.i32Val]
             || column[Types_1.ColumnCode.i64Val]
             || column[Types_1.ColumnCode.stringVal];
-        return ((_c = (_b = columnValue) === null || _b === void 0 ? void 0 : _b.values) === null || _c === void 0 ? void 0 : _c.length) > 0;
+        return ((_b = columnValue === null || columnValue === void 0 ? void 0 : columnValue.values) === null || _b === void 0 ? void 0 : _b.length) > 0;
     };
     return HiveOperation;
 }());

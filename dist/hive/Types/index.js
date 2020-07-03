@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.ColumnCode = void 0;
 var ColumnCode;
 (function (ColumnCode) {
     ColumnCode["boolVal"] = "boolVal";

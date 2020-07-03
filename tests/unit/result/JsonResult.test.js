@@ -194,4 +194,102 @@ describe('JsonResult', () => {
             { id: "3" },
         ]);
     });
+
+    it('should detect nulls', () => {
+        const result = new JsonResult(TCLIService_types);
+        const buf = Buffer.from([0x55, 0xAA, 0xC3]);
+        
+        [
+            true, false, true, false, true, false, true, false, // 0x55
+            false, true, false, true, false, true, false, true, // 0xAA,
+            true, true, false, false, false, false, true, true, // 0xC3 
+        ].forEach((value, i) => {
+            expect(result.isNull(buf, i), i).to.be.eq(value);
+        });
+    });
+
+     it('should detect nulls for each type', () => {
+        const schema = {
+            columns: [
+                getColumnSchema('table.str', TCLIService_types.TTypeId.STRING_TYPE, 1),
+                getColumnSchema('table.int64', TCLIService_types.TTypeId.BIGINT_TYPE, 2),
+                getColumnSchema('table.bin', TCLIService_types.TTypeId.BINARY_TYPE, 3),
+                getColumnSchema('table.bool', TCLIService_types.TTypeId.BOOLEAN_TYPE, 4),
+                getColumnSchema('table.char', TCLIService_types.TTypeId.CHAR_TYPE, 5),
+                getColumnSchema('table.dbl', TCLIService_types.TTypeId.DOUBLE_TYPE, 6),
+                getColumnSchema('table.flt', TCLIService_types.TTypeId.FLOAT_TYPE, 7),
+                getColumnSchema('table.int', TCLIService_types.TTypeId.INT_TYPE, 8),
+                getColumnSchema('table.small_int', TCLIService_types.TTypeId.SMALLINT_TYPE, 9),
+                getColumnSchema('table.tiny_int', TCLIService_types.TTypeId.TINYINT_TYPE, 10),
+                getColumnSchema('table.varch', TCLIService_types.TTypeId.VARCHAR_TYPE, 11),
+                getColumnSchema('table.dec', TCLIService_types.TTypeId.DECIMAL_TYPE, 12),
+                getColumnSchema('table.ts', TCLIService_types.TTypeId.TIMESTAMP_TYPE, 13),
+                getColumnSchema('table.date', TCLIService_types.TTypeId.DATE_TYPE, 14),
+                getColumnSchema('table.day_interval', TCLIService_types.TTypeId.INTERVAL_DAY_TIME_TYPE, 15),
+                getColumnSchema('table.month_interval', TCLIService_types.TTypeId.INTERVAL_YEAR_MONTH_TYPE, 16),
+            ]
+        };
+        const data = [
+            {
+                columns: [{
+                    stringVal: { values: ['a'], nulls: Buffer.from([0x01]) }
+                }, {
+                    i64Val: { values: [new Int64(Buffer.from([0x00, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01]))], nulls: Buffer.from([0x01]) }
+                }, {
+                    binaryVal: { values: [Buffer.from([1])], nulls: Buffer.from([0x01]) }
+                }, {
+                    boolVal: { values: [true], nulls: Buffer.from([0x01]) }
+                }, {
+                    stringVal: { values: ['c'], nulls: Buffer.from([0x01]) } 
+                }, {
+                    doubleVal: { values: [1.2], nulls: Buffer.from([0x01]) } 
+                }, {
+                    doubleVal: { values: [2.2], nulls: Buffer.from([0x01]) } 
+                }, {
+                    i32Val: { values: [1], nulls: Buffer.from([0x01]) } 
+                }, {
+                    i16Val: { values: [3], nulls: Buffer.from([0x01]) } 
+                }, {
+                    byteVal: { values: [5], nulls: Buffer.from([0x01]) } 
+                }, {
+                    stringVal: { values: ['e'], nulls: Buffer.from([0x01]) } 
+                }, {
+                    stringVal: { values: ['2.1'], nulls: Buffer.from([0x01]) } 
+                }, {
+                    stringVal: { values: ['2020-01-17 00:17:13.0'], nulls: Buffer.from([0x01]) } 
+                }, {
+                    stringVal: { values: ['2020-01-17'], nulls: Buffer.from([0x01]) } 
+                }, {
+                    stringVal: { values: ['1 00:00:00.000000000'], nulls: Buffer.from([0x01]) } 
+                }, {
+                    stringVal: { values: ['0-1'], nulls: Buffer.from([0x01]) } 
+                }]
+            }
+        ];
+
+        const result = new JsonResult(TCLIService_types);
+        result.setOperation({
+            getSchema: () => schema,
+            getData: () => data,
+        });
+
+        expect(result.getValue()).to.be.deep.eq([{
+            "str": null,
+            "int64": null,
+            "bin": null,
+            "bool": null,
+            "char": null,
+            "dbl": null,
+            "flt": null,
+            "int": null,
+            "small_int": null,
+            "tiny_int": null,
+            "varch": null,
+            "dec": null,
+            "ts": null,
+            "date": null,
+            "day_interval": null,
+            "month_interval": null,
+        }]);
+    });
 });

@@ -59,7 +59,7 @@ const up = (type, logger = () => {}) => {
         .then(result => {
             logger(result);
 
-            return waitUntilHiveReady(30, logger);
+            return waitUntilHiveReady(60, logger);
         });
 };
 

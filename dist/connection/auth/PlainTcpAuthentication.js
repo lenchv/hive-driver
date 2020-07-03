@@ -7,13 +7,12 @@ var SaslPackageFactory_1 = require("./helpers/SaslPackageFactory");
 var AuthenticationError_1 = __importDefault(require("../../errors/AuthenticationError"));
 var PlainTcpAuthentication = /** @class */ (function () {
     function PlainTcpAuthentication(authOptions) {
-        var _a, _b, _c;
-        this.username = ((_a = authOptions) === null || _a === void 0 ? void 0 : _a.username) || 'anonymous';
-        if (((_b = authOptions) === null || _b === void 0 ? void 0 : _b.password) === undefined) {
+        this.username = (authOptions === null || authOptions === void 0 ? void 0 : authOptions.username) || 'anonymous';
+        if ((authOptions === null || authOptions === void 0 ? void 0 : authOptions.password) === undefined) {
             this.password = 'anonymous';
         }
         else {
-            this.password = (_c = authOptions) === null || _c === void 0 ? void 0 : _c.password;
+            this.password = authOptions === null || authOptions === void 0 ? void 0 : authOptions.password;
         }
     }
     PlainTcpAuthentication.prototype.authenticate = function (transport) {

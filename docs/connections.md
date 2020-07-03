@@ -32,14 +32,14 @@ const client = new hive.HiveClient(
 );
 
 client.connect(
-	{
-		host: 'localhost',
-		port: 10000,
-	},
-	new hive.connections.TcpConnection(),
-	new hive.auth.NoSaslAuthentication()
+    {
+        host: 'localhost',
+        port: 10000,
+    },
+    new hive.connections.TcpConnection(),
+    new hive.auth.NoSaslAuthentication()
 ).then(client => {
-	// ...
+    // ...
 });
 ```
 
@@ -58,17 +58,17 @@ const client = new hive.HiveClient(
 );
 
 client.connect(
-	{
-		host: 'localhost',
-		port: 10001,
-		options: {
-			path: '/hive'
-		}
-	},
-	new hive.connections.HttpConnection(),
-	new hive.auth.PlainHttpAuthentication()
+    {
+        host: 'localhost',
+        port: 10001,
+        options: {
+            path: '/hive'
+        }
+    },
+    new hive.connections.HttpConnection(),
+    new hive.auth.PlainHttpAuthentication()
 ).then(client => {
-	// ...
+    // ...
 });
 ```
 
@@ -96,14 +96,14 @@ const client = new hive.HiveClient(
 );
 
 client.connect(
-	{
-		host: 'localhost',
-		port: 10000,
-	},
-	new hive.connections.TcpConnection(),
-	new hive.auth.PlainTcpAuthentication()
+    {
+        host: 'localhost',
+        port: 10000,
+    },
+    new hive.connections.TcpConnection(),
+    new hive.auth.PlainTcpAuthentication()
 ).then(client => {
-	// ...
+    // ...
 });
 ```
 
@@ -122,17 +122,17 @@ const client = new hive.HiveClient(
 );
 
 client.connect(
-	{
-		host: 'localhost',
-		port: 10001,
-		options: {
-			path: '/hive'
-		}
-	},
-	new hive.connections.HttpConnection(),
-	new hive.auth.PlainHttpAuthentication()
+    {
+        host: 'localhost',
+        port: 10001,
+        options: {
+            path: '/hive'
+        }
+    },
+    new hive.connections.HttpConnection(),
+    new hive.auth.PlainHttpAuthentication()
 ).then(client => {
-	// ...
+    // ...
 });
 ```
 
@@ -159,17 +159,17 @@ const client = new hive.HiveClient(
 );
 
 client.connect(
-	{
-		host: 'localhost',
-		port: 10000,
-	},
-	new hive.connections.TcpConnection(),
-	new hive.auth.PlainTcpAuthentication({
-		username: 'admin',
-		password: '123456'
-	})
+    {
+        host: 'localhost',
+        port: 10000,
+    },
+    new hive.connections.TcpConnection(),
+    new hive.auth.PlainTcpAuthentication({
+        username: 'admin',
+        password: '123456'
+    })
 ).then(client => {
-	// ...
+    // ...
 });
 ```
 
@@ -188,20 +188,20 @@ const client = new hive.HiveClient(
 );
 
 client.connect(
-	{
-		host: 'localhost',
-		port: 10001,
-		options: {
-			path: '/hive'
-		}
-	},
-	new hive.connections.HttpConnection(),
-	new hive.auth.PlainHttpAuthentication({
-		username: 'admin',
-		password: '123456'
-	})
+    {
+        host: 'localhost',
+        port: 10001,
+        options: {
+            path: '/hive'
+        }
+    },
+    new hive.connections.HttpConnection(),
+    new hive.auth.PlainHttpAuthentication({
+        username: 'admin',
+        password: '123456'
+    })
 ).then(client => {
-	// ...
+    // ...
 });
 ```
 
@@ -226,8 +226,8 @@ kinit hive@KERBEROS.SERVER
     <value>kerberos</value>
 </property>
 <property>
-	<name>hive.server2.thrift.sasl.qop</name>
-	<value>auth</value>
+    <name>hive.server2.thrift.sasl.qop</name>
+    <value>auth</value>
 </property>
 ```
 
@@ -242,20 +242,20 @@ const client = new hive.HiveClient(
 );
 
 client.connect(
-	{
-		host: 'localhost',
-		port: 10000,
-	},
-	new hive.connections.TcpConnection(),
-	new hive.auth.KerberosTcpAuthentication({
-		username: 'hive@KERBEROS.SERVER',
-		password: 'hive'
-	}, new auth.helpers.MongoKerberosAuthProcess({
-		fqdn: 'hive.driver',
-		service: 'hive'
-	}, kerberos)
+    {
+        host: 'localhost',
+        port: 10000,
+    },
+    new hive.connections.TcpConnection(),
+    new hive.auth.KerberosTcpAuthentication({
+        username: 'hive@KERBEROS.SERVER',
+        password: 'hive'
+    }, new auth.helpers.MongoKerberosAuthProcess({
+        fqdn: 'hive.driver',
+        service: 'hive'
+    }, kerberos)
 ).then(client => {
-	// ...
+    // ...
 });
 ```
 
@@ -274,23 +274,23 @@ const client = new hive.HiveClient(
 );
 
 client.connect(
-	{
-		host: 'localhost',
-		port: 10001,
-		options: {
-			path: '/hive'
-		}
-	},
-	new hive.connections.HttpConnection(),
-	new auth.KerberosHttpAuthentication({
-		username: 'hive@KERBEROS.SERVER',
-		password: 'hive'
-	}, new auth.helpers.MongoKerberosAuthProcess({
-		fqdn: 'hive.driver',
-		service: 'hive'
-	}, kerberos))
+    {
+        host: 'localhost',
+        port: 10001,
+        options: {
+            path: '/hive'
+        }
+    },
+    new hive.connections.HttpConnection(),
+    new auth.KerberosHttpAuthentication({
+        username: 'hive@KERBEROS.SERVER',
+        password: 'hive'
+    }, new auth.helpers.MongoKerberosAuthProcess({
+        fqdn: 'hive.driver',
+        service: 'hive'
+    }, kerberos))
 ).then(client => {
-	// ...
+    // ...
 });
 ```
 
@@ -307,21 +307,21 @@ const client = new hive.HiveClient(
 );
 
 client.connect(
-	{
-		host: '<cluster-name>.azurehdinsight.net',
-		port: 443,
-		options: {
-			path: '/hive2',
-			https: true
-		}
-	},
-	new hive.connections.HttpConnection(),
-	new hive.auth.PlainHttpAuthentication({
-		username: 'cluster-user',
-		password: 'cluster-password'
-	})
+    {
+        host: '<cluster-name>.azurehdinsight.net',
+        port: 443,
+        options: {
+            path: '/hive2',
+            https: true
+        }
+    },
+    new hive.connections.HttpConnection(),
+    new hive.auth.PlainHttpAuthentication({
+        username: 'cluster-user',
+        password: 'cluster-password'
+    })
 ).then(client => {
-	// ...
+    // ...
 });
 ```
 
@@ -344,21 +344,21 @@ const client = new hive.HiveClient(
 );
 
 client.connect(
-	{
-		host: 'host.name',
-		port: 10000,
-		options: {
+    {
+        host: 'host.name',
+        port: 10000,
+        options: {
             ssl: true,
             cert: fs.readFileSync('/path/to/cert.crt'),
-			key: fs.readFileSync('/path/to/cert.key'),
-			// in case of self-signed cert
+            key: fs.readFileSync('/path/to/cert.key'),
+            // in case of self-signed cert
             ca: fs.readFileSync('/path/to/cert.ca')
-		}
-	},
-	new hive.connections.TcpConnection(),
-	new hive.auth.NoSaslAuthentication()
+        }
+    },
+    new hive.connections.TcpConnection(),
+    new hive.auth.NoSaslAuthentication()
 ).then(client => {
-	// ...
+    // ...
 });
 ```
 
@@ -377,22 +377,22 @@ const client = new hive.HiveClient(
 );
 
 client.connect(
-	{
-		host: 'host.name',
-		port: 10001,
-		options: {
-			path: '/hive',
+    {
+        host: 'host.name',
+        port: 10001,
+        options: {
+            path: '/hive',
             https: true,
             cert: fs.readFileSync('/path/to/cert.crt'),
-			key: fs.readFileSync('/path/to/cert.key'),
-			// in case of self-signed cert
+            key: fs.readFileSync('/path/to/cert.key'),
+            // in case of self-signed cert
             ca: fs.readFileSync('/path/to/cert.ca')
-		}
-	},
-	new hive.connections.HttpConnection(),
-	new hive.auth.PlainHttpAuthentication()
+        }
+    },
+    new hive.connections.HttpConnection(),
+    new hive.auth.PlainHttpAuthentication()
 ).then(client => {
-	// ...
+    // ...
 });
 ```
 
@@ -409,8 +409,8 @@ const jks = require('jks-js');
 const hive = require('hive-driver');
 
 const keystore = jks.toPem(
-	fs.readFileSync('/path/to/keystore.jks'),
-	'keystore-password'
+    fs.readFileSync('/path/to/keystore.jks'),
+    'keystore-password'
 );
 
 const client = new hive.HiveClient(
@@ -419,18 +419,18 @@ const client = new hive.HiveClient(
 );
 
 client.connect(
-	{
-		host: 'host.name',
-		port: 10000,
-		options: {
+    {
+        host: 'host.name',
+        port: 10000,
+        options: {
             ssl: true,
             cert: keystore['alias'].cert,
-			key: keystore['alias'].key
-		}
-	},
-	new hive.connections.TcpConnection(),
-	new hive.auth.NoSaslAuthentication()
+            key: keystore['alias'].key
+        }
+    },
+    new hive.connections.TcpConnection(),
+    new hive.auth.NoSaslAuthentication()
 ).then(client => {
-	// ...
+    // ...
 });
 ```

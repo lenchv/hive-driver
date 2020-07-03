@@ -2,6 +2,7 @@ const fs = require('fs');
 const hive = require('../../');
 const { TCLIService, TCLIService_types } = hive.thrift;
 const { HiveClient, auth, connections } = hive;
+const config = require('./config');
 const kerberos = require('kerberos');
 
 const client = new HiveClient(

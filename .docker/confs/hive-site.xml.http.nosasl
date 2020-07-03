@@ -51,5 +51,8 @@
         <name>datanucleus.schema.autoCreateTables</name>
         <value>true</value>
     </property>
-
+	<property>
+		<name>hive.server2.allow.user.substitution</name>
+		<value>true</value>
+	</property>
 </configuration>

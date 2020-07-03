@@ -72,8 +72,12 @@ export default class JsonResult implements IOperationResult {
             return [];
         }
 
-        return columnValue.values.map((value: any) => {
-            return this.convertData(typeDescriptor, value);
+        return columnValue.values.map((value: any, i: number) => {
+            if (columnValue.nulls && this.isNull(columnValue.nulls, i)) {
+                return null;
+            } else {
+                return this.convertData(typeDescriptor, value);
+            }
         });
     }
 
@@ -115,6 +119,13 @@ export default class JsonResult implements IOperationResult {
             default:
                 return value;
         }
+    }
+
+    private isNull(nulls: Buffer, i: number): boolean {
+        const byte = nulls[Math.floor(i / 8)];
+        const ofs = Math.pow(2, i % 8);
+
+        return (byte & ofs) !== 0;
     }
 
     private toJSON(value: any, defaultValue: any): any {
