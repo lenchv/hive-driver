@@ -1,4 +1,7 @@
 # Changelog
+[0.1.4](https://github.com/lenchv/hive-driver/releases/tag/v0.1.4) 2020-07-03
+
+- Fixed retrieving null values from the API
 
 [0.1.3](https://github.com/lenchv/hive-driver/releases/tag/v0.1.3) 2020-03-30
 
