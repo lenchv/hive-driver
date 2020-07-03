@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.SaslPackageFactory = exports.StatusCode = void 0;
 var StatusCode;
 (function (StatusCode) {
     StatusCode[StatusCode["START"] = 1] = "START";

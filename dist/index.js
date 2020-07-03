@@ -16,6 +16,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.HiveUtils = exports.HiveDriver = exports.HiveClient = exports.thrift = exports.connections = exports.auth = void 0;
 var TCLIService = require('../thrift/gen-nodejs/TCLIService');
 var TCLIService_types = require('../thrift/gen-nodejs/TCLIService_types');
 var HiveClient_1 = __importDefault(require("./HiveClient"));

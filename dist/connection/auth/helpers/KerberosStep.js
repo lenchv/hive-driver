@@ -3,6 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.KerberosStep = void 0;
 var KerberosError_1 = __importDefault(require("../../../errors/KerberosError"));
 var TransitionState;
 (function (TransitionState) {
