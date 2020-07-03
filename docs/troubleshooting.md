@@ -32,7 +32,7 @@ To define if the connection lost, you should subscribe on event "close":
 
 ```javascript
 client.on('close', () => {
-	// do reconnect
+    // do reconnect
 });
 ```
 
@@ -50,43 +50,43 @@ const client = new hive.HiveClient(
 );
 
 client.on('close', () => {
-	console.error('[Hive Connection Lost]');
+    console.error('[Hive Connection Lost]');
 
-	connect(RECONNECT_ATTEMPTS).catch(error => {
-		console.error('[Hive Connection Failed]', error);
-	});
+    connect(RECONNECT_ATTEMPTS).catch(error => {
+        console.error('[Hive Connection Failed]', error);
+    });
 });
 
 connect(RECONNECT_ATTEMPTS).then(async client => {
-	// work with client
+    // work with client
 }, (error) => {
-	console.error('[Hive Connection Failed]', error);
+    console.error('[Hive Connection Failed]', error);
 });
 
 function connect(attempts) => new Promise((resolve, reject) => {
-	setTimeout(() => {
-		client.connect(
-			{
-				host: 'localhost',
-				port: 10000,
-				options: {}
-			},
-			new hive.connections.TcpConnection(),
-    		new hive.auth.NoSaslAuthentication() 
-		).then((client) => {
-			console.log('Connected successfully to hive server!');
+    setTimeout(() => {
+        client.connect(
+            {
+                host: 'localhost',
+                port: 10000,
+                options: {}
+            },
+            new hive.connections.TcpConnection(),
+            new hive.auth.NoSaslAuthentication() 
+        ).then((client) => {
+            console.log('Connected successfully to hive server!');
 
-			resolve(client);
-		}, (error) => {
-			console.error('[Hive Connection Failed] attempt:' + attempts, error.message);
+            resolve(client);
+        }, (error) => {
+            console.error('[Hive Connection Failed] attempt:' + attempts, error.message);
 
-			if (!attempts) {
-				reject(error);
-			} else {
-				connect(attempts - 1).then(resolve, reject);
-			}
-		});
-	}, RECONNECT_TIMEOUT);
+            if (!attempts) {
+                reject(error);
+            } else {
+                connect(attempts - 1).then(resolve, reject);
+            }
+        });
+    }, RECONNECT_TIMEOUT);
 });
 ```
 
