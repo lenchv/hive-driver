@@ -57,8 +57,13 @@ var JsonResult = /** @class */ (function () {
         if (!columnValue) {
             return [];
         }
-        return columnValue.values.map(function (value) {
-            return _this.convertData(typeDescriptor, value);
+        return columnValue.values.map(function (value, i) {
+            if (columnValue.nulls && _this.isNull(columnValue.nulls, i)) {
+                return null;
+            }
+            else {
+                return _this.convertData(typeDescriptor, value);
+            }
         });
     };
     JsonResult.prototype.getColumnName = function (column) {
@@ -97,6 +102,11 @@ var JsonResult = /** @class */ (function () {
             default:
                 return value;
         }
+    };
+    JsonResult.prototype.isNull = function (nulls, i) {
+        var byte = nulls[Math.floor(i / 8)];
+        var ofs = Math.pow(2, i % 8);
+        return (byte & ofs) !== 0;
     };
     JsonResult.prototype.toJSON = function (value, defaultValue) {
         try {

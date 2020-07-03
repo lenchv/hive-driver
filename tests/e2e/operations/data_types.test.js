@@ -368,4 +368,88 @@ describe('Data types', () => {
             });
         }); 
     });
+
+    it('boolean types should be retrieved correctly', () => {
+        return openSession().then(session => {
+            return execute(session, `DROP TABLE IF EXISTS null_table`)
+            .then(() => execute(session, `
+                CREATE TABLE IF NOT EXISTS null_table (a INT, b BOOLEAN, c STRING)
+            `))
+            .then(() => {
+                return execute(session, `
+                    LOAD DATA LOCAL INPATH \'/opt/apache-hive-2.3.6-bin/examples/files/null.txt\' OVERWRITE INTO TABLE null_table
+                `);
+            }).then(() => {
+                return execute(session, 'select * from null_table');
+            }).then(result => {
+                expect(result).to.be.deep.eq([
+                    {
+                        "a": 1,
+                        "b": null,
+                        "c": "same"
+                    },
+                    {
+                        "a": 1,
+                        "b": null,
+                        "c": "same"
+                    },
+                    {
+                        "a": 1,
+                        "b": null,
+                        "c": "same"
+                    },
+                    {
+                        "a": 1,
+                        "b": null,
+                        "c": "same"
+                    },
+                    {
+                        "a": 1,
+                        "b": null,
+                        "c": "same"
+                    },
+                    {
+                        "a": null,
+                        "b": null,
+                        "c": "same"
+                    },
+                    {
+                        "a": null,
+                        "b": null,
+                        "c": "same"
+                    },
+                    {
+                        "a": 1,
+                        "b": null,
+                        "c": "same"
+                    },
+                    {
+                        "a": 1,
+                        "b": null,
+                        "c": "same"
+                    },
+                    {
+                        "a": 1,
+                        "b": null,
+                        "c": "same"
+                    }
+                ]);
+
+                return session.close();
+            }).catch(error => {
+                logger(error);
+                return session.close()
+                    .then(() => Promise.reject(error));
+            });
+        });
+    });
 });
+// !connect jdbc:hive2://localhost:10000/default;auth=noSasl
+
+// insert into booleanTypes (
+//     bool1, bool2, bool3, bool4
+// ) values (
+//     false, true, false, false
+// );
+
+// select * from booleanTypes;

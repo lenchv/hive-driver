@@ -13,10 +13,9 @@ var __assign = (this && this.__assign) || function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var PlainHttpAuthentication = /** @class */ (function () {
     function PlainHttpAuthentication(options) {
-        var _a, _b, _c, _d;
-        this.username = ((_a = options) === null || _a === void 0 ? void 0 : _a.username) || 'anonymous';
-        this.password = ((_b = options) === null || _b === void 0 ? void 0 : _b.password) !== undefined ? (_c = options) === null || _c === void 0 ? void 0 : _c.password : 'anonymous';
-        this.headers = ((_d = options) === null || _d === void 0 ? void 0 : _d.headers) || {};
+        this.username = (options === null || options === void 0 ? void 0 : options.username) || 'anonymous';
+        this.password = (options === null || options === void 0 ? void 0 : options.password) !== undefined ? options === null || options === void 0 ? void 0 : options.password : 'anonymous';
+        this.headers = (options === null || options === void 0 ? void 0 : options.headers) || {};
     }
     PlainHttpAuthentication.prototype.authenticate = function (transport) {
         transport.setOptions('headers', __assign(__assign({}, (this.headers)), { Authorization: this.getToken(this.username, this.password) }));

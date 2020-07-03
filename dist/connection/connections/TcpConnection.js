@@ -23,8 +23,8 @@ var TcpConnection = /** @class */ (function () {
     }
     TcpConnection.prototype.connect = function (options, authProvider) {
         var _this = this;
-        var _a, _b;
-        var transport = ((_a = options.options) === null || _a === void 0 ? void 0 : _a.ssl) ? new TlsTransport_1.default(options.host, options.port, __assign({}, (((_b = options) === null || _b === void 0 ? void 0 : _b.options) || {})))
+        var _a;
+        var transport = ((_a = options.options) === null || _a === void 0 ? void 0 : _a.ssl) ? new TlsTransport_1.default(options.host, options.port, __assign({}, ((options === null || options === void 0 ? void 0 : options.options) || {})))
             : new TcpTransport_1.default(options.host, options.port);
         return authProvider.authenticate(transport).then(function (transport) {
             _this.connection = _this.createConnection(transport, options);
@@ -43,9 +43,8 @@ var TcpConnection = /** @class */ (function () {
         }
     };
     TcpConnection.prototype.createConnection = function (transport, options) {
-        var _a;
         var stream = transport.getTransport();
-        var instance = new ThriftConnection(stream, __assign(__assign({ transport: thrift.TFramedTransport, protocol: thrift.TBinaryProtocol }, (((_a = options) === null || _a === void 0 ? void 0 : _a.options) || {})), transport.getOptions()));
+        var instance = new ThriftConnection(stream, __assign(__assign({ transport: thrift.TFramedTransport, protocol: thrift.TBinaryProtocol }, ((options === null || options === void 0 ? void 0 : options.options) || {})), transport.getOptions()));
         instance.host = options.host;
         instance.port = options.port;
         transport.emit('connect');
