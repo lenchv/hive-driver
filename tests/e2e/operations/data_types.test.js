@@ -445,7 +445,8 @@ describe('Data types', () => {
     });
 });
 // !connect jdbc:hive2://localhost:10000/default;auth=noSasl
-
+// !connect jdbc:hive2://zookeeper:2181/;serviceDiscoveryMode=zooKeeper;zooKeeperNamespace=hive_zookeeper_namespace
+// !connect jdbc:hive2://zookeeper:2181/default;serviceDiscoveryMode=zooKeeper;zooKeeperNamespace=hiveserver2
 // insert into booleanTypes (
 //     bool1, bool2, bool3, bool4
 // ) values (

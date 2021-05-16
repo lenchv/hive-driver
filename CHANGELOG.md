@@ -1,4 +1,11 @@
 # Changelog
+
+[0.1.5](https://github.com/lenchv/hive-driver/releases/tag/v0.1.5) 2021-05-16
+
+- Added method `flush()` to operation class, in order to avoid memory allocation errors when working with massive amount of data
+
+- Added an instruction how to connect via zookeeper using hive-driver
+
 [0.1.4](https://github.com/lenchv/hive-driver/releases/tag/v0.1.4) 2020-07-03
 
 - Fixed retrieving null values from the API

@@ -154,6 +154,14 @@ export default class HiveOperation implements IOperation {
     }
 
     /**
+     * Resets `this.data` buffer.
+     * Needs to be called when working with massive data.
+     */
+    flush(): void {
+        this.data = [];
+    }
+
+    /**
      * Retrieves schema
      * @throws {StatusError}
      */

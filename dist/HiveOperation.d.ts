@@ -45,6 +45,11 @@ export default class HiveOperation implements IOperation {
     getData(): Array<RowSet>;
     getQueryId(): Promise<string>;
     /**
+     * Resets `this.data` buffer.
+     * Needs to be called when working with massive data.
+     */
+    flush(): void;
+    /**
      * Retrieves schema
      * @throws {StatusError}
      */

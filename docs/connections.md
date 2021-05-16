@@ -4,6 +4,7 @@
 - [None](#none)
 - [LDAP](#ldap)
 - [Kerberos](#kerberos)
+- [Zookeeper](#zookeeper)
 - [Azure HDInsight](#azure-hdinsight)
 - [SSL](#ssl)
 - [Java Keystore (JKS)](#java-keystore-jks)
@@ -292,6 +293,86 @@ client.connect(
 ).then(client => {
     // ...
 });
+```
+
+## Zookeeper
+
+The driver is not able to connect to zookeeper directly. Zookeeper contains a list of hosts to hive clusters, so you can retrieve from zookeeper the list on your own and then connect to hive via hive-driver.
+
+To connect to zookeeper you can use npm library [zookeeper](https://www.npmjs.com/package/zookeeper). To retrieve list of hive clusters you have to know host of the zookeeper server and namespace.
+
+Host and namespace you can find in *hive-site.xml* in properties: *hive.zookeeper.quorum* (one host is enough) and *hive.zookeeper.namespace* (default: hiveserver2).
+
+After that you should be able to connect to zookeeper and retrieve hive clusters. Here is an example, but your cases maybe different, at least parsing server uri may differ:
+
+[*example*](/examples/connections/zookeeper.js)
+
+```javascript
+const ZooKeeper = require('zookeeper');
+
+function parseServerUri(param) {
+	return param.replace(/^serverUri=/, '').split(';').shift();
+}
+
+async function getServerUri({ zookeeperQuorum, namespace }) {
+	return new Promise((resolve, reject) => {
+        const client = new ZooKeeper({
+            connect: zookeeperQuorum,
+            timeout: 5000,
+            debug_level: ZooKeeper.ZOO_LOG_LEVEL_WARN,
+            host_order_deterministic: false,
+        });
+
+		client.on('connect', async () => {
+            // getting list of clusters from zookeeper namespace
+			const clusters = await client.get_children(namespace);
+			// take random cluster and parse it
+            const serverUri = parseServerUri(clusters[Math.ceil((clusters.length - 1) * Math.random())]);
+
+			resolve(serverUri);
+		});
+	
+		client.init();
+	});
+};
+
+const hiveHost = await getServerUri({ zookeeperQuorum: 'localhost:2181', namespace: '/hiveserver2' });
+```
+
+And when you get hive host you can connect with *hive-driver*:
+
+```javascript
+async function connectToHive(host, port) {
+	const client = new hive.HiveClient(TCLIService, TCLIService_types);
+	const utils = new hive.HiveUtils(TCLIService_types);
+
+	client.connect(
+		{ host, port },
+		new hive.connections.TcpConnection(),
+		new hive.auth.NoSaslAuthentication()
+	).then(async client => {
+		// ... execute statements
+		await client.close();
+	});
+}
+
+const [host, port] = hiveHost.split(':');
+await connectToHive(host, port);
+```
+
+You can find an example of the instance with zookeeper in [.docker](/.docker) folder.
+
+To run it execute following commands:
+
+```bash
+make up-zoo TYPE=tcp.nosasl.zoo
+```
+
+Via beeline you can connect as following:
+
+```bash
+docker-compose exec hive-server bin/beeline
+!connect jdbc:hive2://zookeeper:2181/default;serviceDiscoveryMode=zooKeeper;zooKeeperNamespace=hiveserver2
 ```
 
 ## Azure HDInsight
