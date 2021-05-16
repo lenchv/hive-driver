@@ -365,7 +365,7 @@ You can find an example of the instance with zookeeper in [.docker](/.docker) fo
 To run it execute following commands:
 
 ```bash
-make up-zoo TYPE=tcp.nosasl
+make up-zoo TYPE=tcp.nosasl.zoo
 ```
 
 Via beeline you can connect as following:

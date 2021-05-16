@@ -2,7 +2,7 @@ version: "3"
 
 services:
   hive-server:
-    image: lenchv/hive:2.3.8
+    image: lenchv/hive:2.3.6
     ports:
       - "10000:10000"
       - "10001:10001"
@@ -13,7 +13,7 @@ services:
       - ./confs/hive-site.xml:/opt/apache-hive-2.3.6-bin/conf/hive-site.xml
       - ./ssl/:/opt/ssl/
   hive-metastore:
-    image: lenchv/hive:2.3.8
+    image: lenchv/hive:2.3.6
     hostname: HOSTNAME_VALUE
     ports:
       - "9083:9083"
