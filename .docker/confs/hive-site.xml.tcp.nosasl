@@ -52,5 +52,19 @@
         <value>true</value>
     </property>
 
-</configuration>
+    <property>
+        <name>hive.zookeeper.quorum</name>
+        <value>zookeeper:2181</value>
+    </property>
+    
+    <property>
+        <name>hive.zookeeper.namespace</name>
+        <value>hiveserver2</value>
+    </property>
+    
+    <property>
+        <name>hive.server2.support.dynamic.service.discovery</name>
+        <value>true</value>
+    </property>
 
+</configuration>
