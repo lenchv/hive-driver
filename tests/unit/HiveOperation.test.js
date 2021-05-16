@@ -324,3 +324,17 @@ describe('HiveOperation.processFetchResponse', () => {
         expect(operation.data).includes('data');
     });
 });
+
+describe('HiveOperation.flush', () => {
+    it('should flush data', () => {
+        const operation = new HiveOperation(
+            driverMock,
+            operationHandle,
+            TCLIService_types
+        );
+        operation.data = [1, 2, 3];
+        operation.flush();
+
+        expect(operation.data).empty;
+    });
+});

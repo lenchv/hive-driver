@@ -23,6 +23,11 @@ up-krb:
 	&& docker-compose exec -T kerberos.server kadmin -p admin/admin -w admin -q "addprinc -pw hive hive@KERBEROS.SERVER" \
 	&& cp ./confs/hive-site.xml.$(TYPE) ./confs/hive-site.xml \
 	&& docker-compose up -d hive-server hive-metastore
+up-zoo:
+	rm -f ./confs/hive-site.xml \
+	&& cp ./confs/hive-site.xml.$(TYPE) ./confs/hive-site.xml \
+	&& sed "s/HOSTNAME_VALUE/`hostname -f`/g" docker-compose.zookeeper.dist > docker-compose.yml \
+	&& docker-compose up -d
 down:
 	docker-compose down -v
 log:
