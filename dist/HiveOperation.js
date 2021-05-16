@@ -117,6 +117,13 @@ var HiveOperation = /** @class */ (function () {
         });
     };
     /**
+     * Resets `this.data` buffer.
+     * Needs to be called when working with massive data.
+     */
+    HiveOperation.prototype.flush = function () {
+        this.data = [];
+    };
+    /**
      * Retrieves schema
      * @throws {StatusError}
      */
