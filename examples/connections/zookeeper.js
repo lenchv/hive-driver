@@ -1,5 +1,5 @@
 const ZooKeeper = require('zookeeper');
-const hive = require('hive-driver');
+const hive = require('../..');
 const { TCLIService, TCLIService_types } = hive.thrift;
 
 function createClient(zookeeperQuorum) {
