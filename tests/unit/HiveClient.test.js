@@ -75,7 +75,7 @@ describe('HiveClient.connect', () => {
             cb();
         });
 
-        client.connect({}).catch(cb);
+        client.connect({path: '', port: 0}).catch(cb);
     });
 });
 
