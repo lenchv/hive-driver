@@ -29,6 +29,10 @@ export default interface IOperation {
      */
     hasMoreRows(): boolean;
     /**
+     * Set the max fetch size
+     */
+    setMaxRows(maxRows: number): void;
+    /**
      * Return retrieved schema
      */
     getSchema(): TableSchema | null;
