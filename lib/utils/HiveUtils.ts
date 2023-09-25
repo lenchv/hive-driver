@@ -1,4 +1,4 @@
-import { TCLIServiceTypes, ProgressUpdateResponse } from "../hive/Types";
+import { TCLIServiceTypes, ProgressUpdateResponse, FetchOrientation } from "../hive/Types";
 import IOperation from "../contracts/IOperation";
 import WaitUntilReady from "./WaitUntilReady";
 import IOperationResult from "../result/IOperationResult";
@@ -30,8 +30,8 @@ export default class HiveUtils {
         return getResult.execute(resultHandler);
     }
 
-    fetchAll(operation: IOperation): Promise<IOperation> {
-        return operation.fetch()
+    fetchAll(operation: IOperation, orientation?: FetchOrientation): Promise<IOperation> {
+        return operation.fetch(orientation)
             .then(() => {
                 if (operation.hasMoreRows()) {
                     return this.fetchAll(operation);

@@ -1,4 +1,5 @@
 const { expect } = require('chai');
+const { FetchOrientation } = require('../../dist/hive/Types');
 const HiveOperation = require('../../dist/HiveOperation').default;
 const { TCLIService_types } = require('../../').thrift;
 
@@ -49,7 +50,7 @@ describe('HiveOperation.fetch', () => {
         });
     });
 
-    it('should initilize schema and make first result request', (cb) => {
+    it('should initialize schema and make first result request', (cb) => {
         const mockHiveOperation = getMock(HiveOperation, {
             initializeSchema() { return Promise.resolve('schema'); },
 
@@ -68,6 +69,33 @@ describe('HiveOperation.fetch', () => {
         operation.fetch().then((status) => {
             expect(operation.schema).to.be.eq('schema');
             expect(operation.data).includes('data');
+            cb();
+        }).catch((error) => {
+            cb(error);
+        });
+    });
+
+    
+    it('should call next fetch instead of first if the orientation parameter passed', (cb) => {
+        const mockHiveOperation = getMock(HiveOperation, {
+            initializeSchema() { return Promise.resolve('schema'); },
+
+            firstFetch() { return Promise.resolve('first'); },
+            nextFetch() { return Promise.resolve('next'); },
+
+            processFetchResponse(data) { this.data.push(data); }
+        });
+        const operation = new mockHiveOperation(
+            driverMock,
+            operationHandle,
+            TCLIService_types
+        );
+        operation.hasResultSet = true;
+        operation.state = TCLIService_types.TOperationState.FINISHED_STATE;
+
+        operation.fetch(FetchOrientation.FETCH_NEXT).then((status) => {
+            expect(operation.schema).to.be.eq('schema');
+            expect(operation.data).includes('next');
             cb();
         }).catch((error) => {
             cb(error);
