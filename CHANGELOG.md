@@ -1,6 +1,6 @@
 # Changelog
 
-[0.2.0](https://github.com/lenchv/hive-driver/releases/tag/v0.3.0) 2023-09-25
+[0.3.0](https://github.com/lenchv/hive-driver/releases/tag/v0.3.0) 2023-09-25
 
 - Upgraded kerberos library
 
