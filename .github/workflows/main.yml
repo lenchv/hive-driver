@@ -27,7 +27,7 @@ jobs:
           ${{ runner.os }}-
     - name: Run unit tests
       run: |
-        sudo apt-get install krb5-user
+        sudo apt-get -y install gcc libgssapi-krb5-2 libkrb5-dev libsasl2-modules-gssapi-mit
         npm install
         npm run build
         npm run test
