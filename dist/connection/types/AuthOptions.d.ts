@@ -1,4 +1,4 @@
-export declare type AuthOptions = {
+export type AuthOptions = {
     username?: string;
     password?: string;
 };

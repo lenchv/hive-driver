@@ -1,9 +1,9 @@
 import { TableSchema, Status, OperationHandle } from "../Types";
 import BaseCommand from "./BaseCommand";
-export declare type GetResultSetMetadataRequest = {
+export type GetResultSetMetadataRequest = {
     operationHandle: OperationHandle;
 };
-export declare type GetResultSetMetadataResponse = {
+export type GetResultSetMetadataResponse = {
     status: Status;
     schema: TableSchema;
 };

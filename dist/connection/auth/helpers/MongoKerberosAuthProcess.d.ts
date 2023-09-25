@@ -7,7 +7,7 @@ interface IMongoDbKerberos {
     GSS_C_NO_OID: number;
     initializeClient(service: string, options: object, cb: Function): void;
 }
-declare type KerberosOptions = {
+type KerberosOptions = {
     fqdn: string;
     service: string;
 };

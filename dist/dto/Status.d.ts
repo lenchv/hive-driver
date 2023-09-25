@@ -1,4 +1,4 @@
-declare type StatusData = {
+type StatusData = {
     success: boolean;
     executing: boolean;
     infoMessages: Array<string>;

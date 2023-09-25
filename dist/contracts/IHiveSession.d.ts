@@ -2,7 +2,7 @@
 import IOperation from "./IOperation";
 import Status from "../dto/Status";
 import InfoValue from "../dto/InfoValue";
-export declare type CrossReferenceRequest = {
+export type CrossReferenceRequest = {
     parentCatalogName: string;
     parentSchemaName: string;
     parentTableName: string;
@@ -10,33 +10,33 @@ export declare type CrossReferenceRequest = {
     foreignSchemaName: string;
     foreignTableName: string;
 };
-export declare type ExecuteStatementOptions = {
+export type ExecuteStatementOptions = {
     runAsync?: boolean;
     confOverlay?: Map<string, string>;
     queryTimeout?: Buffer;
 };
-export declare type SchemasRequest = {
+export type SchemasRequest = {
     schemaName?: string;
     catalogName?: string;
 };
-export declare type TablesRequest = {
+export type TablesRequest = {
     catalogName?: string;
     schemaName?: string;
     tableName?: string;
     tableTypes?: Array<string>;
 };
-export declare type ColumnRequest = {
+export type ColumnRequest = {
     catalogName?: string;
     schemaName?: string;
     tableName?: string;
     columnName?: string;
 };
-export declare type FunctionNameRequest = {
+export type FunctionNameRequest = {
     functionName: string;
     catalogName?: string;
     schemaName?: string;
 };
-export declare type PrimaryKeysRequest = {
+export type PrimaryKeysRequest = {
     schemaName: string;
     tableName: string;
     catalogName?: string;

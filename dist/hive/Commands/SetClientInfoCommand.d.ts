@@ -1,10 +1,10 @@
 import BaseCommand from "./BaseCommand";
 import { SessionHandle, Status } from "../Types";
-export declare type SetClientInfoRequest = {
+export type SetClientInfoRequest = {
     sessionHandle: SessionHandle;
     configuration?: Map<string, string>;
 };
-export declare type SetClientInfoResponse = {
+export type SetClientInfoResponse = {
     status: Status;
 };
 export default class SetClientInfoCommand extends BaseCommand {

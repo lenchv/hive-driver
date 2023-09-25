@@ -1,5 +1,5 @@
 /// <reference types="node" />
-export declare type ThriftConnection = any;
+export type ThriftConnection = any;
 export default interface ITransport {
     getTransport(): any;
     setOptions(option: string, value: any): void;

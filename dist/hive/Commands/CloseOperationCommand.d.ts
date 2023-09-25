@@ -1,9 +1,9 @@
 import BaseCommand from "./BaseCommand";
 import { Status, OperationHandle } from "../Types";
-export declare type CloseOperationRequest = {
+export type CloseOperationRequest = {
     operationHandle: OperationHandle;
 };
-export declare type CloseOperationResponse = {
+export type CloseOperationResponse = {
     status: Status;
 };
 export default class CloseOperationCommand extends BaseCommand {

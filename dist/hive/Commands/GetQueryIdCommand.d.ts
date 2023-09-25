@@ -1,9 +1,9 @@
 import BaseCommand from "./BaseCommand";
 import { OperationHandle } from "../Types";
-export declare type GetQueryIdRequest = {
+export type GetQueryIdRequest = {
     operationHandle: OperationHandle;
 };
-export declare type GetQueryIdResponse = {
+export type GetQueryIdResponse = {
     queryId: string;
 };
 export default class GetQueryIdCommand extends BaseCommand {

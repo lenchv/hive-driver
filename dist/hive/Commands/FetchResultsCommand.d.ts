@@ -4,13 +4,13 @@ import { OperationHandle, Status, RowSet } from "../Types";
  * @param orientation - TCLIService_types.TFetchOrientation
  * @param fetchType - 0 represents Query output. 1 represents Log
  */
-export declare type FetchResultsRequest = {
+export type FetchResultsRequest = {
     operationHandle: OperationHandle;
     orientation: number;
     maxRows: number;
     fetchType?: number;
 };
-export declare type FetchResultsResponse = {
+export type FetchResultsResponse = {
     status: Status;
     hasMoreRows?: boolean;
     results?: RowSet;
