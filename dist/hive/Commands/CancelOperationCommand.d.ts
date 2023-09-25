@@ -1,9 +1,9 @@
 import BaseCommand from "./BaseCommand";
 import { Status, OperationHandle } from "../Types";
-export declare type CancelOperationRequest = {
+export type CancelOperationRequest = {
     operationHandle: OperationHandle;
 };
-export declare type CancelOperationResponse = {
+export type CancelOperationResponse = {
     status: Status;
 };
 export default class CancelOperationCommand extends BaseCommand {

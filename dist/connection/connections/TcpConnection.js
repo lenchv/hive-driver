@@ -24,7 +24,8 @@ var TcpConnection = /** @class */ (function () {
     TcpConnection.prototype.connect = function (options, authProvider) {
         var _this = this;
         var _a;
-        var transport = ((_a = options.options) === null || _a === void 0 ? void 0 : _a.ssl) ? new TlsTransport_1.default(options.host, options.port, __assign({}, ((options === null || options === void 0 ? void 0 : options.options) || {})))
+        var transport = ((_a = options.options) === null || _a === void 0 ? void 0 : _a.ssl)
+            ? new TlsTransport_1.default(options.host, options.port, __assign({}, ((options === null || options === void 0 ? void 0 : options.options) || {})))
             : new TcpTransport_1.default(options.host, options.port);
         return authProvider.authenticate(transport).then(function (transport) {
             _this.connection = _this.createConnection(transport, options);

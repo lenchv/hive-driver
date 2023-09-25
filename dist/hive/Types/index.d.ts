@@ -1,5 +1,5 @@
 /// <reference types="node" />
-export declare type ThriftClient = {
+export type ThriftClient = {
     OpenSession: Function;
     CloseSession: Function;
     GetResultSetMetadata: Function;
@@ -24,7 +24,7 @@ export declare type ThriftClient = {
     GetQueryId: Function;
     SetClientInfo: Function;
 };
-export declare type TCLIServiceTypes = {
+export type TCLIServiceTypes = {
     TOpenSessionReq: any;
     TCloseSessionReq: any;
     TProtocolVersion: any;
@@ -54,58 +54,58 @@ export declare type TCLIServiceTypes = {
     TStatusCode: any;
     TOperationState: any;
 };
-export declare type ThriftSession = {
+export type ThriftSession = {
     sessionHandle: any;
 };
-export declare type Status = {
+export type Status = {
     statusCode: number;
     infoMessages?: Array<string>;
     sqlState?: string;
     errorCode?: number;
     errorMessage?: string;
 };
-export declare type ThriftBuffer = Buffer;
-declare type HandleIdentifier = {
+export type ThriftBuffer = Buffer;
+type HandleIdentifier = {
     guid: ThriftBuffer;
     secret: ThriftBuffer;
 };
-export declare type SessionHandle = {
+export type SessionHandle = {
     sessionId: HandleIdentifier;
 };
-export declare type OperationHandle = {
+export type OperationHandle = {
     operationId: HandleIdentifier;
     operationType: number;
     hasResultSet: boolean;
     modifiedRowCount?: number;
 };
-declare type TypeQualifiers = {
+type TypeQualifiers = {
     qualifiers: Map<string, {
         i32Value?: number;
         stringValue?: string;
     }>;
 };
-export declare type PrimitiveTypeEntry = {
+export type PrimitiveTypeEntry = {
     type: number;
     typeQualifiers?: TypeQualifiers;
 };
-declare type TypeEntryPtr = number;
-export declare type ArrayTypeEntry = {
+type TypeEntryPtr = number;
+export type ArrayTypeEntry = {
     objectTypePtr: TypeEntryPtr;
 };
-export declare type MapTypeEntry = {
+export type MapTypeEntry = {
     keyTypePtr: TypeEntryPtr;
     valueTypePtr: TypeEntryPtr;
 };
-export declare type StructTypeEntry = {
+export type StructTypeEntry = {
     nameToTypePtr: Map<string, TypeEntryPtr>;
 };
-export declare type UnionTypeEntry = {
+export type UnionTypeEntry = {
     nameToTypePtr: Map<string, TypeEntryPtr>;
 };
-export declare type UserDefinedTypeEntry = {
+export type UserDefinedTypeEntry = {
     typeClassName: string;
 };
-export declare type TypeEntry = {
+export type TypeEntry = {
     primitiveEntry: PrimitiveTypeEntry;
     arrayEntry: ArrayTypeEntry;
     mapEntry: MapTypeEntry;
@@ -113,72 +113,72 @@ export declare type TypeEntry = {
     unionEntry: UnionTypeEntry;
     userDefinedTypeEntry: UserDefinedTypeEntry;
 };
-export declare type TypeDesc = {
+export type TypeDesc = {
     types: Array<TypeEntry>;
 };
-export declare type ColumnDesc = {
+export type ColumnDesc = {
     columnName: string;
     typeDesc: TypeDesc;
     position: number;
     comment?: string;
 };
-export declare type TableSchema = {
+export type TableSchema = {
     columns: Array<ColumnDesc>;
 };
-declare type ColumnValue = BoolValue | ByteValue | TI16Value | TI32Value | TI64Value | TDoubleValue | TStringValue;
-declare type BoolValue = {
+type ColumnValue = BoolValue | ByteValue | TI16Value | TI32Value | TI64Value | TDoubleValue | TStringValue;
+type BoolValue = {
     value: boolean;
 };
-declare type ByteValue = {
+type ByteValue = {
     value: ThriftBuffer;
 };
-declare type TI16Value = {
+type TI16Value = {
     value: number;
 };
-declare type TI32Value = {
+type TI32Value = {
     value: number;
 };
-declare type TI64Value = {
+type TI64Value = {
     value: ThriftBuffer;
 };
-declare type TDoubleValue = {
+type TDoubleValue = {
     value: number;
 };
-declare type TStringValue = {
+type TStringValue = {
     value: string;
 };
-declare type Row = {
+type Row = {
     colVals: Array<ColumnValue>;
 };
-export declare type TBoolColumn = {
+export type TBoolColumn = {
     values: Array<boolean>;
     nulls: ThriftBuffer;
 };
-export declare type TByteColumn = {
+export type TByteColumn = {
     values: Array<ThriftBuffer>;
     nulls: ThriftBuffer;
 };
-export declare type TI16Column = {
+export type TI16Column = {
     values: Array<number>;
     nulls: ThriftBuffer;
 };
-export declare type TI32Column = {
+export type TI32Column = {
     values: Array<number>;
     nulls: ThriftBuffer;
 };
-export declare type TI64Column = {
+export type TI64Column = {
     values: Array<ThriftBuffer>;
     nulls: ThriftBuffer;
 };
-export declare type TDoubleColumn = {
+export type TDoubleColumn = {
     values: Array<number>;
     nulls: ThriftBuffer;
 };
-export declare type TStringColumn = {
+export type TStringColumn = {
     values: Array<string>;
     nulls: ThriftBuffer;
 };
-export declare type TBinaryColumn = {
+export type TBinaryColumn = {
     values: Array<ThriftBuffer>;
     nulls: ThriftBuffer;
 };
@@ -192,8 +192,8 @@ export declare enum ColumnCode {
     stringVal = "stringVal",
     binaryVal = "binaryVal"
 }
-export declare type ColumnType = TBoolColumn | TByteColumn | TI16Column | TI32Column | TI64Column | TDoubleColumn | TStringColumn | TBinaryColumn;
-export declare type Column = {
+export type ColumnType = TBoolColumn | TByteColumn | TI16Column | TI32Column | TI64Column | TDoubleColumn | TStringColumn | TBinaryColumn;
+export type Column = {
     [ColumnCode.boolVal]: TBoolColumn;
     [ColumnCode.byteVal]: TByteColumn;
     [ColumnCode.i16Val]: TI16Column;
@@ -203,14 +203,14 @@ export declare type Column = {
     [ColumnCode.stringVal]: TStringColumn;
     [ColumnCode.binaryVal]: TBinaryColumn;
 };
-export declare type RowSet = {
+export type RowSet = {
     startRowOffset: ThriftBuffer;
     rows: Array<Row>;
     columns?: Array<Column>;
     binaryColumns?: ThriftBuffer;
     columnCount?: number;
 };
-export declare type GetInfoValue = {
+export type GetInfoValue = {
     stringValue: string;
     smallIntValue: number;
     integerBitmask: number;
@@ -218,7 +218,7 @@ export declare type GetInfoValue = {
     binaryValue: number;
     lenValue: ThriftBuffer;
 };
-export declare type ProgressUpdateResponse = {
+export type ProgressUpdateResponse = {
     headerNames: Array<string>;
     rows: Array<Array<string>>;
     progressedPercentage: number;

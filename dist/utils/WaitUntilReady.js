@@ -14,7 +14,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     function verb(n) { return function (v) { return step([n, v]); }; }
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
-        while (_) try {
+        while (g && (g = 0, op[0] && (_ = 0)), _) try {
             if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
             if (y = 0, t) op = [op[0] & 2, t.value];
             switch (op[0]) {
@@ -97,7 +97,7 @@ var WaitUntilReady = /** @class */ (function () {
             case this.TCLIService_types.TOperationState.ERROR_STATE:
                 throw new OperationStateError_1.default('The operation failed due to an error', response);
             case this.TCLIService_types.TOperationState.PENDING_STATE:
-                throw new OperationStateError_1.default('The operation is in a pending state', response);
+                return false;
             case this.TCLIService_types.TOperationState.TIMEDOUT_STATE:
                 throw new OperationStateError_1.default('The operation is in a timedout state', response);
             case this.TCLIService_types.TOperationState.UKNOWN_STATE:

@@ -1,11 +1,11 @@
 import BaseCommand from "./BaseCommand";
 import { Status, SessionHandle, OperationHandle } from "../Types";
-export declare type GetSchemasRequest = {
+export type GetSchemasRequest = {
     sessionHandle: SessionHandle;
     catalogName?: string;
     schemaName?: string;
 };
-export declare type GetSchemasResponse = {
+export type GetSchemasResponse = {
     status: Status;
     operationHandle: OperationHandle;
 };

@@ -1,9 +1,9 @@
 import { SessionHandle, Status } from "../Types";
 import BaseCommand from "./BaseCommand";
-export declare type CloseSessionRequest = {
+export type CloseSessionRequest = {
     sessionHandle: SessionHandle;
 };
-export declare type CloseSessionResponse = {
+export type CloseSessionResponse = {
     status: Status;
 };
 export default class CloseSessionCommand extends BaseCommand {

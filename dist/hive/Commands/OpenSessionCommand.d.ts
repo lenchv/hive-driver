@@ -3,7 +3,7 @@ import BaseCommand from "./BaseCommand";
 /**
  * For auth mechanism GSSAPI the host and service should be provided when session is opened.
  */
-declare type SessionConfiguration = {
+type SessionConfiguration = {
     krb_host?: string;
     krb_service?: string;
     [key: string]: any;
@@ -15,13 +15,13 @@ declare type SessionConfiguration = {
  * @param password
  * @param configuration    in case of GSSAPI you should define configuration
  */
-export declare type OpenSessionRequest = {
+export type OpenSessionRequest = {
     client_protocol: number;
     username?: string;
     password?: string;
     configuration?: SessionConfiguration;
 };
-export declare type OpenSessionResponse = {
+export type OpenSessionResponse = {
     status: Status;
     serverProtocolVersion: number;
     sessionHandle: SessionHandle;

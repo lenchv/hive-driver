@@ -54,8 +54,8 @@ var MongoKerberosAuthProcess = /** @class */ (function () {
     };
     MongoKerberosAuthProcess.prototype.getSpn = function () {
         return this.platform === 'win32'
-            ? this.options.service + "/" + this.options.fqdn
-            : this.options.service + "@" + this.options.fqdn;
+            ? "".concat(this.options.service, "/").concat(this.options.fqdn)
+            : "".concat(this.options.service, "@").concat(this.options.fqdn);
     };
     return MongoKerberosAuthProcess;
 }());

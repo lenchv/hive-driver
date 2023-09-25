@@ -22,7 +22,7 @@ var PlainHttpAuthentication = /** @class */ (function () {
         return Promise.resolve(transport);
     };
     PlainHttpAuthentication.prototype.getToken = function (username, password) {
-        return 'Basic ' + Buffer.from(username + ":" + password).toString('base64');
+        return 'Basic ' + Buffer.from("".concat(username, ":").concat(password)).toString('base64');
     };
     return PlainHttpAuthentication;
 }());

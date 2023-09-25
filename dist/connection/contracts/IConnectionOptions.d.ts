@@ -1,5 +1,5 @@
 /// <reference types="node" />
-export declare type Options = {
+export type Options = {
     username?: string;
     password?: string;
     ssl?: boolean;

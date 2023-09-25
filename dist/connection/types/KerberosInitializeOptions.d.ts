@@ -1,4 +1,4 @@
-export declare type KerberosInitializeOptions = {
+export type KerberosInitializeOptions = {
     username: string;
     password: string;
     http?: boolean;

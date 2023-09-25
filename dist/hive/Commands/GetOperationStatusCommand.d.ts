@@ -1,11 +1,11 @@
 /// <reference types="node" />
 import BaseCommand from "./BaseCommand";
 import { Status, OperationHandle, ProgressUpdateResponse } from "../Types";
-export declare type GetOperationStatusRequest = {
+export type GetOperationStatusRequest = {
     operationHandle: OperationHandle;
     getProgressUpdate?: boolean;
 };
-export declare type GetOperationStatusResponse = {
+export type GetOperationStatusResponse = {
     status: Status;
     operationState?: number;
     sqlState?: string;

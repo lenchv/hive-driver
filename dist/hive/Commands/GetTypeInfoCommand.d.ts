@@ -1,9 +1,9 @@
 import BaseCommand from "./BaseCommand";
 import { Status, SessionHandle, OperationHandle } from "../Types";
-export declare type GetTypeInfoRequest = {
+export type GetTypeInfoRequest = {
     sessionHandle: SessionHandle;
 };
-export declare type GetTypeInfoResponse = {
+export type GetTypeInfoResponse = {
     status: Status;
     operationHandle: OperationHandle;
 };

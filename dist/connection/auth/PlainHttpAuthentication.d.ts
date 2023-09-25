@@ -1,7 +1,7 @@
 import IAuthentication from "../contracts/IAuthentication";
 import ITransport from "../contracts/ITransport";
 import { AuthOptions } from '../types/AuthOptions';
-declare type HttpAuthOptions = AuthOptions & {
+type HttpAuthOptions = AuthOptions & {
     headers?: object;
 };
 export default class PlainHttpAuthentication implements IAuthentication {

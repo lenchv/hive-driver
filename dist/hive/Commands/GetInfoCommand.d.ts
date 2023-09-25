@@ -3,11 +3,11 @@ import { Status, GetInfoValue, SessionHandle } from "../Types";
 /**
  * @param infoType TCLISErvice_types.TGetInfoType
  */
-export declare type GetInfoRequest = {
+export type GetInfoRequest = {
     sessionHandle: SessionHandle;
     infoType: number;
 };
-export declare type GetInfoResponse = {
+export type GetInfoResponse = {
     status: Status;
     infoValue: GetInfoValue;
 };

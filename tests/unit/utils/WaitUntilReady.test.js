@@ -28,6 +28,7 @@ describe('WaitUntilReady', () => {
         const waitUntilReady = new WaitUntilReady(op, TCLIService_types);
         let states = [
             TCLIService_types.TOperationState.INITIALIZED_STATE,
+            TCLIService_types.TOperationState.PENDING_STATE,
             TCLIService_types.TOperationState.RUNNING_STATE,
             TCLIService_types.TOperationState.FINISHED_STATE,
         ];
@@ -58,10 +59,6 @@ describe('WaitUntilReady', () => {
             }),
             execute(TCLIService_types.TOperationState.ERROR_STATE).catch(error => {
                 expect(error.message).to.be.eq('The operation failed due to an error');
-                expect(error.response.type).to.be.eq('GetOperationStatusResponse');
-            }),
-            execute(TCLIService_types.TOperationState.PENDING_STATE).catch(error => {
-                expect(error.message).to.be.eq('The operation is in a pending state');
                 expect(error.response.type).to.be.eq('GetOperationStatusResponse');
             }),
             execute(TCLIService_types.TOperationState.TIMEDOUT_STATE).catch(error => {

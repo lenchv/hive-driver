@@ -2,7 +2,7 @@ import IAuthentication from "../contracts/IAuthentication";
 import ITransport from "../contracts/ITransport";
 import { AuthOptions } from '../types/AuthOptions';
 import { IKerberosAuthProcess } from "../contracts/IKerberosAuthProcess";
-declare type HttpAuthOptions = AuthOptions & {
+type HttpAuthOptions = AuthOptions & {
     headers?: object;
 };
 export default class KerberosHttpAuthentication implements IAuthentication {

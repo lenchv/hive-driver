@@ -1,10 +1,10 @@
 import BaseCommand from "./BaseCommand";
 import { Status, SessionHandle } from "../Types";
-export declare type RenewDelegationTokenRequest = {
+export type RenewDelegationTokenRequest = {
     sessionHandle: SessionHandle;
     delegationToken: string;
 };
-export declare type RenewDelegationTokenResponse = {
+export type RenewDelegationTokenResponse = {
     status: Status;
 };
 export default class RenewDelegationTokenCommand extends BaseCommand {

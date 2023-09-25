@@ -1,6 +1,6 @@
 import BaseCommand from "./BaseCommand";
 import { Status, SessionHandle, OperationHandle } from "../Types";
-export declare type GetCrossReferenceRequest = {
+export type GetCrossReferenceRequest = {
     sessionHandle: SessionHandle;
     parentCatalogName?: string;
     parentSchemaName: string;
@@ -9,7 +9,7 @@ export declare type GetCrossReferenceRequest = {
     foreignSchemaName: string;
     foreignTableName: string;
 };
-export declare type GetCrossReferenceResponse = {
+export type GetCrossReferenceResponse = {
     status: Status;
     operationHandle: OperationHandle;
 };
