@@ -292,4 +292,57 @@ describe('JsonResult', () => {
             "month_interval": null,
         }]);
     });
+
+    it('should check column that starts from 0', () => {
+        const schema = {
+            columns: [
+                getColumnSchema('table.str_0', TCLIService_types.TTypeId.STRING_TYPE, 0),
+                getColumnSchema('table.str', TCLIService_types.TTypeId.STRING_TYPE, 1),
+            ]
+        };
+        const data = [
+            {
+                columns: [{
+                    stringVal: { values: ['a0', 'b0'] }
+                }, {
+                    stringVal: { values: ['a', 'b'] }
+                }]
+            }
+        ];
+
+        const result = new JsonResult(TCLIService_types);
+        result.setOperation({
+            getSchema: () => schema,
+            getData: () => data,
+        });
+
+        expect(result.getValue()).to.be.deep.eq([{
+            "str":"a",
+            "str_0":"a0",
+        }, {
+            "str":"b",
+            "str_0":"b0",
+        }]);
+    });
+
+    it('should not fail if there is no column by descriptor', () => {
+        const schema = {
+            columns: [
+                getColumnSchema('table.str', TCLIService_types.TTypeId.STRING_TYPE, 0),
+            ]
+        };
+        const data = [
+            {
+                columns: []
+            }
+        ];
+
+        const result = new JsonResult(TCLIService_types);
+        result.setOperation({
+            getSchema: () => schema,
+            getData: () => data,
+        });
+
+        expect(result.getValue()).to.be.deep.eq([]);
+    });
 });
