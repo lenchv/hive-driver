@@ -27,6 +27,7 @@ jobs:
           ${{ runner.os }}-
     - name: Run unit tests
       run: |
+        sudo apt-get install krb5-user
         npm install
         npm run build
         npm run test
