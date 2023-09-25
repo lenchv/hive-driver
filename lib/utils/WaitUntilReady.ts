@@ -53,7 +53,7 @@ export default class WaitUntilReady {
             case this.TCLIService_types.TOperationState.ERROR_STATE:
                 throw new OperationStateError('The operation failed due to an error', response);
             case this.TCLIService_types.TOperationState.PENDING_STATE:
-                throw new OperationStateError('The operation is in a pending state', response);
+                return false;
             case this.TCLIService_types.TOperationState.TIMEDOUT_STATE:
                 throw new OperationStateError('The operation is in a timedout state', response);
             case this.TCLIService_types.TOperationState.UKNOWN_STATE:
