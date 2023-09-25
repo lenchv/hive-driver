@@ -40,9 +40,9 @@ var JsonResult = /** @class */ (function () {
     };
     JsonResult.prototype.getRows = function (columns, descriptors) {
         var _this = this;
-        var columnStartPosition = Math.min.apply(Math, descriptors.map(function (d) { return d.position; }));
+        var columnStartPosition = Math.max(Math.min.apply(Math, descriptors.map(function (d) { return d.position; })), 0);
         return descriptors.reduce(function (rows, descriptor) {
-            return _this.getSchemaValues(descriptor, columns[descriptor.position - columnStartPosition]).reduce(function (result, value, i) {
+            return _this.getSchemaValues(descriptor, columns[descriptor.position - columnStartPosition] || {}).reduce(function (result, value, i) {
                 if (!result[i]) {
                     result[i] = {};
                 }

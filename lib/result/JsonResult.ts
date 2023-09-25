@@ -46,11 +46,11 @@ export default class JsonResult implements IOperationResult {
     }
 
     private getRows(columns: Array<Column>, descriptors: Array<ColumnDesc>): Array<any> {
-        const columnStartPosition = Math.min(...descriptors.map(d => d.position));
+        const columnStartPosition = Math.max(Math.min(...descriptors.map(d => d.position)), 0);
         return descriptors.reduce((rows, descriptor) => {
             return this.getSchemaValues(
                 descriptor,
-                columns[descriptor.position - columnStartPosition]
+                columns[descriptor.position - columnStartPosition] || {}
             ).reduce((result, value, i) => {
                 if (!result[i]) {
                     result[i] = {};
