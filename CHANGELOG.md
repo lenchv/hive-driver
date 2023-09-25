@@ -1,5 +1,15 @@
 # Changelog
 
+[0.2.0](https://github.com/lenchv/hive-driver/releases/tag/v0.3.0) 2023-09-25
+
+- Upgraded kerberos library
+
+- Added parameter "orientation" to fetch method in order to force using FETCH_NEXT as first operation after initialization schema
+
+- Fixed issue when on pending state the error was thrown
+
+- Fixed issue when in some cases colum was undefined when parsing JsonResult
+
 [0.2.0](https://github.com/lenchv/hive-driver/releases/tag/v0.2.0) 2022-08-20
 
 - Fixed an issue with zero-based column start (Spark Thrift Server, Kyuubi, for example)
