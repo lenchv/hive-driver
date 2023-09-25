@@ -18,9 +18,9 @@ var HiveUtils = /** @class */ (function () {
         var getResult = new GetResult_1.default(operation, this.TCLIService_types);
         return getResult.execute(resultHandler);
     };
-    HiveUtils.prototype.fetchAll = function (operation) {
+    HiveUtils.prototype.fetchAll = function (operation, orientation) {
         var _this = this;
-        return operation.fetch()
+        return operation.fetch(orientation)
             .then(function () {
             if (operation.hasMoreRows()) {
                 return _this.fetchAll(operation);

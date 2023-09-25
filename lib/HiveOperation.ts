@@ -1,6 +1,6 @@
 import IOperation from "./contracts/IOperation";
 import HiveDriver from "./hive/HiveDriver";
-import { OperationHandle, TCLIServiceTypes, TableSchema, RowSet, ColumnCode, Column } from "./hive/Types";
+import { OperationHandle, TCLIServiceTypes, TableSchema, RowSet, ColumnCode, Column, FetchOrientation } from "./hive/Types";
 import Status from "./dto/Status";
 import { GetOperationStatusResponse } from "./hive/Commands/GetOperationStatusCommand";
 import { GetResultSetMetadataResponse } from "./hive/Commands/GetResultSetMetadataCommand";
@@ -43,7 +43,7 @@ export default class HiveOperation implements IOperation {
      * Fetches result and schema from operation
      * @throws {StatusError}
      */
-    fetch(): Promise<Status> {
+    fetch(orientation?: FetchOrientation): Promise<Status> {
         if (!this.hasResultSet) {
             return Promise.resolve(
                 this.statusFactory.create({
@@ -63,8 +63,12 @@ export default class HiveOperation implements IOperation {
         if (this.schema === null) {
             return this.initializeSchema().then((schema: TableSchema) => {
                 this.schema = schema;
-    
-                return this.firstFetch();
+   
+                if (orientation === FetchOrientation.FETCH_NEXT) {
+                    return this.nextFetch();
+                } else {
+                    return this.firstFetch();
+                }
             }).then(
                 response => this.processFetchResponse(response)
             );

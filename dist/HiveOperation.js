@@ -24,7 +24,7 @@ var HiveOperation = /** @class */ (function () {
      * Fetches result and schema from operation
      * @throws {StatusError}
      */
-    HiveOperation.prototype.fetch = function () {
+    HiveOperation.prototype.fetch = function (orientation) {
         var _this = this;
         if (!this.hasResultSet) {
             return Promise.resolve(this.statusFactory.create({
@@ -39,7 +39,12 @@ var HiveOperation = /** @class */ (function () {
         if (this.schema === null) {
             return this.initializeSchema().then(function (schema) {
                 _this.schema = schema;
-                return _this.firstFetch();
+                if (orientation === Types_1.FetchOrientation.FETCH_NEXT) {
+                    return _this.nextFetch();
+                }
+                else {
+                    return _this.firstFetch();
+                }
             }).then(function (response) { return _this.processFetchResponse(response); });
         }
         else {

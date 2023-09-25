@@ -1,4 +1,4 @@
-import { TCLIServiceTypes, ProgressUpdateResponse } from "../hive/Types";
+import { TCLIServiceTypes, ProgressUpdateResponse, FetchOrientation } from "../hive/Types";
 import IOperation from "../contracts/IOperation";
 import IOperationResult from "../result/IOperationResult";
 export default class HiveUtils {
@@ -6,6 +6,6 @@ export default class HiveUtils {
     constructor(TCLIService_types: TCLIServiceTypes);
     waitUntilReady(operation: IOperation, progress?: boolean, callback?: Function): Promise<IOperation>;
     getResult(operation: IOperation, resultHandler?: IOperationResult): IOperationResult;
-    fetchAll(operation: IOperation): Promise<IOperation>;
+    fetchAll(operation: IOperation, orientation?: FetchOrientation): Promise<IOperation>;
     formatProgress(progressUpdate: ProgressUpdateResponse): string;
 }

@@ -226,4 +226,8 @@ export type ProgressUpdateResponse = {
     footerSummary: string;
     startTime: ThriftBuffer;
 };
+export declare enum FetchOrientation {
+    FETCH_FIRST = 0,
+    FETCH_NEXT = 1
+}
 export {};

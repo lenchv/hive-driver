@@ -1,12 +1,12 @@
 import { GetOperationStatusResponse } from "../hive/Commands/GetOperationStatusCommand";
 import Status from "../dto/Status";
-import { TableSchema, RowSet } from "../hive/Types";
+import { TableSchema, RowSet, FetchOrientation } from "../hive/Types";
 
 export default interface IOperation {
     /**
      * Fetch schema and a portion of data
      */
-    fetch(): Promise<Status>;
+    fetch(orientation?: FetchOrientation): Promise<Status>;
 
     /**
      * Request status of operation

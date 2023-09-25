@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ColumnCode = void 0;
+exports.FetchOrientation = exports.ColumnCode = void 0;
 var ColumnCode;
 (function (ColumnCode) {
     ColumnCode["boolVal"] = "boolVal";
@@ -13,4 +13,9 @@ var ColumnCode;
     ColumnCode["binaryVal"] = "binaryVal";
 })(ColumnCode = exports.ColumnCode || (exports.ColumnCode = {}));
 ;
+var FetchOrientation;
+(function (FetchOrientation) {
+    FetchOrientation[FetchOrientation["FETCH_FIRST"] = 0] = "FETCH_FIRST";
+    FetchOrientation[FetchOrientation["FETCH_NEXT"] = 1] = "FETCH_NEXT";
+})(FetchOrientation = exports.FetchOrientation || (exports.FetchOrientation = {}));
 //# sourceMappingURL=index.js.map
