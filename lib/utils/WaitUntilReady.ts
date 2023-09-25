@@ -49,7 +49,7 @@ export default class WaitUntilReady {
             case this.TCLIService_types.TOperationState.CANCELED_STATE:
                 throw new OperationStateError('The operation was canceled by a client', response);
             case this.TCLIService_types.TOperationState.CLOSED_STATE:
-                throw new OperationStateError('The operation was closed by a client', response);
+                throw new OperatioπnStateError('The operation was closed by a client', response);
             case this.TCLIService_types.TOperationState.ERROR_STATE:
                 throw new OperationStateError('The operation failed due to an error', response);
             case this.TCLIService_types.TOperationState.PENDING_STATE:
