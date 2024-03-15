@@ -9,6 +9,12 @@ export default interface IOperation {
     fetch(orientation?: FetchOrientation): Promise<Status>;
 
     /**
+     * Resets `this.data` buffer.
+     * Needs to be called when working with massive data.
+     */
+    flush(): void;
+
+    /**
      * Request status of operation
      * 
      * @param progress 
