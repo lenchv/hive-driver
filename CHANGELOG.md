@@ -1,5 +1,9 @@
 # Changelog
 
+[0.3.1](https://github.com/lenchv/hive-driver/releases/tag/v0.3.0) 2024-03-15
+
+- expose flush() in IOperation for proper work with massive data
+
 [0.3.0](https://github.com/lenchv/hive-driver/releases/tag/v0.3.0) 2023-09-25
 
 - Upgraded kerberos library
