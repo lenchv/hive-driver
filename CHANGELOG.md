@@ -1,5 +1,11 @@
 # Changelog
 
+[1.0.0](https://github.com/lenchv/hive-driver/releases/tag/v1.0.0) 2024-04-21
+
+- Updated npm modules
+- Added UploadData and DownloadData methods of newest TCLIService.thrift
+- Added npm provenance check
+
 [0.3.1](https://github.com/lenchv/hive-driver/releases/tag/v0.3.0) 2024-03-15
 
 - expose flush() in IOperation for proper work with massive data
