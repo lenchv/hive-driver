@@ -112,4 +112,12 @@ describe('HiveDriver', () => {
     it('should execute setClientInfo', () => {
         return testCommand('setClientInfo', { sessionHandle });
     });
+
+    it('should execute uploadData', () => {
+        return testCommand('uploadData', { sessionHandle, tableName: 't1', values: Buffer.from('asd') });
+    });
+
+    it('should execute downloadData', () => {
+        return testCommand('downloadData', { sessionHandle });
+    });
 });

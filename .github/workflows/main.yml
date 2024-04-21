@@ -13,9 +13,9 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - name: Cache node modules
-      uses: actions/cache@v1
+      uses: actions/cache@v4
       env:
         cache-name: cache-node-modules
       with:

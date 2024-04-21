@@ -3,37 +3,36 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var WaitUntilReady_1 = __importDefault(require("./WaitUntilReady"));
-var GetResult_1 = __importDefault(require("./GetResult"));
-var ProgressUpdateTransformer_1 = __importDefault(require("./ProgressUpdateTransformer"));
-var HiveUtils = /** @class */ (function () {
-    function HiveUtils(TCLIService_types) {
+const WaitUntilReady_1 = __importDefault(require("./WaitUntilReady"));
+const GetResult_1 = __importDefault(require("./GetResult"));
+const ProgressUpdateTransformer_1 = __importDefault(require("./ProgressUpdateTransformer"));
+class HiveUtils {
+    TCLIService_types;
+    constructor(TCLIService_types) {
         this.TCLIService_types = TCLIService_types;
     }
-    HiveUtils.prototype.waitUntilReady = function (operation, progress, callback) {
-        var waitUntilReady = new WaitUntilReady_1.default(operation, this.TCLIService_types);
+    waitUntilReady(operation, progress, callback) {
+        const waitUntilReady = new WaitUntilReady_1.default(operation, this.TCLIService_types);
         return waitUntilReady.execute(progress, callback);
-    };
-    HiveUtils.prototype.getResult = function (operation, resultHandler) {
-        var getResult = new GetResult_1.default(operation, this.TCLIService_types);
+    }
+    getResult(operation, resultHandler) {
+        const getResult = new GetResult_1.default(operation, this.TCLIService_types);
         return getResult.execute(resultHandler);
-    };
-    HiveUtils.prototype.fetchAll = function (operation, orientation) {
-        var _this = this;
+    }
+    fetchAll(operation, orientation) {
         return operation.fetch(orientation)
-            .then(function () {
+            .then(() => {
             if (operation.hasMoreRows()) {
-                return _this.fetchAll(operation);
+                return this.fetchAll(operation);
             }
             else {
                 return operation;
             }
         });
-    };
-    HiveUtils.prototype.formatProgress = function (progressUpdate) {
+    }
+    formatProgress(progressUpdate) {
         return String(new ProgressUpdateTransformer_1.default(progressUpdate));
-    };
-    return HiveUtils;
-}());
+    }
+}
 exports.default = HiveUtils;
 //# sourceMappingURL=HiveUtils.js.map

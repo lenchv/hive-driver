@@ -1,79 +1,70 @@
 "use strict";
-var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
-    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
-        if (ar || !(i in from)) {
-            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
-            ar[i] = from[i];
-        }
-    }
-    return to.concat(ar || Array.prototype.slice.call(from));
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-var Types_1 = require("../hive/Types");
-var JsonResult = /** @class */ (function () {
-    function JsonResult(TCLIService_types) {
+const Types_1 = require("../hive/Types");
+class JsonResult {
+    TCLIService_types;
+    schema;
+    data;
+    constructor(TCLIService_types) {
         this.TCLIService_types = TCLIService_types;
         this.schema = null;
         this.data = null;
     }
-    JsonResult.prototype.setOperation = function (operation) {
+    setOperation(operation) {
         this.schema = operation.getSchema();
         this.data = operation.getData();
-    };
-    JsonResult.prototype.getValue = function () {
-        var _this = this;
+    }
+    getValue() {
         if (!this.data) {
             return [];
         }
-        var descriptors = this.getSchemaColumns();
-        return this.data.reduce(function (result, rowSet) {
-            var columns = rowSet.columns || [];
-            var rows = _this.getRows(columns, descriptors);
+        const descriptors = this.getSchemaColumns();
+        return this.data.reduce((result, rowSet) => {
+            const columns = rowSet.columns || [];
+            const rows = this.getRows(columns, descriptors);
             return result.concat(rows);
         }, []);
-    };
-    JsonResult.prototype.getSchemaColumns = function () {
+    }
+    getSchemaColumns() {
         if (!this.schema) {
             return [];
         }
-        return __spreadArray([], (this.schema.columns), true).sort(function (c1, c2) { return c1.position - c2.position; });
-    };
-    JsonResult.prototype.getRows = function (columns, descriptors) {
-        var _this = this;
-        var columnStartPosition = Math.max(Math.min.apply(Math, descriptors.map(function (d) { return d.position; })), 0);
-        return descriptors.reduce(function (rows, descriptor) {
-            return _this.getSchemaValues(descriptor, columns[descriptor.position - columnStartPosition] || {}).reduce(function (result, value, i) {
+        return [...(this.schema.columns)]
+            .sort((c1, c2) => c1.position - c2.position);
+    }
+    getRows(columns, descriptors) {
+        const columnStartPosition = Math.max(Math.min(...descriptors.map(d => d.position)), 0);
+        return descriptors.reduce((rows, descriptor) => {
+            return this.getSchemaValues(descriptor, columns[descriptor.position - columnStartPosition] || {}).reduce((result, value, i) => {
                 if (!result[i]) {
                     result[i] = {};
                 }
-                var name = _this.getColumnName(descriptor);
+                const name = this.getColumnName(descriptor);
                 result[i][name] = value;
                 return result;
             }, rows);
         }, []);
-    };
-    JsonResult.prototype.getSchemaValues = function (descriptor, column) {
-        var _this = this;
-        var _a;
-        var typeDescriptor = ((_a = descriptor.typeDesc.types[0]) === null || _a === void 0 ? void 0 : _a.primitiveEntry) || {};
-        var columnValue = this.getColumnValue(column);
+    }
+    getSchemaValues(descriptor, column) {
+        const typeDescriptor = descriptor.typeDesc.types[0]?.primitiveEntry || {};
+        const columnValue = this.getColumnValue(column);
         if (!columnValue) {
             return [];
         }
-        return columnValue.values.map(function (value, i) {
-            if (columnValue.nulls && _this.isNull(columnValue.nulls, i)) {
+        return columnValue.values.map((value, i) => {
+            if (columnValue.nulls && this.isNull(columnValue.nulls, i)) {
                 return null;
             }
             else {
-                return _this.convertData(typeDescriptor, value);
+                return this.convertData(typeDescriptor, value);
             }
         });
-    };
-    JsonResult.prototype.getColumnName = function (column) {
-        var name = column.columnName || '';
+    }
+    getColumnName(column) {
+        const name = column.columnName || '';
         return name.split('.').pop() || '';
-    };
-    JsonResult.prototype.convertData = function (typeDescriptor, value) {
+    }
+    convertData(typeDescriptor, value) {
         switch (typeDescriptor.type) {
             case this.TCLIService_types.TTypeId.TIMESTAMP_TYPE:
             case this.TCLIService_types.TTypeId.DATE_TYPE:
@@ -105,24 +96,24 @@ var JsonResult = /** @class */ (function () {
             default:
                 return value;
         }
-    };
-    JsonResult.prototype.isNull = function (nulls, i) {
-        var byte = nulls[Math.floor(i / 8)];
-        var ofs = Math.pow(2, i % 8);
+    }
+    isNull(nulls, i) {
+        const byte = nulls[Math.floor(i / 8)];
+        const ofs = Math.pow(2, i % 8);
         return (byte & ofs) !== 0;
-    };
-    JsonResult.prototype.toJSON = function (value, defaultValue) {
+    }
+    toJSON(value, defaultValue) {
         try {
             return JSON.parse(value);
         }
         catch (e) {
             return defaultValue;
         }
-    };
-    JsonResult.prototype.convertBigInt = function (value) {
+    }
+    convertBigInt(value) {
         return value.toNumber();
-    };
-    JsonResult.prototype.getColumnValue = function (column) {
+    }
+    getColumnValue(column) {
         return column[Types_1.ColumnCode.binaryVal]
             || column[Types_1.ColumnCode.boolVal]
             || column[Types_1.ColumnCode.byteVal]
@@ -131,8 +122,7 @@ var JsonResult = /** @class */ (function () {
             || column[Types_1.ColumnCode.i32Val]
             || column[Types_1.ColumnCode.i64Val]
             || column[Types_1.ColumnCode.stringVal];
-    };
-    return JsonResult;
-}());
+    }
+}
 exports.default = JsonResult;
 //# sourceMappingURL=JsonResult.js.map

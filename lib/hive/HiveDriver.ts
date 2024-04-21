@@ -22,6 +22,8 @@ import CancelDelegationTokenCommand, { CancelDelegationTokenRequest, CancelDeleg
 import RenewDelegationTokenCommand, { RenewDelegationTokenRequest, RenewDelegationTokenResponse } from "./Commands/RenewDelegationTokenCommand";
 import GetQueryIdCommand, { GetQueryIdRequest, GetQueryIdResponse } from "./Commands/GetQueryIdCommand";
 import SetClientInfoCommand, { SetClientInfoRequest, SetClientInfoResponse } from "./Commands/SetClientInfoCommand";
+import UploadDataCommand, { UploadDataRequest, UploadDataResponse } from './Commands/UploadDataCommand';
+import DownloadDataCommand, { DownloadDataRequest, DownloadDataResponse } from './Commands/DownloadDataCommand';
 
 export default class HiveDriver {
     private TCLIService_types: TCLIServiceTypes;
@@ -235,6 +237,18 @@ export default class HiveDriver {
             this.client,
             this.TCLIService_types
         );
+
+        return command.execute(request);
+    }
+
+    uploadData(request: UploadDataRequest): Promise<UploadDataResponse> {
+        const command = new UploadDataCommand(this.client, this.TCLIService_types);
+
+        return command.execute(request);
+    }
+
+    downloadData(request: DownloadDataRequest): Promise<DownloadDataResponse> {
+        const command = new DownloadDataCommand(this.client, this.TCLIService_types);
 
         return command.execute(request);
     }

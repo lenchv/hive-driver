@@ -23,6 +23,8 @@ export type ThriftClient = {
     RenewDelegationToken: Function;
     GetQueryId: Function;
     SetClientInfo: Function;
+    UploadData: Function;
+    DownloadData: Function;
 };
 export type TCLIServiceTypes = {
     TOpenSessionReq: any;
@@ -53,6 +55,8 @@ export type TCLIServiceTypes = {
     TTypeId: any;
     TStatusCode: any;
     TOperationState: any;
+    TUploadDataReq: any;
+    TDownloadDataReq: any;
 };
 export type ThriftSession = {
     sessionHandle: any;

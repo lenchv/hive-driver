@@ -3,127 +3,138 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var OpenSessionCommand_1 = __importDefault(require("./Commands/OpenSessionCommand"));
-var CloseSessionCommand_1 = __importDefault(require("./Commands/CloseSessionCommand"));
-var ExecuteStatementCommand_1 = __importDefault(require("./Commands/ExecuteStatementCommand"));
-var GetResultSetMetadataCommand_1 = __importDefault(require("./Commands/GetResultSetMetadataCommand"));
-var FetchResultsCommand_1 = __importDefault(require("./Commands/FetchResultsCommand"));
-var GetInfoCommand_1 = __importDefault(require("./Commands/GetInfoCommand"));
-var GetTypeInfoCommand_1 = __importDefault(require("./Commands/GetTypeInfoCommand"));
-var GetCatalogsCommand_1 = __importDefault(require("./Commands/GetCatalogsCommand"));
-var GetSchemasCommand_1 = __importDefault(require("./Commands/GetSchemasCommand"));
-var GetTablesCommand_1 = __importDefault(require("./Commands/GetTablesCommand"));
-var GetTableTypesCommand_1 = __importDefault(require("./Commands/GetTableTypesCommand"));
-var GetColumnsCommand_1 = __importDefault(require("./Commands/GetColumnsCommand"));
-var GetFunctionsCommand_1 = __importDefault(require("./Commands/GetFunctionsCommand"));
-var GetPrimaryKeysCommand_1 = __importDefault(require("./Commands/GetPrimaryKeysCommand"));
-var GetCrossReferenceCommand_1 = __importDefault(require("./Commands/GetCrossReferenceCommand"));
-var GetOperationStatusCommand_1 = __importDefault(require("./Commands/GetOperationStatusCommand"));
-var CancelOperationCommand_1 = __importDefault(require("./Commands/CancelOperationCommand"));
-var CloseOperationCommand_1 = __importDefault(require("./Commands/CloseOperationCommand"));
-var GetDelegationTokenCommand_1 = __importDefault(require("./Commands/GetDelegationTokenCommand"));
-var CancelDelegationTokenCommand_1 = __importDefault(require("./Commands/CancelDelegationTokenCommand"));
-var RenewDelegationTokenCommand_1 = __importDefault(require("./Commands/RenewDelegationTokenCommand"));
-var GetQueryIdCommand_1 = __importDefault(require("./Commands/GetQueryIdCommand"));
-var SetClientInfoCommand_1 = __importDefault(require("./Commands/SetClientInfoCommand"));
-var HiveDriver = /** @class */ (function () {
-    function HiveDriver(TCLIService_types, client) {
+const OpenSessionCommand_1 = __importDefault(require("./Commands/OpenSessionCommand"));
+const CloseSessionCommand_1 = __importDefault(require("./Commands/CloseSessionCommand"));
+const ExecuteStatementCommand_1 = __importDefault(require("./Commands/ExecuteStatementCommand"));
+const GetResultSetMetadataCommand_1 = __importDefault(require("./Commands/GetResultSetMetadataCommand"));
+const FetchResultsCommand_1 = __importDefault(require("./Commands/FetchResultsCommand"));
+const GetInfoCommand_1 = __importDefault(require("./Commands/GetInfoCommand"));
+const GetTypeInfoCommand_1 = __importDefault(require("./Commands/GetTypeInfoCommand"));
+const GetCatalogsCommand_1 = __importDefault(require("./Commands/GetCatalogsCommand"));
+const GetSchemasCommand_1 = __importDefault(require("./Commands/GetSchemasCommand"));
+const GetTablesCommand_1 = __importDefault(require("./Commands/GetTablesCommand"));
+const GetTableTypesCommand_1 = __importDefault(require("./Commands/GetTableTypesCommand"));
+const GetColumnsCommand_1 = __importDefault(require("./Commands/GetColumnsCommand"));
+const GetFunctionsCommand_1 = __importDefault(require("./Commands/GetFunctionsCommand"));
+const GetPrimaryKeysCommand_1 = __importDefault(require("./Commands/GetPrimaryKeysCommand"));
+const GetCrossReferenceCommand_1 = __importDefault(require("./Commands/GetCrossReferenceCommand"));
+const GetOperationStatusCommand_1 = __importDefault(require("./Commands/GetOperationStatusCommand"));
+const CancelOperationCommand_1 = __importDefault(require("./Commands/CancelOperationCommand"));
+const CloseOperationCommand_1 = __importDefault(require("./Commands/CloseOperationCommand"));
+const GetDelegationTokenCommand_1 = __importDefault(require("./Commands/GetDelegationTokenCommand"));
+const CancelDelegationTokenCommand_1 = __importDefault(require("./Commands/CancelDelegationTokenCommand"));
+const RenewDelegationTokenCommand_1 = __importDefault(require("./Commands/RenewDelegationTokenCommand"));
+const GetQueryIdCommand_1 = __importDefault(require("./Commands/GetQueryIdCommand"));
+const SetClientInfoCommand_1 = __importDefault(require("./Commands/SetClientInfoCommand"));
+const UploadDataCommand_1 = __importDefault(require("./Commands/UploadDataCommand"));
+const DownloadDataCommand_1 = __importDefault(require("./Commands/DownloadDataCommand"));
+class HiveDriver {
+    TCLIService_types;
+    client;
+    constructor(TCLIService_types, client) {
         this.TCLIService_types = TCLIService_types;
         this.client = client;
     }
-    HiveDriver.prototype.openSession = function (request) {
-        var action = new OpenSessionCommand_1.default(this.client, this.TCLIService_types);
+    openSession(request) {
+        const action = new OpenSessionCommand_1.default(this.client, this.TCLIService_types);
         return action.execute(request);
-    };
-    HiveDriver.prototype.closeSession = function (request) {
-        var command = new CloseSessionCommand_1.default(this.client, this.TCLIService_types);
+    }
+    closeSession(request) {
+        const command = new CloseSessionCommand_1.default(this.client, this.TCLIService_types);
         return command.execute(request);
-    };
-    HiveDriver.prototype.executeStatement = function (request) {
-        var command = new ExecuteStatementCommand_1.default(this.client, this.TCLIService_types);
+    }
+    executeStatement(request) {
+        const command = new ExecuteStatementCommand_1.default(this.client, this.TCLIService_types);
         return command.execute(request);
-    };
-    HiveDriver.prototype.getResultSetMetadata = function (request) {
-        var command = new GetResultSetMetadataCommand_1.default(this.client, this.TCLIService_types);
+    }
+    getResultSetMetadata(request) {
+        const command = new GetResultSetMetadataCommand_1.default(this.client, this.TCLIService_types);
         return command.execute(request);
-    };
-    HiveDriver.prototype.fetchResults = function (request) {
-        var command = new FetchResultsCommand_1.default(this.client, this.TCLIService_types);
+    }
+    fetchResults(request) {
+        const command = new FetchResultsCommand_1.default(this.client, this.TCLIService_types);
         return command.execute(request);
-    };
-    HiveDriver.prototype.getInfo = function (request) {
-        var command = new GetInfoCommand_1.default(this.client, this.TCLIService_types);
+    }
+    getInfo(request) {
+        const command = new GetInfoCommand_1.default(this.client, this.TCLIService_types);
         return command.execute(request);
-    };
-    HiveDriver.prototype.getTypeInfo = function (request) {
-        var command = new GetTypeInfoCommand_1.default(this.client, this.TCLIService_types);
+    }
+    getTypeInfo(request) {
+        const command = new GetTypeInfoCommand_1.default(this.client, this.TCLIService_types);
         return command.execute(request);
-    };
-    HiveDriver.prototype.getCatalogs = function (request) {
-        var command = new GetCatalogsCommand_1.default(this.client, this.TCLIService_types);
+    }
+    getCatalogs(request) {
+        const command = new GetCatalogsCommand_1.default(this.client, this.TCLIService_types);
         return command.execute(request);
-    };
-    HiveDriver.prototype.getSchemas = function (request) {
-        var command = new GetSchemasCommand_1.default(this.client, this.TCLIService_types);
+    }
+    getSchemas(request) {
+        const command = new GetSchemasCommand_1.default(this.client, this.TCLIService_types);
         return command.execute(request);
-    };
-    HiveDriver.prototype.getTables = function (request) {
-        var command = new GetTablesCommand_1.default(this.client, this.TCLIService_types);
+    }
+    getTables(request) {
+        const command = new GetTablesCommand_1.default(this.client, this.TCLIService_types);
         return command.execute(request);
-    };
-    HiveDriver.prototype.getTableTypes = function (request) {
-        var command = new GetTableTypesCommand_1.default(this.client, this.TCLIService_types);
+    }
+    getTableTypes(request) {
+        const command = new GetTableTypesCommand_1.default(this.client, this.TCLIService_types);
         return command.execute(request);
-    };
-    HiveDriver.prototype.getColumns = function (request) {
-        var command = new GetColumnsCommand_1.default(this.client, this.TCLIService_types);
+    }
+    getColumns(request) {
+        const command = new GetColumnsCommand_1.default(this.client, this.TCLIService_types);
         return command.execute(request);
-    };
-    HiveDriver.prototype.getFunctions = function (request) {
-        var command = new GetFunctionsCommand_1.default(this.client, this.TCLIService_types);
+    }
+    getFunctions(request) {
+        const command = new GetFunctionsCommand_1.default(this.client, this.TCLIService_types);
         return command.execute(request);
-    };
-    HiveDriver.prototype.getPrimaryKeys = function (request) {
-        var command = new GetPrimaryKeysCommand_1.default(this.client, this.TCLIService_types);
+    }
+    getPrimaryKeys(request) {
+        const command = new GetPrimaryKeysCommand_1.default(this.client, this.TCLIService_types);
         return command.execute(request);
-    };
-    HiveDriver.prototype.getCrossReference = function (request) {
-        var command = new GetCrossReferenceCommand_1.default(this.client, this.TCLIService_types);
+    }
+    getCrossReference(request) {
+        const command = new GetCrossReferenceCommand_1.default(this.client, this.TCLIService_types);
         return command.execute(request);
-    };
-    HiveDriver.prototype.getOperationStatus = function (request) {
-        var command = new GetOperationStatusCommand_1.default(this.client, this.TCLIService_types);
+    }
+    getOperationStatus(request) {
+        const command = new GetOperationStatusCommand_1.default(this.client, this.TCLIService_types);
         return command.execute(request);
-    };
-    HiveDriver.prototype.cancelOperation = function (request) {
-        var command = new CancelOperationCommand_1.default(this.client, this.TCLIService_types);
+    }
+    cancelOperation(request) {
+        const command = new CancelOperationCommand_1.default(this.client, this.TCLIService_types);
         return command.execute(request);
-    };
-    HiveDriver.prototype.closeOperation = function (request) {
-        var command = new CloseOperationCommand_1.default(this.client, this.TCLIService_types);
+    }
+    closeOperation(request) {
+        const command = new CloseOperationCommand_1.default(this.client, this.TCLIService_types);
         return command.execute(request);
-    };
-    HiveDriver.prototype.getDelegationToken = function (request) {
-        var command = new GetDelegationTokenCommand_1.default(this.client, this.TCLIService_types);
+    }
+    getDelegationToken(request) {
+        const command = new GetDelegationTokenCommand_1.default(this.client, this.TCLIService_types);
         return command.execute(request);
-    };
-    HiveDriver.prototype.cancelDelegationToken = function (request) {
-        var command = new CancelDelegationTokenCommand_1.default(this.client, this.TCLIService_types);
+    }
+    cancelDelegationToken(request) {
+        const command = new CancelDelegationTokenCommand_1.default(this.client, this.TCLIService_types);
         return command.execute(request);
-    };
-    HiveDriver.prototype.renewDelegationToken = function (request) {
-        var command = new RenewDelegationTokenCommand_1.default(this.client, this.TCLIService_types);
+    }
+    renewDelegationToken(request) {
+        const command = new RenewDelegationTokenCommand_1.default(this.client, this.TCLIService_types);
         return command.execute(request);
-    };
-    HiveDriver.prototype.getQueryId = function (request) {
-        var command = new GetQueryIdCommand_1.default(this.client, this.TCLIService_types);
+    }
+    getQueryId(request) {
+        const command = new GetQueryIdCommand_1.default(this.client, this.TCLIService_types);
         return command.execute(request);
-    };
-    HiveDriver.prototype.setClientInfo = function (request) {
-        var command = new SetClientInfoCommand_1.default(this.client, this.TCLIService_types);
+    }
+    setClientInfo(request) {
+        const command = new SetClientInfoCommand_1.default(this.client, this.TCLIService_types);
         return command.execute(request);
-    };
-    return HiveDriver;
-}());
+    }
+    uploadData(request) {
+        const command = new UploadDataCommand_1.default(this.client, this.TCLIService_types);
+        return command.execute(request);
+    }
+    downloadData(request) {
+        const command = new DownloadDataCommand_1.default(this.client, this.TCLIService_types);
+        return command.execute(request);
+    }
+}
 exports.default = HiveDriver;
 //# sourceMappingURL=HiveDriver.js.map
