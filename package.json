@@ -1,6 +1,6 @@
 {
   "name": "hive-driver",
-  "version": "0.3.1",
+  "version": "1.0.0",
   "description": "Driver for connection to Apache Hive via Thrift API.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -9,7 +9,7 @@
     "test": "tests"
   },
   "scripts": {
-    "e2e": "env HIVE_E2E_LOG=FILE mocha 'tests/e2e/**/*.test.js' --timeout=300000",
+    "e2e": "env HIVE_E2E_LOG=CONSOLE mocha 'tests/e2e/**/*.test.js' --timeout=300000",
     "test": "nyc --reporter=lcov mocha 'tests/unit/**/*.test.js'",
     "coverage": "codecov",
     "build": "tsc",
