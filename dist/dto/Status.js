@@ -1,21 +1,23 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var Status = /** @class */ (function () {
-    function Status(data) {
+class Status {
+    isSuccess;
+    isExecuting;
+    infoMessages;
+    constructor(data) {
         this.isSuccess = data.success;
         this.isExecuting = data.executing;
         this.infoMessages = data.infoMessages;
     }
-    Status.prototype.success = function () {
+    success() {
         return this.isSuccess;
-    };
-    Status.prototype.executing = function () {
+    }
+    executing() {
         return this.isExecuting;
-    };
-    Status.prototype.getInfo = function () {
+    }
+    getInfo() {
         return this.infoMessages;
-    };
-    return Status;
-}());
+    }
+}
 exports.default = Status;
 //# sourceMappingURL=Status.js.map

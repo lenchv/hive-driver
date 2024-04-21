@@ -1,18 +1,18 @@
 const { expect } = require('chai');
 const { FetchOrientation } = require('../../dist/hive/Types');
+const { prototype } = require('events');
 const HiveOperation = require('../../dist/HiveOperation').default;
 const { TCLIService_types } = require('../../').thrift;
 
 const getMock = (parent, prototype) => {
-    const mock = function(...args) {
-        parent.call(this, ...args);
+    return class extends parent {
+        constructor(...args) {
+            super(...args);
+            Object.entries(prototype).forEach(([name, method]) => {
+                this[name] = method.bind(this);
+            });
+        }
     };
-    mock.prototype = Object.create(parent.prototype);
-    mock.prototype.constructor = mock;
-
-    mock.prototype = Object.assign(mock.prototype, prototype);
-
-    return mock;
 };
 
 const driverMock = {};

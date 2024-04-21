@@ -11,11 +11,11 @@ var ColumnCode;
     ColumnCode["doubleVal"] = "doubleVal";
     ColumnCode["stringVal"] = "stringVal";
     ColumnCode["binaryVal"] = "binaryVal";
-})(ColumnCode = exports.ColumnCode || (exports.ColumnCode = {}));
+})(ColumnCode || (exports.ColumnCode = ColumnCode = {}));
 ;
 var FetchOrientation;
 (function (FetchOrientation) {
     FetchOrientation[FetchOrientation["FETCH_FIRST"] = 0] = "FETCH_FIRST";
     FetchOrientation[FetchOrientation["FETCH_NEXT"] = 1] = "FETCH_NEXT";
-})(FetchOrientation = exports.FetchOrientation || (exports.FetchOrientation = {}));
+})(FetchOrientation || (exports.FetchOrientation = FetchOrientation = {}));
 //# sourceMappingURL=index.js.map

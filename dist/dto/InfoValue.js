@@ -1,11 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var InfoValue = /** @class */ (function () {
-    function InfoValue(value) {
+class InfoValue {
+    value;
+    constructor(value) {
         this.value = value;
     }
-    InfoValue.prototype.getValue = function () {
-        var infoValue = this.value;
+    getValue() {
+        const infoValue = this.value;
         if (infoValue.stringValue) {
             return infoValue.stringValue;
         }
@@ -24,8 +25,7 @@ var InfoValue = /** @class */ (function () {
         else {
             return null;
         }
-    };
-    return InfoValue;
-}());
+    }
+}
 exports.default = InfoValue;
 //# sourceMappingURL=InfoValue.js.map

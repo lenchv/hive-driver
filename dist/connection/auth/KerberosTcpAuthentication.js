@@ -3,46 +3,49 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var SaslPackageFactory_1 = require("./helpers/SaslPackageFactory");
-var AuthenticationError_1 = __importDefault(require("../../errors/AuthenticationError"));
-var KerberosTcpAuthentication = /** @class */ (function () {
-    function KerberosTcpAuthentication(options, authProcess) {
-        this.username = (options === null || options === void 0 ? void 0 : options.username) || 'anonymous';
-        this.password = (options === null || options === void 0 ? void 0 : options.password) !== undefined ? options.password : 'anonymous';
+const SaslPackageFactory_1 = require("./helpers/SaslPackageFactory");
+const AuthenticationError_1 = __importDefault(require("../../errors/AuthenticationError"));
+class KerberosTcpAuthentication {
+    static AUTH_MECH = 'GSSAPI';
+    username;
+    password;
+    authProcess;
+    constructor(options, authProcess) {
+        this.username = options?.username || 'anonymous';
+        this.password = options?.password !== undefined ? options.password : 'anonymous';
         this.authProcess = authProcess;
     }
-    KerberosTcpAuthentication.prototype.authenticate = function (transport) {
-        var _this = this;
-        return new Promise(function (resolve, reject) {
-            _this.authProcess.init({
-                password: _this.password,
-                username: _this.username,
-            }, function (error, client) {
+    authenticate(transport) {
+        return new Promise((resolve, reject) => {
+            this.authProcess.init({
+                password: this.password,
+                username: this.username,
+            }, (error, client) => {
                 if (error) {
                     return reject(error);
                 }
-                var onError = function (err) {
+                const onError = (err) => {
                     transport.end();
                     reject(err);
                 };
-                var onSuccess = function () {
+                const onSuccess = () => {
                     transport.removeListener('connect', onConnect);
                     transport.removeListener('data', onData);
                     resolve(transport);
                 };
-                var onConnect = function () {
-                    _this.onConnect(transport).catch(onError);
+                const onConnect = () => {
+                    this.onConnect(transport).catch(onError);
                 };
-                var onData = function (data) {
-                    var status = data[0];
+                const onData = (data) => {
+                    const status = data[0];
                     if (status === SaslPackageFactory_1.StatusCode.OK) {
-                        _this.nextTransition(transport, data).catch(onError);
+                        this.nextTransition(transport, data).catch(onError);
                     }
                     else if (status === SaslPackageFactory_1.StatusCode.COMPLETE) {
                         onSuccess();
                     }
                     else {
-                        var message = data.slice(5).toString();
+                        const message = data.slice(5).toString();
                         onError(new AuthenticationError_1.default('Authentication error: ' + message));
                     }
                 };
@@ -52,12 +55,11 @@ var KerberosTcpAuthentication = /** @class */ (function () {
                 transport.addListener('error', onError);
             });
         });
-    };
-    KerberosTcpAuthentication.prototype.onConnect = function (transport) {
-        var _this = this;
-        return new Promise(function (resolve, reject) {
+    }
+    onConnect(transport) {
+        return new Promise((resolve, reject) => {
             transport.write(SaslPackageFactory_1.SaslPackageFactory.create(SaslPackageFactory_1.StatusCode.START, Buffer.from(KerberosTcpAuthentication.AUTH_MECH)));
-            _this.authProcess.transition('', function (err, token) {
+            this.authProcess.transition('', (err, token) => {
                 if (err) {
                     return reject(err);
                 }
@@ -65,12 +67,11 @@ var KerberosTcpAuthentication = /** @class */ (function () {
                 resolve();
             });
         });
-    };
-    KerberosTcpAuthentication.prototype.nextTransition = function (transport, data) {
-        var _this = this;
-        return new Promise(function (resolve, reject) {
-            var payload = data.slice(5).toString('base64');
-            _this.authProcess.transition(payload, function (err, response) {
+    }
+    nextTransition(transport, data) {
+        return new Promise((resolve, reject) => {
+            const payload = data.slice(5).toString('base64');
+            this.authProcess.transition(payload, (err, response) => {
                 if (err) {
                     return reject(err);
                 }
@@ -78,9 +79,7 @@ var KerberosTcpAuthentication = /** @class */ (function () {
                 resolve();
             });
         });
-    };
-    KerberosTcpAuthentication.AUTH_MECH = 'GSSAPI';
-    return KerberosTcpAuthentication;
-}());
+    }
+}
 exports.default = KerberosTcpAuthentication;
 //# sourceMappingURL=KerberosTcpAuthentication.js.map

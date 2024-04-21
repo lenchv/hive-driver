@@ -22,6 +22,8 @@ import { CancelDelegationTokenRequest, CancelDelegationTokenResponse } from "./C
 import { RenewDelegationTokenRequest, RenewDelegationTokenResponse } from "./Commands/RenewDelegationTokenCommand";
 import { GetQueryIdRequest, GetQueryIdResponse } from "./Commands/GetQueryIdCommand";
 import { SetClientInfoRequest, SetClientInfoResponse } from "./Commands/SetClientInfoCommand";
+import { UploadDataRequest, UploadDataResponse } from './Commands/UploadDataCommand';
+import { DownloadDataRequest, DownloadDataResponse } from './Commands/DownloadDataCommand';
 export default class HiveDriver {
     private TCLIService_types;
     private client;
@@ -49,4 +51,6 @@ export default class HiveDriver {
     renewDelegationToken(request: RenewDelegationTokenRequest): Promise<RenewDelegationTokenResponse>;
     getQueryId(request: GetQueryIdRequest): Promise<GetQueryIdResponse>;
     setClientInfo(request: SetClientInfoRequest): Promise<SetClientInfoResponse>;
+    uploadData(request: UploadDataRequest): Promise<UploadDataResponse>;
+    downloadData(request: DownloadDataRequest): Promise<DownloadDataResponse>;
 }
