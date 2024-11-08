@@ -12,6 +12,9 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    container:
+      image: ${{needs.images-build.outputs.dataplatform-image-name-and-tag}}
+      options: --hostname test.local
     steps:
     - uses: actions/checkout@v4
     - name: Cache node modules
@@ -32,6 +35,7 @@ jobs:
         npm run test
     - name: Run e2e tests
       run: |
+        hostname -f
         sudo echo "127.0.0.1 KERBEROS.SERVER" | sudo tee -a /etc/hosts
         sudo echo "127.0.0.1 kerberos.server" | sudo tee -a /etc/hosts
         sudo apt-get install krb5-user
