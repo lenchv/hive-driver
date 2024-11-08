@@ -35,8 +35,8 @@ jobs:
         npm run test
     - name: Run e2e tests
       run: |
-        hostnamectl set-hostname test.local
-        hostnamectl
+        sudo hostnamectl set-hostname test.local
+        sudo hostnamectl
         hostname -f
         sudo echo "127.0.0.1 KERBEROS.SERVER" | sudo tee -a /etc/hosts
         sudo echo "127.0.0.1 kerberos.server" | sudo tee -a /etc/hosts
