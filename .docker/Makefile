@@ -15,12 +15,12 @@ up-krb:
 	sed "s/HOSTNAME_VALUE/`hostname -f`/g" docker-compose.kerberos.yml > docker-compose.yml \
 	&& docker compose up -d kerberos.server \
 	&& echo "Add user" \
-	&& docker compose exec -T kerberos.server kadmin -p admin/admin -w admin -q "addprinc -randkey hive/hive.driver@KERBEROS.SERVER" \
-	&& docker compose exec -T kerberos.server kadmin -p admin/admin -w admin -q "xst -k /opt/hive.keytab hive/hive.driver" \
+	&& docker compose exec -T kerberos.server kadmin.local -p root/admin -w admin -q "addprinc -randkey hive/hive.driver@KERBEROS.SERVER" \
+	&& docker compose exec -T kerberos.server kadmin.local -p root/admin -w admin -q "xst -k /root/hive.keytab hive/hive.driver" \
 	&& echo "Copy keytab" \
-	&& docker cp hive.driver_kerberos.server:/opt/hive.keytab ${PWD}/krb/hive.keytab \
+	&& docker cp hive.driver_kerberos.server:/root/hive.keytab ${PWD}/krb/hive.keytab \
 	&& echo "Add hive user" \
-	&& docker compose exec -T kerberos.server kadmin -p admin/admin -w admin -q "addprinc -pw hive hive@KERBEROS.SERVER" \
+	&& docker compose exec -T kerberos.server kadmin.local -p root/admin -w admin -q "addprinc -pw hive hive@KERBEROS.SERVER" \
 	&& cp ./confs/hive-site.xml.$(TYPE) ./confs/hive-site.xml \
 	&& docker compose up -d hive-server hive-metastore
 up-zoo:

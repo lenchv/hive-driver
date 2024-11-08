@@ -3,6 +3,7 @@ version: "3"
 services:
   hive-server:
     image: lenchv/hive:2.3.6
+    platform: linux/amd64
     ports:
       - "10000:10000"
       - "10001:10001"
@@ -20,6 +21,7 @@ services:
       - ./krb/mapred-site.xml:/opt/hadoop-2.9.2/etc/hadoop/mapred-site.xml
   hive-metastore:
     image: lenchv/hive:2.3.6
+    platform: linux/amd64
     hostname: HOST_NAME
     ports:
       - "9083:9083"
@@ -34,13 +36,16 @@ services:
       - ./krb/mapred-site.xml:/opt/hadoop-2.9.2/etc/hadoop/mapred-site.xml
     command: bash -c "chown hive:hive /opt/hive.keytab && kinit hive/hive.driver@KERBEROS.SERVER -k -t /opt/hive.keytab && /opt/apache-hive-2.3.6-bin/bin/hive --service metastore"
   kerberos.server:
-    image: sequenceiq/kerberos:1.1
+    image: staticmukesh/kerberos-docker:1.0.0
+    platform: linux/amd64
     container_name: hive.driver_kerberos.server
     hostname: kerberos.server
     ports:
       - "749:749"
       - "88:88"
     environment:
-      REALM: KERBEROS.SERVER
-      DOMAIN_REALM: kerberos.server
+      REALM_NAME: KERBEROS.SERVER
+      DOMAIN_NAME: kerberos.server
+      KADMIN_PASS: admin
+      MASTER_PASS: admin
 
