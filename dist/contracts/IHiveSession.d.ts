@@ -1,4 +1,3 @@
-/// <reference types="node" />
 import IOperation from "./IOperation";
 import Status from "../dto/Status";
 import InfoValue from "../dto/InfoValue";

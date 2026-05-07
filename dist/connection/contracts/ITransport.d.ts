@@ -1,4 +1,3 @@
-/// <reference types="node" />
 export type ThriftConnection = any;
 export default interface ITransport {
     getTransport(): any;

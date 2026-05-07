@@ -1,5 +1,3 @@
-/// <reference types="node" />
-/// <reference types="node" />
 import { TlsOptions } from "tls";
 import ITransport from "../contracts/ITransport";
 export default class TlsTransport implements ITransport {

@@ -1,4 +1,3 @@
-/// <reference types="node" />
 export declare enum StatusCode {
     START = 1,
     OK = 2,

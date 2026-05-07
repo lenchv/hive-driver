@@ -1,4 +1,3 @@
-/// <reference types="node" />
 import ITransport from "../contracts/ITransport";
 export default class TcpTransport implements ITransport {
     private host;

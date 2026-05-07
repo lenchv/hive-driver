@@ -1,4 +1,3 @@
-/// <reference types="node" />
 import { ThriftClient, TCLIServiceTypes } from './hive/Types/';
 import IHiveClient from './contracts/IHiveClient';
 import { OpenSessionRequest } from './hive/Commands/OpenSessionCommand';

@@ -1,4 +1,3 @@
-/// <reference types="node" />
 export type Options = {
     username?: string;
     password?: string;

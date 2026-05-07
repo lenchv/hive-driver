@@ -1,4 +1,3 @@
-/// <reference types="node" />
 import BaseCommand from "./BaseCommand";
 import { OperationHandle, SessionHandle, Status } from "../Types";
 export type UploadDataRequest = {

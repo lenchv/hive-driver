@@ -1,4 +1,3 @@
-/// <reference types="node" />
 export type ThriftClient = {
     OpenSession: Function;
     CloseSession: Function;
