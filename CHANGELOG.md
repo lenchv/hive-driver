@@ -1,5 +1,10 @@
 # Changelog
 
+[1.0.1](https://github.com/lenchv/hive-driver/releases/tag/v1.0.1) 2026-05-07
+
+- Update thrift library
+
+
 [1.0.0](https://github.com/lenchv/hive-driver/releases/tag/v1.0.0) 2024-04-21
 
 - Updated npm modules

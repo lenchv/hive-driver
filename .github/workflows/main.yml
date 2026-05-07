@@ -47,7 +47,9 @@ jobs:
         sudo cp krb/krb5.conf /etc/krb5.conf
         cd ..
         env HOSTNAME=$(hostname -f) npm run e2e
-    - name: Coverage
-      run: |
-        npm run coverage -- -t ${{secrets.CODECOV_TOKEN}}
-        bash <(curl -s https://codecov.io/bash) -t ${{secrets.CODECOV_TOKEN}}
+    - uses: codecov/codecov-action@v5
+      with:
+        fail_ci_if_error: false
+        files: ./coverage/lcov.info
+        token: ${{ secrets.CODECOV_TOKEN }}
+        verbose: true

@@ -1,4 +1,3 @@
-/// <reference types="node" />
 import { SessionHandle, Status, OperationHandle } from "../Types";
 import BaseCommand from "./BaseCommand";
 export type ExecuteStatementRequest = {

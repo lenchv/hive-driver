@@ -1,4 +1,3 @@
-/// <reference types="node" />
 import BaseCommand from "./BaseCommand";
 import { Status, OperationHandle, ProgressUpdateResponse } from "../Types";
 export type GetOperationStatusRequest = {
